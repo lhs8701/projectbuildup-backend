@@ -9,3 +9,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #swagger 3.0 오류 해결
+
+  redis:
+    host: localhost
+    port: 6379
