@@ -25,10 +25,10 @@ public class ChallengeEntity extends BaseTimeEntity {
     private Long id;
 
     @Column(length = 40)
-    private LocalDateTime startDate;
+    private String startDate;
 
     @Column(length = 40)
-    private LocalDateTime endDate;
+    private String endDate;
 
     @Column(length = 30)
     private String mainTitle;
