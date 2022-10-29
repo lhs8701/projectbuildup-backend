@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Configuration
-@EnableWebMvc
 public class SwaggerConfig implements EnvironmentAware {
 
     private Environment environment;
