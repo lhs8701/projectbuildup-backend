@@ -28,8 +28,15 @@ public class ChallengeController {
      * 챌린지 생성을 위한 메서드
      * @param challengeReqDto
      */
-    public void createChallenge(@RequestBody CreateChallengeReqDto challengeReqDto) {
+    @PostMapping
+    public ResponseEntity<Void> createChallenge(@RequestBody CreateChallengeReqDto challengeReqDto) {
+        try{
+            challengeService.createChallenge(challengeReqDto);
 
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
     }
 
 }
