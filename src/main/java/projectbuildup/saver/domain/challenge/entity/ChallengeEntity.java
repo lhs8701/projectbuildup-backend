@@ -31,13 +31,19 @@ public class ChallengeEntity extends BaseTimeEntity {
     private LocalDateTime endDate;
 
     @Column(length = 30)
-    private String title;
+    private String mainTitle;
+
+    @Column(length = 30)
+    private String subTitle;
 
     @Column(length = 200)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @Column(length = 30)
+    private Long savingAmount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -45,4 +51,5 @@ public class ChallengeEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
+
 }

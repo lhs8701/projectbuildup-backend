@@ -24,11 +24,12 @@ public class RankingEntity extends BaseTimeEntity {
     @Column(length = 10)
     private Long recentRanking;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_id")
     private ChallengeEntity challenge;
+
 }
