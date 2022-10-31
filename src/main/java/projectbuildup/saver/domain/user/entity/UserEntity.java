@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
-import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
+import projectbuildup.saver.domain.challengeList.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
@@ -41,10 +41,10 @@ public class UserEntity extends BaseTimeEntity {
     private String profileImage;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SavingEntity> savingEntityList;
+    private List<ChallengeLogEntity> challengeLogEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ChallengeEntity> challengeEntityList;
+    private List<SavingEntity> savingEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
