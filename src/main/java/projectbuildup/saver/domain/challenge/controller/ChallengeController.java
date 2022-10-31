@@ -17,11 +17,14 @@ public class ChallengeController {
 
     @GetMapping("/{challengeId}")
     public ResponseEntity<ViewChallengeResDto> viewChallenge(@PathVariable Long challengeId) {
-        
-        //Exception 추가
-        ViewChallengeResDto viewChallengeResDto = challengeService.viewChallenge(challengeId);
 
-        return new ResponseEntity<>(viewChallengeResDto, HttpStatus.OK);
+        try {
+            ViewChallengeResDto viewChallengeResDto = challengeService.viewChallenge(challengeId);
+
+            return new ResponseEntity<>(viewChallengeResDto, HttpStatus.OK);
+        }catch(Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
     }
 
     @PostMapping("")
