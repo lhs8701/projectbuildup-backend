@@ -24,11 +24,7 @@ public class ChallengeController {
         return new ResponseEntity<>(viewChallengeResDto, HttpStatus.OK);
     }
 
-    /**
-     * 챌린지 생성을 위한 메서드
-     * @param challengeReqDto
-     */
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<Void> createChallenge(@RequestBody CreateChallengeReqDto challengeReqDto) {
         try{
             challengeService.createChallenge(challengeReqDto);
