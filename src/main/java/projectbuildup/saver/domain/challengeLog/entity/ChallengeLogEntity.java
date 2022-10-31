@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.challengeList.entity;
+package projectbuildup.saver.domain.challengeLog.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
