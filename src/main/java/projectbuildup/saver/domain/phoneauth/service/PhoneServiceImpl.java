@@ -139,6 +139,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
+    @Transactional
     public PhoneAuthResponseDto verifyNumber(String phoneNumber, String code) {
         Optional<PhoneEntity> phone = phoneRepository.findByPhoneNumber(phoneNumber);
         
