@@ -2,6 +2,10 @@ package projectbuildup.saver.domain.phoneauth.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
 import projectbuildup.saver.domain.phoneauth.entity.PhoneEntity;
@@ -35,6 +39,11 @@ import javax.crypto.spec.SecretKeySpec;
 public class PhoneServiceImpl implements PhoneService{
 
     PhoneRepository phoneRepository;
+
+    private final Environment env;
+
+
+
 
 
     @Override
@@ -76,14 +85,13 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
-    public void sendSMS(String to, String code) {
-        String from = "01021634980";                                    // 발신번호
+    public void sendSMS(String from, String to, String code) {
         String hostNameUrl = "https://sens.apigw.ntruss.com";     		// + 호스트 URL
         String requestUrl= "/sms/v2/services/";                   		// + 요청 URL
         String requestUrlType = "/messages";                      		// + 요청 URL
-        String accessKey = "kEIEdgWRluUtJXy1E51R";                     	// + 네이버 클라우드 플랫폼 회원에게 발급되는 개인 인증키
-        String secretKey = "AtzSAHcUZNflEDYbKSClDluSIMaXOLFE4xYMUPrX";  // + 2차 인증을 위해 서비스마다 할당되는 service secret key
-        String serviceId = "ncp:sms:kr:293656383759:saver_phone";       // + 프로젝트에 할당된 SMS 서비스 ID
+        String accessKey = env.getProperty("naver.accessKey");                     	// + 네이버 클라우드 플랫폼 회원에게 발급되는 개인 인증키
+        String secretKey = env.getProperty("naver.secretKey");   // + 2차 인증을 위해 서비스마다 할당되는 service secret key
+        String serviceId = env.getProperty("naver.serviceId");        // + 프로젝트에 할당된 SMS 서비스 ID
         String method = "POST";											// + 요청 method
         String timestamp = Long.toString(System.currentTimeMillis()); 	// + current timestamp (epoch)
         requestUrl += serviceId + requestUrlType;
@@ -186,7 +194,7 @@ public class PhoneServiceImpl implements PhoneService{
                 phoneRepository.save(newPhone);
             }
 
-            sendSMS(phoneNumber, code);
+            sendSMS("01021634980", phoneNumber, code);
 
             log.info(String.format("%s %s", phoneNumber, code));
         } catch (Exception e) {
