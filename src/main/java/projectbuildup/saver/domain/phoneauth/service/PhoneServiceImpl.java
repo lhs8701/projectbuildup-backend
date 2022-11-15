@@ -42,10 +42,6 @@ public class PhoneServiceImpl implements PhoneService{
 
     private final Environment env;
 
-
-
-
-
     @Override
     public String makeSignature(String url, String timestamp, String method, String accessKey, String secretKey) {
         String space = " ";                    // one space
@@ -162,6 +158,7 @@ public class PhoneServiceImpl implements PhoneService{
         int rightLimit = 57;
         int targetStringLength = 6;
         Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
         return random.ints(leftLimit, rightLimit + 1)
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)

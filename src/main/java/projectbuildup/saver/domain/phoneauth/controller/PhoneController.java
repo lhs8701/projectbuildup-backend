@@ -22,13 +22,13 @@ public class PhoneController {
 
     @PostMapping("/auth/number")
     public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody PhoneAuthDto phoneAuthDto) {
-        log.info(phoneAuthDto.toString());
-        return new ResponseEntity<>(phoneService.getNumber(phoneAuthDto.getPhoneNumber()), HttpStatus.OK);
+        PhoneAuthResponseDto ans = phoneService.getNumber(phoneAuthDto.getPhoneNumber());
+        return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @PostMapping("/auth/verify")
     public ResponseEntity<PhoneAuthResponseDto> verifyNumber(@RequestBody PhoneAuthDto phoneAuthDto) {
-        log.info(phoneAuthDto.toString());
-        return new ResponseEntity<>(phoneService.verifyNumber(phoneAuthDto.getPhoneNumber(), phoneAuthDto.getCode()), HttpStatus.OK);
+        PhoneAuthResponseDto ans = phoneService.verifyNumber(phoneAuthDto.getPhoneNumber(), phoneAuthDto.getCode());
+        return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
     }
 }
