@@ -42,7 +42,7 @@ public class PhoneServiceImpl implements PhoneService{
 
     private final Environment env;
 
-    @Override
+
     public String makeSignature(String url, String timestamp, String method, String accessKey, String secretKey) {
         String space = " ";                    // one space
         String newLine = "\n";                 // new line
@@ -80,7 +80,7 @@ public class PhoneServiceImpl implements PhoneService{
         return encodeBase64String;
     }
 
-    @Override
+
     public void sendSMS(String from, String to, String code) {
         String hostNameUrl = "https://sens.apigw.ntruss.com";     		// + 호스트 URL
         String requestUrl= "/sms/v2/services/";                   		// + 요청 URL
@@ -152,7 +152,7 @@ public class PhoneServiceImpl implements PhoneService{
         }
     }
 
-    @Override
+
     public String getRandomCode() {
         int leftLimit = 48;
         int rightLimit = 57;
