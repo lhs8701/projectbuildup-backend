@@ -2,9 +2,6 @@ package projectbuildup.saver.domain.phoneauth.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
@@ -22,13 +19,14 @@ import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import projectbuildup.saver.domain.phoneauth.service.interfaces.PhoneService;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -36,7 +34,7 @@ import javax.crypto.spec.SecretKeySpec;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class PhoneServiceImpl implements PhoneService{
+public class PhoneServiceImpl implements PhoneService {
 
     PhoneRepository phoneRepository;
 

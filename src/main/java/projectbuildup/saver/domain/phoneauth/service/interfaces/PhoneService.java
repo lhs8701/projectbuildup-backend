@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.phoneauth.service;
+package projectbuildup.saver.domain.phoneauth.service.interfaces;
 
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
 

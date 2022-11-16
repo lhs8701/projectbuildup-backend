@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import projectbuildup.saver.domain.dto.req.PhoneAuthDto;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
-import projectbuildup.saver.domain.phoneauth.service.PhoneService;
+import projectbuildup.saver.domain.phoneauth.service.interfaces.PhoneService;
 
 @RestController
 @AllArgsConstructor
