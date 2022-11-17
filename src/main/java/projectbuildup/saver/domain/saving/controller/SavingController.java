@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
-import projectbuildup.saver.domain.dto.res.ViewChallengeResDto;
 import projectbuildup.saver.domain.saving.service.SavingService;
 
 @RequiredArgsConstructor

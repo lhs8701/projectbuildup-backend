@@ -23,9 +23,15 @@ public class ChallengeEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * yyyy.MM.dd
+     */
     @Column(length = 40)
     private String startDate;
 
+    /**
+     * yyyy.MM.dd
+     */
     @Column(length = 40)
     private String endDate;
 
@@ -49,4 +55,5 @@ public class ChallengeEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ChallengeLogEntity> challengeLogEntityList;
+
 }
