@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
-import projectbuildup.saver.domain.dto.req.GetAvailableChallengesReqDto;
-import projectbuildup.saver.domain.dto.req.GetMyChallengesReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -47,9 +45,9 @@ public class ChallengeController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<GetChallengeResDto>> getAvailableChallenges(@RequestBody GetAvailableChallengesReqDto getChallengesDto) {
+    public ResponseEntity<List<GetChallengeResDto>> getAvailableChallenges(@RequestParam Long sortType, @RequestParam Boolean ascending, @RequestParam String loginId) {
         try {
-            List<GetChallengeResDto> challenges = challengeService.getAvailableChallenges(getChallengesDto.getSortType(), getChallengesDto.isAscending(), getChallengesDto.getLoginId());
+            List<GetChallengeResDto> challenges = challengeService.getAvailableChallenges(sortType, ascending, loginId);
             if(challenges != null) {
                 return new ResponseEntity<>(challenges, HttpStatus.OK);
             } else {
@@ -62,9 +60,9 @@ public class ChallengeController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<GetChallengeResDto>> getMyChallenges(@RequestBody GetMyChallengesReqDto getMyChallengesReqDto) {
+    public ResponseEntity<List<GetChallengeResDto>> getMyChallenges(@RequestParam String loginId) {
         try {
-            List<GetChallengeResDto> challenges = challengeService.getMyChallenges(getMyChallengesReqDto.getLoginId());
+            List<GetChallengeResDto> challenges = challengeService.getMyChallenges(loginId);
             if(challenges != null) {
                 return new ResponseEntity<>(challenges, HttpStatus.OK);
             } else {
