@@ -140,7 +140,8 @@ public class ChallengeServiceImpl implements ChallengeService {
                                                                         challenge.getMainTitle(),
                                                                         challenge.getSubTitle(),
                                                                         challenge.getContent(),
-                                                                        challenge.getSavingAmount()
+                                                                        challenge.getSavingAmount(),
+                                                                        (long) challenge.getChallengeLogEntityList().size()
                                                                 );
                                                             })
                                                             .toList();
@@ -155,7 +156,8 @@ public class ChallengeServiceImpl implements ChallengeService {
                     challenge.getMainTitle(),
                     challenge.getSubTitle(),
                     challenge.getContent(),
-                    challenge.getSavingAmount()
+                    challenge.getSavingAmount(),
+                    (long) challenge.getChallengeLogEntityList().size()
                 );
     }
 

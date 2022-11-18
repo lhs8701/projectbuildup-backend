@@ -16,4 +16,5 @@ public class GetChallengeResDto {
     private String subTitle;
     private String content;
     private Long savingAmount;
+    private Long population;
 }
