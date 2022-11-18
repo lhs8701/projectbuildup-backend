@@ -91,7 +91,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<GetChallengeResDto> getChallenges(Long sortType, Boolean ascending, String loginId) {
+    public List<GetChallengeResDto> getAvailableChallenges(Long sortType, Boolean ascending, String loginId) {
 
         // 모든 챌린지 가져옴
         List<ChallengeEntity> challenges = challengeRepository.findAll();
@@ -159,6 +159,39 @@ public class ChallengeServiceImpl implements ChallengeService {
                     challenge.getSavingAmount(),
                     (long) challenge.getChallengeLogEntityList().size()
                 );
+    }
+
+    @Override
+    public List<GetChallengeResDto> getMyChallenges(String loginId) {
+        List<ChallengeEntity> challenges = challengeRepository.findAll();
+        List<ChallengeEntity> userChallenges = challenges
+                .stream()
+                .filter((challenge) -> {
+                    List<ChallengeLogEntity> challengeLogs = challenge.getChallengeLogEntityList();
+                    for(ChallengeLogEntity c: challengeLogs) {
+                        UserEntity user = userRepository.findById(c.getId()).orElseThrow();
+                        if (loginId.equals(user.getLoginId())) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .toList();
+
+        return (List<GetChallengeResDto>) userChallenges
+                .stream()
+                .map((challenge) -> {
+                    return new GetChallengeResDto(
+                            challenge.getStartDate(),
+                            challenge.getEndDate(),
+                            challenge.getMainTitle(),
+                            challenge.getSubTitle(),
+                            challenge.getContent(),
+                            challenge.getSavingAmount(),
+                            (long) challenge.getChallengeLogEntityList().size()
+                    );
+                })
+                .toList();
     }
 
 }

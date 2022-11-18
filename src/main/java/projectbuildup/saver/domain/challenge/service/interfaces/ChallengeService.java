@@ -26,7 +26,7 @@ public interface ChallengeService {
      * @param ascending {Boolean} 오름차순인지 내림차순인지
      * @return
      */
-    List<GetChallengeResDto> getChallenges(Long sortType, Boolean ascending, String userId);
+    List<GetChallengeResDto> getAvailableChallenges(Long sortType, Boolean ascending, String loginId);
 
     /**
      * 단일 챌린지 리턴.
@@ -34,5 +34,12 @@ public interface ChallengeService {
      * @return
      */
     GetChallengeResDto getChallenge(Long challengeId);
+
+    /**
+     * 특정 유저가 참여중인 챌린지들의 리스트를 리턴합니다.
+     * @param loginId {String} 유저 로그인 아아디
+     * @return 유저가 참여중인 챌린지들의 리스트
+     */
+    List<GetChallengeResDto> getMyChallenges(String loginId);
 
 }

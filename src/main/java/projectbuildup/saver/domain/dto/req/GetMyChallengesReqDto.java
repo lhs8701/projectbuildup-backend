@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetChallengesReqDto {
-    private Long sortType;
-    private boolean ascending;
+public class GetMyChallengesReqDto {
     private String loginId;
 }

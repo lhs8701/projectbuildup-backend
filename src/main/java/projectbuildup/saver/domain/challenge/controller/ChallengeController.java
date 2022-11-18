@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
-import projectbuildup.saver.domain.dto.req.GetChallengesReqDto;
+import projectbuildup.saver.domain.dto.req.GetAvailableChallengesReqDto;
+import projectbuildup.saver.domain.dto.req.GetMyChallengesReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -45,10 +46,25 @@ public class ChallengeController {
         }
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<GetChallengeResDto>> getChallenges(@RequestBody GetChallengesReqDto getChallengesDto) {
+    @GetMapping("/available")
+    public ResponseEntity<List<GetChallengeResDto>> getAvailableChallenges(@RequestBody GetAvailableChallengesReqDto getChallengesDto) {
         try {
-            List<GetChallengeResDto> challenges = challengeService.getChallenges(getChallengesDto.getSortType(), getChallengesDto.isAscending(), getChallengesDto.getLoginId());
+            List<GetChallengeResDto> challenges = challengeService.getAvailableChallenges(getChallengesDto.getSortType(), getChallengesDto.isAscending(), getChallengesDto.getLoginId());
+            if(challenges != null) {
+                return new ResponseEntity<>(challenges, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            log.info(e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<GetChallengeResDto>> getMyChallenges(@RequestBody GetMyChallengesReqDto getMyChallengesReqDto) {
+        try {
+            List<GetChallengeResDto> challenges = challengeService.getMyChallenges(getMyChallengesReqDto.getLoginId());
             if(challenges != null) {
                 return new ResponseEntity<>(challenges, HttpStatus.OK);
             } else {
