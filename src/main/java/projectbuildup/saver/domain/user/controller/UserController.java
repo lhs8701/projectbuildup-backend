@@ -21,7 +21,6 @@ public class UserController {
     public ResponseEntity<Void> createUser(@RequestBody CreateUserReqDto createUserReqDto) {
         try {
             userService.createUser(createUserReqDto);
-
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);

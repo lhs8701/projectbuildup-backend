@@ -45,6 +45,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             // 유저가 없을시 Exception throw -> 404 NOT FOUND
             UserEntity userEntity = userRepository.findById(c.getUser().getId()).orElseThrow();
 
+
             // 본 유저가 본 챌린지에 모았던 기록들을 모두 가져 온 후 총액을 계산함.
             List<SavingEntity> savingEntityList = savingRepository.findByChallengeIdAndUserId(challengeId, userEntity.getId());
             Long savingAmount = 0L;
@@ -163,6 +164,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<GetChallengeResDto> getMyChallenges(String loginId) {
+        // 전부 찾아서 loginId가 같은 user가 있는 챌린지만 추려낸 후 리턴.
         List<ChallengeEntity> challenges = challengeRepository.findAll();
         List<ChallengeEntity> userChallenges = challenges
                 .stream()
@@ -177,7 +179,6 @@ public class ChallengeServiceImpl implements ChallengeService {
                     return false;
                 })
                 .toList();
-
         return (List<GetChallengeResDto>) userChallenges
                 .stream()
                 .map((challenge) -> {
