@@ -5,17 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewChallengeResDto {
-    private String mainTitle;
-    private String subTitle;
+public class ParticipantResDto {
+    private String nickName;
+    private Long recentRanking;
     private Long savingAmount;
-    private Long participants;
-    private LocalDateTime endDate;
-    private String content;
 }
