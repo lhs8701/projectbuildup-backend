@@ -1,9 +1,6 @@
 package projectbuildup.saver.domain.challengeLog.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
@@ -12,6 +9,7 @@ import javax.persistence.*;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "ChallengeLog")

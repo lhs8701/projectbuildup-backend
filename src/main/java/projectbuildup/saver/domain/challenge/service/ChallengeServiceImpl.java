@@ -136,6 +136,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                                             .stream()
                                                             .map((challenge) -> {
                                                                 return new GetChallengeResDto(
+                                                                        challenge.getId(),
                                                                         challenge.getStartDate(),
                                                                         challenge.getEndDate(),
                                                                         challenge.getMainTitle(),
@@ -152,6 +153,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     public GetChallengeResDto getChallenge(Long challengeId) {
         ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
         return new GetChallengeResDto(
+                    challenge.getId(),
                     challenge.getStartDate(),
                     challenge.getEndDate(),
                     challenge.getMainTitle(),
@@ -183,6 +185,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .stream()
                 .map((challenge) -> {
                     return new GetChallengeResDto(
+                            challenge.getId(),
                             challenge.getStartDate(),
                             challenge.getEndDate(),
                             challenge.getMainTitle(),
@@ -193,6 +196,16 @@ public class ChallengeServiceImpl implements ChallengeService {
                     );
                 })
                 .toList();
+    }
+
+    @Override
+    public void joinChallenge(String loginId, Long challengeId) {
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        ChallengeLogEntity log = new ChallengeLogEntity();
+        log.setChallenge(challenge);
+        log.setUser(user);
+        challengeLogRepository.save(log);
     }
 
 }

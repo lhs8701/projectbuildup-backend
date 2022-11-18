@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetChallengeResDto {
+    private Long challengeId;
     private String startDate;
     private String endDate;
     private String mainTitle;

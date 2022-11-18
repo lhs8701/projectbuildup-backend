@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -83,7 +84,17 @@ public class ChallengeController {
             log.info(e.toString());
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+    }
 
+    @PostMapping("/join")
+    public ResponseEntity<HttpStatus> joinChallenge(@RequestBody JoinChallengeReqDto joinChallengeReqDto) {
+        try {
+            challengeService.joinChallenge(joinChallengeReqDto.getLoginId(), joinChallengeReqDto.getChallengeId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info(e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
     }
 
 }
