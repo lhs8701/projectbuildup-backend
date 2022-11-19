@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.LeftChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -99,6 +100,15 @@ public class ChallengeController {
         }
     }
 
-
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
+        try {
+            challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info(e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
+    }
 
 }

@@ -10,5 +10,7 @@ import java.util.Optional;
 
 public interface ChallengeLogRepository extends JpaRepository<ChallengeLogEntity, Long> {
     List<ChallengeLogEntity> findByChallenge_Id(Long challengeId);
-    Optional<ChallengeLogEntity> findByChallengeAndUser(ChallengeEntity challengeId, UserEntity userId);
+    Optional<ChallengeLogEntity> findByChallengeAndUser(ChallengeEntity challenge, UserEntity user);
+
+    void deleteByChallengeAndUer(ChallengeEntity challenge, UserEntity user);
 }

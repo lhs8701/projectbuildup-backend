@@ -49,4 +49,11 @@ public interface ChallengeService {
      */
     void joinChallenge(String loginId, Long challengeId);
 
+    /**
+     * 챌린지 탈퇴
+     * @param loginId {String} 유저 아이디
+     * @param challengeId {Long} 챌린지 아이디
+     */
+    void leftChallenge(String loginId, Long challengeId);
+
 }

@@ -213,4 +213,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         challengeLogRepository.save(log);
     }
 
+    @Override
+    public void leftChallenge(String loginId, Long challengeId) {
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        challengeLogRepository.deleteByChallengeAndUer(challenge, user);
+    }
+
 }
