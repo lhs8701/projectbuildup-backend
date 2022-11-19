@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParticipantResDto {
+    private String loginId;
     private String nickName;
     private Long recentRanking;
     private Long savingAmount;

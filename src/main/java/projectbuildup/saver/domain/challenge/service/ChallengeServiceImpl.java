@@ -55,6 +55,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             // 참여자 추가.
             ParticipantResDto participantResDto = ParticipantResDto.builder()
+                    .loginId(userEntity.getLoginId())
                     .nickName(userEntity.getNickName())
                     .savingAmount(savingAmount)
                     .build();
@@ -97,13 +98,13 @@ public class ChallengeServiceImpl implements ChallengeService {
         // 모든 챌린지 가져옴
         List<ChallengeEntity> challenges = challengeRepository.findAll();
 
-        List<ChallengeEntity> selectedChallenges = new ArrayList<ChallengeEntity>(
+        List<ChallengeEntity> selectedChallenges = new ArrayList<>(
                 challenges
                         .stream()
                         .filter((challenge) -> {
                     // 챌린지 중 자신의 loginId가 있는 챌린지는 제외함.
                             for(ChallengeLogEntity c: challenge.getChallengeLogEntityList()) {
-                                UserEntity user = userRepository.findById(c.getId()).orElseThrow();
+                                UserEntity user = userRepository.findById(c.getUser().getId()).orElseThrow();
                                 return !loginId.equals(user.getLoginId());
                             }
                             return true;
@@ -136,6 +137,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                                             .stream()
                                                             .map((challenge) -> {
                                                                 return new GetChallengeResDto(
+                                                                        challenge.getId(),
                                                                         challenge.getStartDate(),
                                                                         challenge.getEndDate(),
                                                                         challenge.getMainTitle(),
@@ -152,6 +154,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     public GetChallengeResDto getChallenge(Long challengeId) {
         ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
         return new GetChallengeResDto(
+                    challenge.getId(),
                     challenge.getStartDate(),
                     challenge.getEndDate(),
                     challenge.getMainTitle(),
@@ -171,7 +174,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .filter((challenge) -> {
                     List<ChallengeLogEntity> challengeLogs = challenge.getChallengeLogEntityList();
                     for(ChallengeLogEntity c: challengeLogs) {
-                        UserEntity user = userRepository.findById(c.getId()).orElseThrow();
+                        UserEntity user = userRepository.findById(c.getUser().getId()).orElseThrow();
                         if (loginId.equals(user.getLoginId())) {
                             return true;
                         }
@@ -183,6 +186,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .stream()
                 .map((challenge) -> {
                     return new GetChallengeResDto(
+                            challenge.getId(),
                             challenge.getStartDate(),
                             challenge.getEndDate(),
                             challenge.getMainTitle(),
@@ -193,6 +197,20 @@ public class ChallengeServiceImpl implements ChallengeService {
                     );
                 })
                 .toList();
+    }
+
+    @Override
+    public void joinChallenge(String loginId, Long challengeId) {
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        if(challengeLogRepository.findByChallengeAndUser(challenge, user).isPresent()) {
+            log.info("already joined" + loginId + challengeId);
+            return;
+        }
+        ChallengeLogEntity log = new ChallengeLogEntity();
+        log.setChallenge(challenge);
+        log.setUser(user);
+        challengeLogRepository.save(log);
     }
 
 }
