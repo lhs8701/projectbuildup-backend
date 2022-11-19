@@ -53,8 +53,8 @@ public class AuthController {
     })
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout", headers = "X-AUTH-TOKEN")
-    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken) {
-        authService.logout(accessToken);
+    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal UserEntity user) {
+        authService.logout(accessToken, user);
         return ResponseEntity.ok("로그아웃 성공");
     }
 
