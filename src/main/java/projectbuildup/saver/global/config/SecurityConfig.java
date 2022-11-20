@@ -14,10 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import projectbuildup.saver.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
-import projectbuildup.saver.global.security.CustomAccessDeniedHandler;
-import projectbuildup.saver.global.security.CustomAuthenticationEntryPoint;
-import projectbuildup.saver.global.security.JwtAuthenticationFilter;
-import projectbuildup.saver.global.security.JwtProvider;
+import projectbuildup.saver.global.security.*;
 
 
 @RequiredArgsConstructor
@@ -52,7 +49,9 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+
         return http.build();
     }
 
