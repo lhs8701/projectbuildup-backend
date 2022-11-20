@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,9 +22,9 @@ import projectbuildup.saver.domain.user.entity.UserEntity;
 import javax.validation.Valid;
 
 @Slf4j
-@Api(tags = {"Basic Auth"})
+@Api(tags = {"Auth Controller"})
 @RequiredArgsConstructor
-@RequestMapping("/open/auth")
+@RequestMapping("/auth")
 @RestController
 public class AuthController {
 
@@ -34,14 +35,14 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequestDto signupRequestDto){
         authService.signup(signupRequestDto);
-        return ResponseEntity.ok("회원가입 성공");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value="로그인")
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto){
-        return ResponseEntity.ok(authService.login(loginRequestDto));
+        return new ResponseEntity<>(authService.login(loginRequestDto), HttpStatus.OK);
     }
 
     @ApiImplicitParams({
@@ -55,7 +56,7 @@ public class AuthController {
     @PostMapping(value = "/logout", headers = "X-AUTH-TOKEN")
     public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal UserEntity user) {
         authService.logout(accessToken, user);
-        return ResponseEntity.ok("로그아웃 성공");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiImplicitParams({
@@ -69,13 +70,13 @@ public class AuthController {
     @PostMapping(value = "/withdrawal", headers = "X-AUTH-TOKEN")
     public ResponseEntity<?> withdrawal(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal UserEntity user) {
         authService.withdrawal(accessToken, user);
-        return ResponseEntity.ok("회원 탈퇴 성공");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "액세스, 리프레시 토큰 재발급")
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/reissue")
     public ResponseEntity<?> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+        return new ResponseEntity<>(authService.reissue(tokenRequestDto), HttpStatus.OK);
     }
 }
