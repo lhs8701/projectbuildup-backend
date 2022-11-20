@@ -17,9 +17,15 @@ public class SignupRequestDto {
     private String loginId;
     private String password;
 
+    private String nickName;
+
+    private String phoneNumber;
+
     public UserEntity toEntity(PasswordEncoder passwordEncoder) {
         return UserEntity.builder()
-                .loginId(loginId)
+                .loginId(this.loginId)
+                .nickName(this.nickName)
+                .phoneNumber(this.phoneNumber)
                 .password(passwordEncoder.encode(password))
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
