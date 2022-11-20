@@ -1,15 +1,12 @@
 package projectbuildup.saver.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
-import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
+import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
@@ -22,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name="User")
@@ -31,7 +29,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10)
+    @Column(length = 100, unique = true)
     private String loginId;
 
     @Column(length = 300)
@@ -52,10 +50,10 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SavingEntity> savingEntityList;
+    private List<ChallengeLogEntity> challengeLogEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ChallengeEntity> challengeEntityList;
+    private List<SavingEntity> savingEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
@@ -106,6 +104,11 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AlarmEntity> sendAlarmEntityList;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AlarmEntity> receiveAlarmEntityList;
 }
 
 
