@@ -12,5 +12,5 @@ public interface ChallengeLogRepository extends JpaRepository<ChallengeLogEntity
     List<ChallengeLogEntity> findByChallenge_Id(Long challengeId);
     Optional<ChallengeLogEntity> findByChallengeAndUser(ChallengeEntity challenge, UserEntity user);
 
-    void deleteByChallengeAndUer(ChallengeEntity challenge, UserEntity user);
+    void deleteByChallengeAndUser(ChallengeEntity challenge, UserEntity user);
 }
