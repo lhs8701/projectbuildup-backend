@@ -19,28 +19,10 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/exception")
 @ApiIgnore
 public class SecurityExceptionController {
-
     @GetMapping("/entrypoint")
     public void entrypointException() {
         throw new CAuthenticationEntryPointException();
     }
-    @GetMapping("/entrypoint/illegal")
-    public void illegalArgumentException() {
-        throw new CIllegalArgumentException();
-    }
-    @GetMapping("/entrypoint/wrong")
-    public void wrongTypeTokenException() {
-        throw new CWrongTypeTokenException();
-    }
-    @GetMapping("/entrypoint/expired")
-    public void expiredTokenException() {
-        throw new CExpiredTokenException();
-    }
-    @GetMapping("/entrypoint/unsupported")
-    public void unsupportedTokenException() {
-        throw new CUnsupportedTokenException();
-    }
-
     @GetMapping("/accessDenied")
     public void accessDeniedException() {
         throw new CAccessDeniedException();

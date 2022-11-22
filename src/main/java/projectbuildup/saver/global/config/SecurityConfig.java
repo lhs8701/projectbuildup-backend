@@ -16,8 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import projectbuildup.saver.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import projectbuildup.saver.global.security.CustomAccessDeniedHandler;
 import projectbuildup.saver.global.security.CustomAuthenticationEntryPoint;
-import projectbuildup.saver.global.security.JwtAuthenticationFilter;
+import projectbuildup.saver.global.security.filter.JwtAuthenticationFilter;
 import projectbuildup.saver.global.security.JwtProvider;
+import projectbuildup.saver.global.security.filter.JwtExceptionFilter;
 
 
 @RequiredArgsConstructor
@@ -29,7 +30,6 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
@@ -52,7 +52,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
         return http.build();
     }
 

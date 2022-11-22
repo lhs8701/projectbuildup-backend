@@ -99,29 +99,17 @@ public class JwtProvider {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(jwt);
             if (logoutAccessTokenRedisRepository.existsById(jwt)) {
-                request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode());
-                return false;
+                throw new JwtException(String.valueOf(ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode()));
             }
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            request.setAttribute("exception", ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getCode());
+            throw new JwtException(String.valueOf(ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getCode()));
         } catch (ExpiredJwtException e) {
-            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode());
+            throw new JwtException(String.valueOf(ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode()));
         } catch (UnsupportedJwtException e) {
-            request.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN_EXCEPTION.getCode());
+            throw new JwtException(String.valueOf(ErrorCode.UNSUPPORTED_TOKEN_EXCEPTION.getCode()));
         } catch (IllegalArgumentException e) {
-            request.setAttribute("exception", ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getCode());
-        } catch (Exception e) {
-            log.error("================================================");
-            log.error("JwtFilter - doFilterInternal() 오류발생");
-            log.error("token : {}", jwt);
-            log.error("Exception Message : {}", e.getMessage());
-            log.error("Exception StackTrace : {");
-            e.printStackTrace();
-            log.error("}");
-            log.error("================================================");
-            request.setAttribute("exception", ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+            throw new JwtException(String.valueOf(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getCode()));
         }
-        return false;
     }
 }

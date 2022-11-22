@@ -1,4 +1,4 @@
-package projectbuildup.saver.global.security;
+package projectbuildup.saver.global.security.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import projectbuildup.saver.global.security.JwtProvider;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
