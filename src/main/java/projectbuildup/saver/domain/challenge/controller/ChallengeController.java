@@ -27,7 +27,6 @@ public class ChallengeController {
     public ResponseEntity<Void> createChallenge(@RequestBody CreateChallengeReqDto challengeReqDto) {
         try{
             challengeService.createChallenge(challengeReqDto);
-
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e) {
             log.info(e.toString());
