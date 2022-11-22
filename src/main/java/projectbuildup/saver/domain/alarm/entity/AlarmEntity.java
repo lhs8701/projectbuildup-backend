@@ -30,7 +30,11 @@ public class AlarmEntity extends BaseTimeEntity {
     @Column(length = 40)
     private LocalDateTime sentDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="sender_id")
+    private UserEntity sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="receiver_id")
+    private UserEntity receiver;
 }

@@ -26,13 +26,14 @@ public class SavingEntity extends BaseTimeEntity {
     private Long amount;
 
     //절약 날짜
-    private LocalDateTime savingDate;
+    private String savingDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private ChallengeEntity challenge;
+
 }

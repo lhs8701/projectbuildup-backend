@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
-import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -24,25 +23,37 @@ public class ChallengeEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * yyyy.MM.dd
+     */
     @Column(length = 40)
-    private LocalDateTime startDate;
+    private String startDate;
 
+    /**
+     * yyyy.MM.dd
+     */
     @Column(length = 40)
-    private LocalDateTime endDate;
+    private String endDate;
 
     @Column(length = 30)
-    private String title;
+    private String mainTitle;
+
+    @Column(length = 30)
+    private String subTitle;
 
     @Column(length = 200)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @Column(length = 30)
+    private Long savingAmount;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SavingEntity> savingEntityList;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
+
+    @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ChallengeLogEntity> challengeLogEntityList;
+
 }
