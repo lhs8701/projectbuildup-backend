@@ -25,89 +25,54 @@ public class ChallengeController {
 
     @PostMapping("")
     public ResponseEntity<Void> createChallenge(@RequestBody CreateChallengeReqDto challengeReqDto) {
-        try{
-            challengeService.createChallenge(challengeReqDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        challengeService.createChallenge(challengeReqDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/join")
     public ResponseEntity<HttpStatus> joinChallenge(@RequestBody JoinChallengeReqDto joinChallengeReqDto) {
-        try {
-            challengeService.joinChallenge(joinChallengeReqDto.getLoginId(), joinChallengeReqDto.getChallengeId());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        challengeService.joinChallenge(joinChallengeReqDto.getLoginId(), joinChallengeReqDto.getChallengeId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{challengeId}/participants")
     public ResponseEntity<GetChallengeParticipantsResDto> getChallengeParticipants(@PathVariable Long challengeId) {
-        try {
-            GetChallengeParticipantsResDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
-
-            return new ResponseEntity<>(getChallengeParticipantsResDto, HttpStatus.OK);
-        }catch(Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        GetChallengeParticipantsResDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
+        log.info(getChallengeParticipantsResDto.toString());
+        return new ResponseEntity<>(getChallengeParticipantsResDto, HttpStatus.OK);
     }
 
     @GetMapping("/available")
     public ResponseEntity<List<GetChallengeResDto>> getAvailableChallenges(@RequestParam Long sortType, @RequestParam Boolean ascending, @RequestParam String loginId) {
-        try {
-            List<GetChallengeResDto> challenges = challengeService.getAvailableChallenges(sortType, ascending, loginId);
-            if(challenges != null) {
-                return new ResponseEntity<>(challenges, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        List<GetChallengeResDto> challenges = challengeService.getAvailableChallenges(sortType, ascending, loginId);
+        if (challenges != null) {
+            return new ResponseEntity<>(challenges, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<GetChallengeResDto>> getMyChallenges(@RequestParam String loginId) {
-        try {
-            List<GetChallengeResDto> challenges = challengeService.getMyChallenges(loginId);
-            if(challenges != null) {
-                return new ResponseEntity<>(challenges, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        List<GetChallengeResDto> challenges = challengeService.getMyChallenges(loginId);
+        if (challenges != null) {
+            return new ResponseEntity<>(challenges, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
     @GetMapping("/{challengeId}")
     public ResponseEntity<GetChallengeResDto> getChallenge(@PathVariable Long challengeId) {
-        try {
-            GetChallengeResDto getChallengeResDto = challengeService.getChallenge(challengeId);
-            log.info(getChallengeResDto.toString());
-            return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        GetChallengeResDto getChallengeResDto = challengeService.getChallenge(challengeId);
+        log.info(getChallengeResDto.toString());
+        return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
-        try {
-            challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

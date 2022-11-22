@@ -16,14 +16,7 @@ public class SavingController {
 
     @PostMapping("")
     public ResponseEntity<Void> saveSaving(@RequestBody SaveSavingReqDto saveSavingReqDto) {
-
-        try {
-            savingService.saveSaving(saveSavingReqDto);
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch(Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        savingService.saveSaving(saveSavingReqDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

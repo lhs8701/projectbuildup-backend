@@ -55,13 +55,6 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SavingEntity> savingEntityList;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RankingEntity> rankingEntityList;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> alarmEntityList;
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
@@ -104,6 +97,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AlarmEntity> sendAlarmEntityList;
 

@@ -21,33 +21,19 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserReqDto createUserReqDto) {
-        try {
-            userService.createUser(createUserReqDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        userService.createUser(createUserReqDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("")
     public ResponseEntity<GetUserResDto> getUser(@RequestParam String loginId) {
-        try {
-            GetUserResDto getUserResDto = userService.getUser(loginId);
-            return new ResponseEntity<>(getUserResDto, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        GetUserResDto getUserResDto = userService.getUser(loginId);
+        return new ResponseEntity<>(getUserResDto, HttpStatus.OK);
     }
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody UpdateUserResDto updateUserResDto) {
-        try {
-            userService.updateUser(updateUserResDto.getLoginId(), updateUserResDto.getNickname());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.info(e.toString());
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-        }
+        userService.updateUser(updateUserResDto.getLoginId(), updateUserResDto.getNickname());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

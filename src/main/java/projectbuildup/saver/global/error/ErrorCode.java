@@ -16,6 +16,7 @@ public enum ErrorCode {
     USER_EXIST_EXCEPTION(1007, "이미 가입된 계정입니다. 로그인을 해주세요"),
 
     CHALLENGE_NOT_FOUND_EXCEPTION(1008, "해당 챌린지를 조회할 수 없습니다."),
+    USER_ALREADY_JOINED_EXCEPTION(1009, "이미 참여 중인 챌린지 입니다."),
 
     WRONG_REFRESH_TOKEN_EXCEPTION(9000, "refresh 토큰이 잘못되었습니다"),
     WRONG_TYPE_TOKEN_EXCEPTION(9001, "잘못된 Jwt 서명입니다."),

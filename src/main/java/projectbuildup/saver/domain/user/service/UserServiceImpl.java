@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.error.exception.CUserExistException;
+import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserRepository;
 import projectbuildup.saver.domain.user.service.interfaces.UserService;
 
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUserResDto getUser(String loginId) {
-        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserNotFoundException::new);
         GetUserResDto getUserResDto = GetUserResDto
                 .builder()
                 .nickname(user.getNickName())
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(String loginId, String nickname) {
-        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserExistException::new);
         user.setNickName(nickname);
         userRepository.save(user);
     }
