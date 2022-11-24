@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import projectbuildup.saver.global.common.response.ErrorResponseDto;
 import projectbuildup.saver.global.error.exception.CIllegalArgumentException;
 import projectbuildup.saver.global.error.exception.CWrongApproachException;
 import projectbuildup.saver.domain.file.error.exception.CWrongFileTypeException;
@@ -30,7 +31,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CIllegalArgumentException.class)
     protected ResponseEntity<?> handle(CIllegalArgumentException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -39,7 +40,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CWrongApproachException.class)
     protected ResponseEntity<?> handle(CWrongApproachException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -48,6 +49,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(CWrongFileTypeException.class)
     protected ResponseEntity<?> handle(CWrongFileTypeException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 }

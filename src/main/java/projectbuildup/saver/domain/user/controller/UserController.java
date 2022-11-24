@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateUserResDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
@@ -67,9 +65,9 @@ public class UserController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('User')")
-    @PatchMapping("/profile/image")
-    public ResponseEntity<?> updateProfileImage(@RequestPart MultipartFile imageFile, @AuthenticationPrincipal UserEntity user) {
-        return new ResponseEntity<>(userService.updateProfileImage(imageFile, user), HttpStatus.OK);
+    @PostMapping("/profile/image")
+    public ResponseEntity<?> changeProfileImage(@RequestPart MultipartFile imageFile, @AuthenticationPrincipal UserEntity user) {
+        return new ResponseEntity<>(userService.changeProfileImage(imageFile, user), HttpStatus.OK);
     }
 
 

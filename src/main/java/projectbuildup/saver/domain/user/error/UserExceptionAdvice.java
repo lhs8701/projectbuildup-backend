@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
+import projectbuildup.saver.global.common.response.ErrorResponseDto;
 import projectbuildup.saver.global.error.ErrorCode;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class UserExceptionAdvice {
     @ExceptionHandler(CUserNotFoundException.class)
     protected ResponseEntity<?> handle(CUserNotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /***
@@ -29,6 +30,6 @@ public class UserExceptionAdvice {
     @ExceptionHandler(CUserExistException.class)
     protected ResponseEntity<?> handle(CUserExistException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 }

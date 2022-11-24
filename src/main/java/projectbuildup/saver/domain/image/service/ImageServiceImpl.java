@@ -48,9 +48,9 @@ public class ImageServiceImpl implements ImageService {
             throw new CFileNotFoundException();
         }
         if (file.delete()) {
-            log.info("파일삭제 성공");
+            log.info("이미지 삭제 성공");
             return;
         }
-        log.info("파일삭제 실패");
+        log.info("이미지 삭제 실패");
     }
 }

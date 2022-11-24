@@ -79,8 +79,14 @@ public class UserServiceImpl implements UserService {
         return user.getId();
     }
 
+    /**
+     * 프로필 사진을 변경합니다.
+     * @param imageFile 변경할 사진 파일
+     * @param user 사용자
+     * @return 변경한 사용자의 아이디
+     */
     @Override
-    public Long updateProfileImage(MultipartFile imageFile, UserEntity user) {
+    public Long changeProfileImage(MultipartFile imageFile, UserEntity user) {
         ImageDto imageDto = imageService.uploadImage(imageFile);
         ImageEntity image = imageDto.toEntity();
         imageRepository.save(image);

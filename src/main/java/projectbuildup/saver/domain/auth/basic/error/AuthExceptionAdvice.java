@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.domain.auth.basic.error.exception.*;
 import projectbuildup.saver.domain.auth.basic.error.exception.CWrongPasswordException;
 import projectbuildup.saver.domain.auth.basic.error.exception.CAccessDeniedException;
+import projectbuildup.saver.global.common.response.ErrorResponseDto;
 import projectbuildup.saver.global.error.ErrorCode;
 
 @Slf4j
@@ -22,7 +23,7 @@ public class AuthExceptionAdvice {
     @ExceptionHandler(CWrongPasswordException.class)
     protected ResponseEntity<?> handle(CWrongPasswordException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -32,7 +33,7 @@ public class AuthExceptionAdvice {
     protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error(errorCode.getMessage());
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -42,7 +43,7 @@ public class AuthExceptionAdvice {
     protected ResponseEntity<?> handle(CExpiredTokenException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error(errorCode.getMessage());
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -52,7 +53,7 @@ public class AuthExceptionAdvice {
     protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error(errorCode.getMessage());
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -62,7 +63,7 @@ public class AuthExceptionAdvice {
     protected ResponseEntity<?> handle(CWrongRefreshTokenException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error(errorCode.getMessage());
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
 
@@ -73,7 +74,7 @@ public class AuthExceptionAdvice {
     protected ResponseEntity<?> handle(CRefreshTokenInvalidException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error(errorCode.getMessage());
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -83,7 +84,7 @@ public class AuthExceptionAdvice {
     protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
         ErrorCode errorCode = e.getErrorCode();
         log.error(errorCode.getMessage());
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -92,7 +93,7 @@ public class AuthExceptionAdvice {
     @ExceptionHandler(CAccessDeniedException.class)
     protected ResponseEntity<?> handle(CAccessDeniedException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
 }

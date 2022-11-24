@@ -17,5 +17,5 @@ public interface UserService {
 
     Long updateProfile(ProfileUpdateParam profileUpdateParam, UserEntity user);
 
-    Long updateProfileImage(MultipartFile imageFile, UserEntity user);
+    Long changeProfileImage(MultipartFile imageFile, UserEntity user);
 }

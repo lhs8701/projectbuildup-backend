@@ -29,6 +29,7 @@ public enum ErrorCode {
     WRONG_TYPE_TOKEN_EXCEPTION(-5006, "잘못된 Jwt 서명입니다.", HttpStatus.UNAUTHORIZED),
     EXPIRED_TOKEN_EXCEPTION(-5007, "만료된 토큰입니다.", HttpStatus.UNAUTHORIZED),
     UNSUPPORTED_TOKEN_EXCEPTION(-5008, "지원하지 않는 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    REFRESH_TOKEN_EXPIRED_EXCPEPTION(-5009, "리프레시 토큰이 만료되었습니다. 다시 로그인해주세요.", HttpStatus.FORBIDDEN),
 
 
     /* 외부 영역 */
