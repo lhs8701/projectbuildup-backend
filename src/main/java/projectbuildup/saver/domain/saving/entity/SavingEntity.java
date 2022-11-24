@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.user.entity.UserEntity;
-import projectbuildup.saver.global.entity.BaseTimeEntity;
+import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Builder
 @Getter

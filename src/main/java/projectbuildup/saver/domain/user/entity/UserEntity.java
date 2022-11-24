@@ -7,9 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
-import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
-import projectbuildup.saver.global.entity.BaseTimeEntity;
+import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
