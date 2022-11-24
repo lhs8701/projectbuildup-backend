@@ -20,9 +20,9 @@ public class ExceptionAdvice {
      * 공통 서버 에러
      */
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<?> defaultException(Exception e) {
-        log.error(e.getMessage());
-        return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+    protected ResponseEntity<?> internalException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**

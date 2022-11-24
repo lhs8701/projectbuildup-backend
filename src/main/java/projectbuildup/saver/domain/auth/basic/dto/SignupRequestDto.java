@@ -10,17 +10,18 @@ import projectbuildup.saver.domain.user.entity.UserEntity;
 import java.util.Collections;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequestDto {
     private String loginId;
     private String password;
 
+    private String nickName;
+
     public UserEntity toEntity(PasswordEncoder passwordEncoder) {
         return UserEntity.builder()
                 .loginId(loginId)
                 .password(passwordEncoder.encode(password))
+                .nickName(nickName)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
     }

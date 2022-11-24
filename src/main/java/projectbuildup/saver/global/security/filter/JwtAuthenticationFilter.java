@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import projectbuildup.saver.global.security.JwtProvider;
 
@@ -18,6 +19,7 @@ import java.io.IOException;
 //필터를 Security 설정 시 UsernamePasswordAuthentication 앞에 세팅해서 로그인폼으로 반환하기 전에 인증 여부를 Json으로 반환
 
 @RequiredArgsConstructor
+@Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
