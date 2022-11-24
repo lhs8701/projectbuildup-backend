@@ -1,4 +1,4 @@
-package projectbuildup.saver.global.error.exception;
+package projectbuildup.saver.domain.file.error.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

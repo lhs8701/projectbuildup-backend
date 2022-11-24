@@ -9,5 +9,5 @@ public interface FileService {
 
     public String makeFileUrlByDate(String fileName);
 
-    public void transferFile(MultipartFile file, String transferUrl)
+    public void transferFile(MultipartFile file, String transferUrl);
 }

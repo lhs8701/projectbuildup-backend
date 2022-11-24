@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.global.error.exception.CIllegalArgumentException;
 import projectbuildup.saver.global.error.exception.CWrongApproachException;
-import projectbuildup.saver.global.error.exception.CWrongFileTypeException;
+import projectbuildup.saver.domain.file.error.exception.CWrongFileTypeException;
 
 @Slf4j
 @RequiredArgsConstructor

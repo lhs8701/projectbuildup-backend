@@ -9,5 +9,5 @@ public interface ImageService {
 
     public ImageDto uploadImage(MultipartFile file);
 
-    public boolean removeImage(ImageEntity image);
+    public void removeImage(ImageEntity image);
 }

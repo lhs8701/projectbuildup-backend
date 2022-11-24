@@ -1,25 +1,23 @@
 package projectbuildup.saver.domain.image.service;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import projectbuildup.saver.domain.file.error.exception.CFileNotFoundException;
 import projectbuildup.saver.domain.file.service.FileService;
 import projectbuildup.saver.domain.image.dto.ImageDto;
 import projectbuildup.saver.domain.image.entity.ImageEntity;
-import projectbuildup.saver.global.error.exception.CWrongFileTypeException;
+import projectbuildup.saver.domain.file.error.exception.CWrongFileTypeException;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
-public class ImageServiceImpl implements ImageService{
+@Service
+@Slf4j
+public class ImageServiceImpl implements ImageService {
 
     private final FileService fileService;
 
@@ -42,7 +40,17 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public boolean removeImage(ImageEntity image) {
-        return false;
+    public void removeImage(ImageEntity image) {
+        String fileUrl = image.getFileUrl();
+        File file = new File(ROOT_PATH + fileUrl);
+
+        if (!file.exists()) {
+            throw new CFileNotFoundException();
+        }
+        if (file.delete()) {
+            log.info("파일삭제 성공");
+            return;
+        }
+        log.info("파일삭제 실패");
     }
 }
