@@ -36,9 +36,9 @@ public class UserController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/password")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam) {
-        userService.changePassword(passwordUpdateParam, user);
+    @PatchMapping("/{loginId}/password")
+    public ResponseEntity<?> changePassword(@PathVariable String loginId, @RequestBody PasswordUpdateParam passwordUpdateParam) {
+        userService.changePassword(loginId, passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -51,9 +51,9 @@ public class UserController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/profile")
-    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateParam profileUpdateParam) {
-        return new ResponseEntity<>(userService.updateProfile(profileUpdateParam, user), HttpStatus.OK);
+    @PatchMapping("/{loginId}/profile")
+    public ResponseEntity<?> updateProfile(@PathVariable String loginId, @RequestBody ProfileUpdateParam profileUpdateParam) {
+        return new ResponseEntity<>(userService.updateProfile(loginId, profileUpdateParam), HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 프로필 이미지 변경",
@@ -65,9 +65,9 @@ public class UserController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/profile/image")
-    public ResponseEntity<?> changeProfileImage(@RequestPart MultipartFile imageFile) {
-        return new ResponseEntity<>(userService.changeProfileImage(imageFile, user), HttpStatus.OK);
+    @PostMapping("/{loginId}/profile/image")
+    public ResponseEntity<?> changeProfileImage(@PathVariable String loginId, @RequestPart MultipartFile imageFile) {
+        return new ResponseEntity<>(userService.changeProfileImage(loginId, imageFile), HttpStatus.OK);
     }
 
 

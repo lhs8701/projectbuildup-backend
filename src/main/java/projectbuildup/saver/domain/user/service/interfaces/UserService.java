@@ -13,9 +13,9 @@ public interface UserService {
     GetUserResDto getUser(String loginId);
     void updateUser(String loginId, String nickname);
 
-    void changePassword(PasswordUpdateParam passwordUpdateParam, UserEntity user);
+    void changePassword(String loginId, PasswordUpdateParam passwordUpdateParam);
 
-    Long updateProfile(ProfileUpdateParam profileUpdateParam, UserEntity user);
+    Long updateProfile(String loginId, ProfileUpdateParam profileUpdateParam);
 
-    Long changeProfileImage(MultipartFile imageFile, UserEntity user);
+    Long changeProfileImage(String loginId, MultipartFile imageFile);
 }

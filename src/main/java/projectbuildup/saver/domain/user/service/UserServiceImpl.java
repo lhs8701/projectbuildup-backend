@@ -59,39 +59,45 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 사용자의 비밀번호를 변경합니다.
+     * @param loginId 사용자 아이디
      * @param passwordUpdateParam 비밀번호
-     * @param user 사용자
      */
     @Override
-    public void changePassword(PasswordUpdateParam passwordUpdateParam, UserEntity user) {
+    public void changePassword(String loginId, PasswordUpdateParam passwordUpdateParam) {
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserNotFoundException::new);
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
+        userRepository.save(user);
     }
 
     /**
      * 사용자의 프로필을 수정합니다.
+     * @param loginId 사용자 아이디
      * @param profileUpdateParam 수정 항목 (닉네임)
-     * @param user 사용자
      * @return 수정한 사용자의 아이디
      */
     @Override
-    public Long updateProfile(ProfileUpdateParam profileUpdateParam, UserEntity user) {
+    public Long updateProfile(String loginId, ProfileUpdateParam profileUpdateParam) {
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserNotFoundException::new);
         user.setNickName(profileUpdateParam.getNickName());
+        userRepository.save(user);
         return user.getId();
     }
 
     /**
      * 프로필 사진을 변경합니다.
+     * @param loginId 사용자 아이디
      * @param imageFile 변경할 사진 파일
-     * @param user 사용자
      * @return 변경한 사용자의 아이디
      */
     @Override
-    public Long changeProfileImage(MultipartFile imageFile, UserEntity user) {
+    public Long changeProfileImage(String loginId, MultipartFile imageFile) {
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserNotFoundException::new);
         ImageDto imageDto = imageService.uploadImage(imageFile);
         ImageEntity image = imageDto.toEntity();
         imageRepository.save(image);
         imageService.removeImage(user.getProfileImage());
         user.setProfileImage(image);
+        userRepository.save(user);
 
         return user.getId();
     }
