@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateUserResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
@@ -52,10 +53,26 @@ public class UserController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('User')")
-    @PatchMapping("/profile/")
+    @PatchMapping("/profile")
     public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateParam profileUpdateParam, @AuthenticationPrincipal UserEntity user) {
         return new ResponseEntity<>(userService.updateProfile(profileUpdateParam, user), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "회원 프로필 이미지 변경",
+            notes = """
+                    회원의 프로필 이미지를 변경합니다.
+                    \nparameter : 변경할 항목(닉네임)
+                    \nresponse : 변경한 회원의 아이디
+                    """
+    )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('User')")
+    @PatchMapping("/profile/image")
+    public ResponseEntity<?> updateProfileImage(@RequestPart MultipartFile imageFile, @AuthenticationPrincipal UserEntity user) {
+        return new ResponseEntity<>(userService.updateProfileImage(imageFile, user), HttpStatus.OK);
+    }
+
+
 
     @PostMapping("")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserReqDto createUserReqDto) {

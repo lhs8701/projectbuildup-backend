@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
@@ -72,6 +73,13 @@ public class UserServiceImpl implements UserService {
     public Long updateProfile(ProfileUpdateParam profileUpdateParam, UserEntity user) {
         user.setNickName(profileUpdateParam.getNickName());
         return user.getId();
+    }
+
+    @Override
+    public Long updateProfileImage(MultipartFile imageFile, UserEntity user) {
+
+
+        return null;
     }
 
 }

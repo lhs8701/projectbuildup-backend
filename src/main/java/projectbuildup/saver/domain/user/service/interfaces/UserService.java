@@ -1,5 +1,6 @@
 package projectbuildup.saver.domain.user.service.interfaces;
 
+import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
@@ -15,4 +16,6 @@ public interface UserService {
     void changePassword(PasswordUpdateParam passwordUpdateParam, UserEntity user);
 
     Long updateProfile(ProfileUpdateParam profileUpdateParam, UserEntity user);
+
+    Long updateProfileImage(MultipartFile imageFile, UserEntity user);
 }

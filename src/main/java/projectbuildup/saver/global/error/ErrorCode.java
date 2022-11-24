@@ -34,6 +34,7 @@ public enum ErrorCode {
     /* 외부 영역 */
     ILLEGAL_ARGUMENT_EXCEPTION(-7000, "잘못된 형식입니다.", HttpStatus.BAD_REQUEST),
     WRONG_APPROACH(-7001, "잘못된 접근입니다.", HttpStatus.BAD_REQUEST),
+    WRONG_FILE_TYPE_EXCEPTION(-7002, "올바르지 않은 파일 형식입니다.", HttpStatus.BAD_REQUEST),
 
 
     /* 서버 오류 */
