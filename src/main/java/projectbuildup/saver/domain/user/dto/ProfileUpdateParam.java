@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PasswordUpdateParam {
-    String password;
+public class ProfileUpdateParam {
+    String nickName;
 }

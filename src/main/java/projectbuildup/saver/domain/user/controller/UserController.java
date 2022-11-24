@@ -15,6 +15,7 @@ import projectbuildup.saver.domain.dto.req.UpdateUserResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
+import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.service.interfaces.UserService;
 import projectbuildup.saver.global.common.ConstValue;
@@ -36,10 +37,24 @@ public class UserController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('User')")
-    @PatchMapping("/password/change")
+    @PatchMapping("/password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal UserEntity user) {
         userService.changePassword(passwordUpdateParam, user);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "회원 프로필 수정",
+            notes = """
+                    회원의 프로필을 변경합니다.
+                    \nparameter : 변경할 항목(닉네임)
+                    \nresponse : 변경한 회원의 아이디
+                    """
+    )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('User')")
+    @PatchMapping("/profile/")
+    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateParam profileUpdateParam, @AuthenticationPrincipal UserEntity user) {
+        return new ResponseEntity<>(userService.updateProfile(profileUpdateParam, user), HttpStatus.OK);
     }
 
     @PostMapping("")

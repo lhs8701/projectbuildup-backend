@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
+import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
@@ -59,6 +60,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(PasswordUpdateParam passwordUpdateParam, UserEntity user) {
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
+    }
+
+    /**
+     * 사용자의 프로필을 수정합니다.
+     * @param profileUpdateParam 수정 항목 (닉네임)
+     * @param user 사용자
+     * @return 수정한 사용자의 아이디
+     */
+    @Override
+    public Long updateProfile(ProfileUpdateParam profileUpdateParam, UserEntity user) {
+        user.setNickName(profileUpdateParam.getNickName());
+        return user.getId();
     }
 
 }
