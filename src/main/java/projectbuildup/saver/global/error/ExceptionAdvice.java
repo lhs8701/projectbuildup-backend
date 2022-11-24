@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.global.error.exception.CIllegalArgumentException;
 import projectbuildup.saver.global.error.exception.CWrongApproachException;
+import projectbuildup.saver.global.error.exception.CWrongFileTypeException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,6 +38,15 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongApproachException.class)
     protected ResponseEntity<?> handle(CWrongApproachException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
+    }
+
+    /**
+     * 파일 형식이 잘못되었을 경우 발생하는 예외
+     */
+    @ExceptionHandler(CWrongFileTypeException.class)
+    protected ResponseEntity<?> handle(CWrongFileTypeException e) {
         ErrorCode errorCode = e.getErrorCode();
         return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }

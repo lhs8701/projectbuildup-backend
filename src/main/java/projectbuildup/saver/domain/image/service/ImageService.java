@@ -9,12 +9,5 @@ public interface ImageService {
 
     public ImageDto uploadImage(MultipartFile file);
 
-    public String makeFileName(String fileOriName);
-
-    public String makeFileUrl(String fileName, String uploadPath);
-
     public boolean removeImage(ImageEntity image);
-
-    void save(ImageDto image);
-
 }
