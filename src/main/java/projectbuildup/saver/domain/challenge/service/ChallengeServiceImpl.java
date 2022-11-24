@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
+import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundException;
+import projectbuildup.saver.domain.challenge.error.exception.CUserAlreadyJoinedException;
 import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
 import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
@@ -15,6 +17,7 @@ import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.domain.saving.repository.SavingRepository;
 import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserRepository;
 
 import java.sql.Array;
@@ -43,7 +46,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         for(ChallengeLogEntity c : challengeLogEntityList) {
             // id를 통해 유저 Entity를 가져옴
             // 유저가 없을시 Exception throw -> 404 NOT FOUND
-            UserEntity userEntity = userRepository.findById(c.getUser().getId()).orElseThrow();
+            UserEntity userEntity = userRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
 
 
             // 본 유저가 본 챌린지에 모았던 기록들을 모두 가져 온 후 총액을 계산함.
@@ -104,7 +107,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                         .filter((challenge) -> {
                     // 챌린지 중 자신의 loginId가 있는 챌린지는 제외함.
                             for(ChallengeLogEntity c: challenge.getChallengeLogEntityList()) {
-                                UserEntity user = userRepository.findById(c.getUser().getId()).orElseThrow();
+                                UserEntity user = userRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
                                 return !loginId.equals(user.getLoginId());
                             }
                             return true;
@@ -152,7 +155,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public GetChallengeResDto getChallenge(Long challengeId) {
-        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
         return new GetChallengeResDto(
                     challenge.getId(),
                     challenge.getStartDate(),
@@ -174,7 +177,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .filter((challenge) -> {
                     List<ChallengeLogEntity> challengeLogs = challenge.getChallengeLogEntityList();
                     for(ChallengeLogEntity c: challengeLogs) {
-                        UserEntity user = userRepository.findById(c.getUser().getId()).orElseThrow();
+                        UserEntity user = userRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
                         if (loginId.equals(user.getLoginId())) {
                             return true;
                         }
@@ -201,11 +204,10 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public void joinChallenge(String loginId, Long challengeId) {
-        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
-        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserNotFoundException::new);
         if(challengeLogRepository.findByChallengeAndUser(challenge, user).isPresent()) {
-            log.info("already joined" + loginId + challengeId);
-            return;
+            throw new CUserAlreadyJoinedException();
         }
         ChallengeLogEntity log = new ChallengeLogEntity();
         log.setChallenge(challenge);
@@ -215,8 +217,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public void leftChallenge(String loginId, Long challengeId) {
-        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow();
-        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow();
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserAlreadyJoinedException::new);
         challengeLogRepository.deleteByChallengeAndUser(challenge, user);
     }
 

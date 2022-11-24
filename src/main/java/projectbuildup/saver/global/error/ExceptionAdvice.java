@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import projectbuildup.saver.global.error.exception.*;
+import projectbuildup.saver.global.common.response.ErrorResponseDto;
+import projectbuildup.saver.global.error.exception.CIllegalArgumentException;
+import projectbuildup.saver.global.error.exception.CWrongApproachException;
+import projectbuildup.saver.domain.file.error.exception.CWrongFileTypeException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,55 +19,19 @@ public class ExceptionAdvice {
     /**
      * 공통 서버 에러
      */
-//    @ExceptionHandler(Exception.class)
-//    protected CommonResult defaultException(Exception e) {
-//        return responseService.getFailResult(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
-//    }
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<?> internalException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     /**
      * 잘못된 형식일 때 발생시키는 예외
      */
     @ExceptionHandler(CIllegalArgumentException.class)
     protected ResponseEntity<?> handle(CIllegalArgumentException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * Security - 권한이 없는 리소스를 요청한 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CAccessDeniedException.class)
-    protected ResponseEntity<?> handle(CAccessDeniedException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * Security - JWT 서명이 잘못되었을 때 발생시키는 예외
-     */
-    @ExceptionHandler(CWrongTypeTokenException.class)
-    protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-    /**
-     * Security - 토큰이 만료되었을 때 발생시키는 예외
-     */
-    @ExceptionHandler(CExpiredTokenException.class)
-    protected ResponseEntity<?> handle(CExpiredTokenException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-    /**
-     * Security - 지원하지 않는 토큰일 때 발생시키는 예외
-     */
-    @ExceptionHandler(CUnsupportedTokenException.class)
-    protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * 리프레시 토큰이 불일치할 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CWrongRefreshTokenException.class)
-    protected ResponseEntity<?> handle(CWrongRefreshTokenException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -72,46 +39,16 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongApproachException.class)
     protected ResponseEntity<?> handle(CWrongApproachException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
-     * 해당 유저를 찾을 수 없을 경우 발생시키는 예외
+     * 파일 형식이 잘못되었을 경우 발생하는 예외
      */
-    @ExceptionHandler(CUserNotFoundException.class)
-    protected ResponseEntity<?> handle(CUserNotFoundException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * 패스워드가 불일치할 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CWrongPasswordException.class)
-    protected ResponseEntity<?> handle(CWrongPasswordException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * refresh token이 잘못되었을 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CRefreshTokenInvalidException.class)
-    protected ResponseEntity<?> handle(CRefreshTokenInvalidException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * 리프레쉬 토큰이 만료되었을 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CRefreshTokenExpiredException.class)
-    protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
-    }
-
-    /***
-     * 해당 계정이 이미 가입되어 있는 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CUserExistException.class)
-    protected ResponseEntity<?> handle(CUserExistException e) {
-        return new ResponseEntity<>(ErrorResponse.of(e.getErrorCode()), HttpStatus.NOT_FOUND);
+    @ExceptionHandler(CWrongFileTypeException.class)
+    protected ResponseEntity<?> handle(CWrongFileTypeException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 }

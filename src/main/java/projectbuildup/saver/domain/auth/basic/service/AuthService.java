@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import projectbuildup.saver.domain.auth.basic.dto.LoginRequestDto;
 import projectbuildup.saver.domain.auth.basic.dto.SignupRequestDto;
+import projectbuildup.saver.domain.auth.basic.error.exception.CRefreshTokenExpiredException;
+import projectbuildup.saver.domain.auth.basic.error.exception.CWrongRefreshTokenException;
 import projectbuildup.saver.domain.auth.jwt.dto.TokenRequestDto;
 import projectbuildup.saver.domain.auth.jwt.dto.TokenResponseDto;
 import projectbuildup.saver.domain.auth.jwt.entity.LogoutAccessToken;
@@ -18,7 +20,9 @@ import projectbuildup.saver.domain.auth.jwt.repository.LogoutAccessTokenRedisRep
 import projectbuildup.saver.domain.auth.jwt.repository.RefreshTokenRedisRepository;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.repository.UserJpaRepository;
-import projectbuildup.saver.global.error.exception.*;
+import projectbuildup.saver.domain.user.error.exception.CUserExistException;
+import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
+import projectbuildup.saver.domain.auth.basic.error.exception.CWrongPasswordException;
 import projectbuildup.saver.global.security.JwtProvider;
 
 

@@ -1,4 +1,4 @@
-package projectbuildup.saver.global.error.exception;
+package projectbuildup.saver.domain.auth.basic.error.exception;
 
 import lombok.Getter;
 import projectbuildup.saver.global.error.ErrorCode;

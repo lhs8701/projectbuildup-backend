@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
-import projectbuildup.saver.domain.ranking.entity.RankingEntity;
+import projectbuildup.saver.domain.image.entity.ImageEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
-import projectbuildup.saver.global.entity.BaseTimeEntity;
+import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="User")
+@Entity(name = "User")
 public class UserEntity extends BaseTimeEntity implements UserDetails {
 
     @Id
@@ -41,9 +41,9 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @Column(length = 15)
     private String phoneNumber;
 
-    //이미지 처리에 대해서 추후 얘기해 봐야 할 듯
-    @Column(length = 100)
-    private String profileImage;
+    @OneToOne
+    @JoinColumn
+    ImageEntity profileImage;
 
     @ElementCollection(fetch = FetchType.EAGER) //LAZY -> 오류
     @Builder.Default
@@ -54,13 +54,6 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SavingEntity> savingEntityList;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RankingEntity> rankingEntityList;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> alarmEntityList;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -104,6 +97,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AlarmEntity> sendAlarmEntityList;
 
