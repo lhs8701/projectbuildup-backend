@@ -21,31 +21,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService{
 
-
-
     private final FileService fileService;
 
+    @Value("${location.root}")
+    private String ROOT_PATH;
 
     @Override
     public ImageDto uploadImage(MultipartFile file) {
-        //        이미지가 없거나, 잘못된 형식일 경우
+        //이미지가 없거나, 잘못된 형식일 경우 예외 발생
         if (file.isEmpty() || !file.getContentType().startsWith("image")) {
             throw new CWrongFileTypeException();
         }
 
         String fileOriName = Optional.ofNullable(file.getOriginalFilename()).orElse("image");
-        String fileName = makeFileName(fileOriName);
-        String fileUrl = makeFileUrl(fileName);
-        if (root == null)
-            root = "";
-        String transferUrl = root + fileUrl;
-        Path savePath = Paths.get(transferUrl);
-
-        try {
-            file.transferTo(savePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String fileName = fileService.makeFileName(fileOriName);
+        String fileUrl = fileService.makeFileUrlByDate(fileName);
+        fileService.transferFile(file, ROOT_PATH + fileUrl);
 
         return new ImageDto(fileName, fileOriName, fileUrl);
     }

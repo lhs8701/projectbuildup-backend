@@ -2,8 +2,12 @@ package projectbuildup.saver.domain.file.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -41,5 +45,15 @@ public class FileServiceImpl implements FileService {
         makeDirectory(folderPath);
 
         return fileUrl;
+    }
+
+    public void transferFile(MultipartFile file, String transferUrl) {
+        Path savePath = Paths.get(transferUrl);
+
+        try {
+            file.transferTo(savePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
