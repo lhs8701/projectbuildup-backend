@@ -1,11 +1,8 @@
 package projectbuildup.saver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
@@ -87,9 +84,10 @@ public class UserServiceImpl implements UserService {
         ImageDto imageDto = imageService.uploadImage(imageFile);
         ImageEntity image = imageDto.toEntity();
         imageRepository.save(image);
+        imageService.removeImage(user.getProfileImage());
+        user.setProfileImage(image);
 
-
-        return null;
+        return user.getId();
     }
 
 }
