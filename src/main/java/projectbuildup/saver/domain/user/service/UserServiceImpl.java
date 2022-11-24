@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
+import projectbuildup.saver.domain.image.dto.ImageDto;
+import projectbuildup.saver.domain.image.entity.ImageEntity;
+import projectbuildup.saver.domain.image.repository.ImageRepository;
+import projectbuildup.saver.domain.image.service.ImageService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.entity.UserEntity;
@@ -23,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     @Override
     public void createUser(CreateUserReqDto createUserReqDto) {
@@ -77,6 +84,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long updateProfileImage(MultipartFile imageFile, UserEntity user) {
+        ImageDto imageDto = imageService.uploadImage(imageFile);
+        ImageEntity image = imageDto.toEntity();
+        imageRepository.save(image);
 
 
         return null;

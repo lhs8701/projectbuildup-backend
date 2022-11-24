@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
+import projectbuildup.saver.domain.image.entity.ImageEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="User")
+@Entity(name = "User")
 public class UserEntity extends BaseTimeEntity implements UserDetails {
 
     @Id
@@ -40,9 +41,9 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @Column(length = 15)
     private String phoneNumber;
 
-    //이미지 처리에 대해서 추후 얘기해 봐야 할 듯
-    @Column(length = 100)
-    private String profileImage;
+    @OneToOne
+    @JoinColumn
+    ImageEntity profileImage;
 
     @ElementCollection(fetch = FetchType.EAGER) //LAZY -> 오류
     @Builder.Default
