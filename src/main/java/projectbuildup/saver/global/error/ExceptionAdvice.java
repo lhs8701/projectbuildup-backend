@@ -28,7 +28,8 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CIllegalArgumentException.class)
     protected ResponseEntity<?> handle(CIllegalArgumentException e) {
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -36,6 +37,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongApproachException.class)
     protected ResponseEntity<?> handle(CWrongApproachException e) {
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 }

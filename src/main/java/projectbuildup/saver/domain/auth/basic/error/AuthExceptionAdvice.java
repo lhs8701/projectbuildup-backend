@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.domain.auth.basic.error.exception.*;
 import projectbuildup.saver.domain.auth.basic.error.exception.CWrongPasswordException;
 import projectbuildup.saver.domain.auth.basic.error.exception.CAccessDeniedException;
+import projectbuildup.saver.global.error.ErrorCode;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,7 +21,8 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CWrongPasswordException.class)
     protected ResponseEntity<?> handle(CWrongPasswordException e) {
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -28,8 +30,9 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CWrongTypeTokenException.class)
     protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -37,8 +40,9 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CExpiredTokenException.class)
     protected ResponseEntity<?> handle(CExpiredTokenException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -46,8 +50,9 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CUnsupportedTokenException.class)
     protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -55,8 +60,9 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CWrongRefreshTokenException.class)
     protected ResponseEntity<?> handle(CWrongRefreshTokenException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
 
@@ -65,8 +71,9 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CRefreshTokenInvalidException.class)
     protected ResponseEntity<?> handle(CRefreshTokenInvalidException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -74,8 +81,9 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CRefreshTokenExpiredException.class)
     protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -83,7 +91,8 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CAccessDeniedException.class)
     protected ResponseEntity<?> handle(CAccessDeniedException e) {
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundException;
 import projectbuildup.saver.domain.challenge.error.exception.CUserAlreadyJoinedException;
+import projectbuildup.saver.global.error.ErrorCode;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,8 +22,9 @@ public class ChallengeExceptionAdvice {
      */
     @ExceptionHandler(CChallengeNotFoundException.class)
     protected ResponseEntity<?> handle(CChallengeNotFoundException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 
     /**
@@ -32,7 +34,8 @@ public class ChallengeExceptionAdvice {
      */
     @ExceptionHandler(CUserAlreadyJoinedException.class)
     protected ResponseEntity<?> handle(CUserAlreadyJoinedException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.CONFLICT);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(errorCode, errorCode.getStatusCode());
     }
 }
