@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
+import projectbuildup.saver.domain.alarm.entity.NotificationEntity;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
+import projectbuildup.saver.domain.saving.entity.ChallengeRecordEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -41,7 +41,7 @@ public class UserEntity extends BaseTimeEntity {
     private String profileImage;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SavingEntity> savingEntityList;
+    private List<ChallengeRecordEntity> challengeRecordEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ChallengeEntity> challengeEntityList;
@@ -50,9 +50,9 @@ public class UserEntity extends BaseTimeEntity {
     private List<RankingEntity> rankingEntityList;
 
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> sendAlarmEntityList;
+    private List<NotificationEntity> sendAlarmEntityList;
 
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> receiveAlarmEntityList;
+    private List<NotificationEntity> receiveAlarmEntityList;
 
 }
