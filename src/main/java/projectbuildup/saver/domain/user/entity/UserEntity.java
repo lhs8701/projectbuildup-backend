@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.alarm.entity.NotificationEntity;
+import projectbuildup.saver.domain.Notification.entity.NotificationEntity;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
-import projectbuildup.saver.domain.saving.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.ChallengeRecord.entity.ChallengeRecordEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;

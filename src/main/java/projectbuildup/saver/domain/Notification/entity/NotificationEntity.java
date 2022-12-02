@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.alarm.entity;
+package projectbuildup.saver.domain.Notification.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

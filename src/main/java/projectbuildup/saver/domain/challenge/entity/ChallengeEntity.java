@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
-import projectbuildup.saver.domain.saving.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.ChallengeRecord.entity.ChallengeRecordEntity;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
 
