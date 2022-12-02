@@ -1,10 +1,9 @@
-package projectbuildup.saver.domain.saving.entity;
+package projectbuildup.saver.domain.alarm.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.global.entity.BaseTimeEntity;
 
@@ -15,25 +14,27 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Saving")
-public class SavingEntity extends BaseTimeEntity {
+@Entity(name="Notification")
+public class NotificationEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //절약 금액
-    private Long amount;
+    @Column(length = 30)
+    private String title;
 
-    //절약 날짜
-    private LocalDateTime savingDate;
+    @Column(length = 200)
+    private String content;
+
+    @Column(length = 40)
+    private LocalDateTime sentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private UserEntity user;
+    @JoinColumn(name="sender_id")
+    private UserEntity sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_id")
-    private ChallengeEntity challenge;
-
+    @JoinColumn(name="receiver_id")
+    private UserEntity receiver;
 }
