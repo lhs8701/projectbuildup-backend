@@ -12,6 +12,7 @@ import projectbuildup.saver.domain.image.repository.ImageRepository;
 import projectbuildup.saver.domain.image.service.ImageService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
+import projectbuildup.saver.domain.user.dto.UserProfileResponseDto;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
@@ -102,4 +103,9 @@ public class UserServiceImpl implements UserService {
         return user.getId();
     }
 
+    @Override
+    public UserProfileResponseDto getProfile(String loginId) {
+        UserEntity user = userRepository.findByLoginId(loginId).orElseThrow(CUserNotFoundException::new);
+        return new UserProfileResponseDto(user);
+    }
 }

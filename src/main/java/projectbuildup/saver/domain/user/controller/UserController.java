@@ -56,6 +56,20 @@ public class UserController {
         return new ResponseEntity<>(userService.updateProfile(loginId, profileUpdateParam), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "회원 프로필 조회",
+            notes = """
+                    회원의 프로필을 조회합니다.
+                    \nparameter : 유저 아이디
+                    \nresponse : 회원의 프로필
+                    """
+    )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{loginId}/profile")
+    public ResponseEntity<?> getProfile(@PathVariable String loginId) {
+        return new ResponseEntity<>(userService.getProfile(loginId), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "회원 프로필 이미지 변경",
             notes = """
                     회원의 프로필 이미지를 변경합니다.
