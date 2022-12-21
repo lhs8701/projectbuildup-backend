@@ -21,10 +21,8 @@ public class SavingEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //절약 금액
     private Long amount;
 
-    //절약 날짜
     private String savingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

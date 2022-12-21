@@ -23,15 +23,9 @@ public class ChallengeEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * yyyy.MM.dd
-     */
     @Column(length = 40)
     private String startDate;
 
-    /**
-     * yyyy.MM.dd
-     */
     @Column(length = 40)
     private String endDate;
 
