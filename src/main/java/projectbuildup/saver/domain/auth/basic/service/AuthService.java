@@ -39,20 +39,20 @@ public class AuthService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
     public Long signup(SignupRequestDto signupRequestDto) {
-        if (userJpaRepository.findByLoginId(signupRequestDto.getLoginId()).isPresent())
+        if (userJpaRepository.findByIdToken(signupRequestDto.getIdToken()).isPresent())
             throw new CUserExistException();
         log.info(signupRequestDto.getPassword());
         return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
     }
 
     public TokenResponseDto login(LoginRequestDto loginRequestDto){
-        UserEntity user = userJpaRepository.findByLoginId(loginRequestDto.getLoginId()).orElseThrow(CUserNotFoundException::new);
+        UserEntity user = userJpaRepository.findByIdToken(loginRequestDto.getIdToken()).orElseThrow(CUserNotFoundException::new);
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
 
-        String accessToken = jwtProvider.generateAccessToken(user.getLoginId(), user.getRoles());
-        String refreshToken = jwtProvider.generateRefreshToken(user.getLoginId(),user.getRoles());
+        String accessToken = jwtProvider.generateAccessToken(user.getIdToken(), user.getRoles());
+        String refreshToken = jwtProvider.generateRefreshToken(user.getIdToken(),user.getRoles());
 
         refreshTokenRedisRepository.save(new RefreshToken(user.getId(), refreshToken));
 
@@ -90,8 +90,8 @@ public class AuthService {
         RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getId()).orElseThrow(CRefreshTokenExpiredException::new);
 
         if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
-            String newAccessToken = jwtProvider.generateAccessToken(user.getLoginId(), user.getRoles());
-            String newRefreshToken = jwtProvider.generateRefreshToken(user.getLoginId(), user.getRoles());
+            String newAccessToken = jwtProvider.generateAccessToken(user.getIdToken(), user.getRoles());
+            String newRefreshToken = jwtProvider.generateRefreshToken(user.getIdToken(), user.getRoles());
             refreshTokenRedisRepository.save(new RefreshToken(user.getId(), newRefreshToken));
             return TokenResponseDto.builder()
                     .grantType("bearer")

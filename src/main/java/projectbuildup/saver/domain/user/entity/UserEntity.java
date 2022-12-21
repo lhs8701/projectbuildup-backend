@@ -30,7 +30,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     @Column(length = 100, unique = true)
-    private String loginId;
+    private String idToken;
 
     @Column(length = 300)
     private String password;
@@ -65,7 +65,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.loginId;
+        return this.idToken;
     }
 
     @Override

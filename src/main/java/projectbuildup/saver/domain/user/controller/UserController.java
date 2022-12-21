@@ -14,7 +14,9 @@ import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateUserResDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
+import projectbuildup.saver.domain.user.dto.ProfileImageUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
+import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.service.interfaces.UserService;
 import projectbuildup.saver.global.common.ConstValue;
@@ -30,77 +32,57 @@ public class UserController {
     @ApiOperation(value = "회원 비밀번호 변경",
             notes = """
                     회원의 비밀번호를 변경합니다.
-                    \nparameter : 변경할 비밀번호
+                    \nparameter : 아이디 토큰, 변경할 비밀번호
                     \nresponse : X
                     """
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/{loginId}/password")
-    public ResponseEntity<?> changePassword(@PathVariable String loginId, @RequestBody PasswordUpdateParam passwordUpdateParam) {
-        userService.changePassword(loginId, passwordUpdateParam);
+    @PatchMapping("/password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam) {
+        userService.changePassword(passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 프로필 수정",
             notes = """
                     회원의 프로필을 변경합니다.
-                    \nparameter : 변경할 항목(닉네임)
+                    \nparameter : 아이디 토큰, 변경할 항목(닉네임)
                     \nresponse : 변경한 회원의 아이디
                     """
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/{loginId}/profile")
-    public ResponseEntity<?> updateProfile(@PathVariable String loginId, @RequestBody ProfileUpdateParam profileUpdateParam) {
-        return new ResponseEntity<>(userService.updateProfile(loginId, profileUpdateParam), HttpStatus.OK);
+    @PatchMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateParam profileUpdateParam) {
+        return new ResponseEntity<>(userService.updateProfile(profileUpdateParam), HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 프로필 조회",
             notes = """
                     회원의 프로필을 조회합니다.
-                    \nparameter : 유저 아이디
+                    \nparameter : 아이디 토큰
                     \nresponse : 회원의 프로필
                     """
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/{loginId}/profile")
-    public ResponseEntity<?> getProfile(@PathVariable String loginId) {
-        return new ResponseEntity<>(userService.getProfile(loginId), HttpStatus.OK);
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(@RequestBody UserIdRequestParam userIdRequestParam) {
+        return new ResponseEntity<>(userService.getProfile(userIdRequestParam), HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 프로필 이미지 변경",
             notes = """
                     회원의 프로필 이미지를 변경합니다.
-                    \nparameter : 변경할 항목(닉네임)
+                    \nparameter : 아이디 토큰, 변경할 항목(닉네임)
                     \nresponse : 변경한 회원의 아이디
                     """
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/{loginId}/profile/image")
-    public ResponseEntity<?> changeProfileImage(@PathVariable String loginId, @RequestPart MultipartFile imageFile) {
-        return new ResponseEntity<>(userService.changeProfileImage(loginId, imageFile), HttpStatus.OK);
-    }
-
-
-
-    @PostMapping("")
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserReqDto createUserReqDto) {
-        userService.createUser(createUserReqDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @GetMapping("")
-    public ResponseEntity<GetUserResDto> getUser(@RequestParam String loginId) {
-        GetUserResDto getUserResDto = userService.getUser(loginId);
-        return new ResponseEntity<>(getUserResDto, HttpStatus.OK);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<HttpStatus> updateUser(@RequestBody UpdateUserResDto updateUserResDto) {
-        userService.updateUser(updateUserResDto.getLoginId(), updateUserResDto.getNickname());
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/profile/image")
+    public ResponseEntity<?> changeProfileImage(@RequestBody UserIdRequestParam userIdRequestParam, @RequestPart MultipartFile imageFile) {
+        return new ResponseEntity<>(userService.changeProfileImage(userIdRequestParam, imageFile), HttpStatus.OK);
     }
 }
