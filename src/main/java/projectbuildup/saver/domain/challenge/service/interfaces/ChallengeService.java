@@ -1,6 +1,9 @@
 package projectbuildup.saver.domain.challenge.service.interfaces;
 
+import org.hibernate.sql.Update;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -24,14 +27,14 @@ public interface ChallengeService {
      * 현재 참여 가능한 챌린지를 모두 보여줌, 자신이 참여한것 제외, 특정 타입으로 정렬해야함
      * @param sortType {Long} 1 -> 참여자 수 2 -> 송금 금액 3 -> 종료일자
      * @param ascending {Boolean} 오름차순인지 내림차순인지
-     * @return
+     * @return GetChallengeListResDto 챌린지 리스트와 갯수
      */
-    List<GetChallengeResDto> getAvailableChallenges(Long sortType, Boolean ascending, String loginId);
+    GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId);
 
     /**
      * 단일 챌린지 리턴.
      * @param challengeId {Long} - 챌린지 아이디
-     * @return
+     * @return GetChallengeListResDto 챌린지 리스트와 갯수
      */
     GetChallengeResDto getChallenge(Long challengeId);
 
@@ -40,7 +43,7 @@ public interface ChallengeService {
      * @param loginId {String} 유저 로그인 아아디
      * @return 유저가 참여중인 챌린지들의 리스트
      */
-    List<GetChallengeResDto> getMyChallenges(String loginId);
+    GetChallengeListResDto getMyChallenges(String loginId);
 
     /**
      * 챌린지 참여
@@ -55,5 +58,18 @@ public interface ChallengeService {
      * @param challengeId {Long} 챌린지 아이디
      */
     void leftChallenge(String loginId, Long challengeId);
+
+    /**
+     * 챌린지 삭제
+     * @param challengeId {Long} 챌린지 아이디
+     */
+    void deleteChallenge(Long challengeId);
+
+    /**
+     * 챌린지 업데이트
+     * @param challengeId
+     */
+    void updateChallenge(Long challengeId, UpdateChallengeReqDto updated);
+
 
 }

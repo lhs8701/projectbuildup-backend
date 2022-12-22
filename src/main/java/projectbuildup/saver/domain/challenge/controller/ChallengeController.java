@@ -9,6 +9,8 @@ import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.LeftChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -43,8 +45,8 @@ public class ChallengeController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<GetChallengeResDto>> getAvailableChallenges(@RequestParam Long sortType, @RequestParam Boolean ascending, @RequestParam String loginId) {
-        List<GetChallengeResDto> challenges = challengeService.getAvailableChallenges(sortType, ascending, loginId);
+    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam Long sortType, @RequestParam Boolean ascending, @RequestParam String loginId) {
+        GetChallengeListResDto challenges = challengeService.getAvailableChallenges(sortType, ascending, loginId);
         if (challenges != null) {
             return new ResponseEntity<>(challenges, HttpStatus.OK);
         } else {
@@ -53,8 +55,8 @@ public class ChallengeController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<GetChallengeResDto>> getMyChallenges(@RequestParam String loginId) {
-        List<GetChallengeResDto> challenges = challengeService.getMyChallenges(loginId);
+    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String loginId) {
+        GetChallengeListResDto challenges = challengeService.getMyChallenges(loginId);
         if (challenges != null) {
             return new ResponseEntity<>(challenges, HttpStatus.OK);
         } else {
@@ -69,9 +71,21 @@ public class ChallengeController {
         return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("")
+    @PostMapping("/left")
     public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
         challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{challengeId}")
+    public ResponseEntity<HttpStatus> deleteChallenge(@PathVariable Long challengeId) {
+        challengeService.deleteChallenge(challengeId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{challengeId}")
+    public ResponseEntity<HttpStatus> updateChallenge(@PathVariable Long challengeId, @RequestBody UpdateChallengeReqDto updated) {
+        challengeService.updateChallenge(challengeId, updated);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
