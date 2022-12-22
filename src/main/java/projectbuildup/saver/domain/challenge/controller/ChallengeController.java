@@ -70,9 +70,15 @@ public class ChallengeController {
         return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("")
+    @PostMapping("/left")
     public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
         challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{challengeId}")
+    public ResponseEntity<HttpStatus> deleteChallenge(@PathVariable Long challengeId) {
+        challengeService.deleteChallenge(challengeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

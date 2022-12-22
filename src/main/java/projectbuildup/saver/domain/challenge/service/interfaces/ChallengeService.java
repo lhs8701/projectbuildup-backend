@@ -25,14 +25,14 @@ public interface ChallengeService {
      * 현재 참여 가능한 챌린지를 모두 보여줌, 자신이 참여한것 제외, 특정 타입으로 정렬해야함
      * @param sortType {Long} 1 -> 참여자 수 2 -> 송금 금액 3 -> 종료일자
      * @param ascending {Boolean} 오름차순인지 내림차순인지
-     * @return
+     * @return GetChallengeListResDto 챌린지 리스트와 갯수
      */
     GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId);
 
     /**
      * 단일 챌린지 리턴.
      * @param challengeId {Long} - 챌린지 아이디
-     * @return
+     * @return GetChallengeListResDto 챌린지 리스트와 갯수
      */
     GetChallengeResDto getChallenge(Long challengeId);
 
@@ -56,5 +56,11 @@ public interface ChallengeService {
      * @param challengeId {Long} 챌린지 아이디
      */
     void leftChallenge(String loginId, Long challengeId);
+
+    /**
+     * 챌린지 삭제
+     * @param challengeId {Long} 챌린지 아이디
+     */
+    void deleteChallenge(Long challengeId);
 
 }

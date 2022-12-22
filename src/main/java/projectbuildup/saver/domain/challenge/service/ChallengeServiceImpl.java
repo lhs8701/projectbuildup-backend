@@ -235,4 +235,13 @@ public class ChallengeServiceImpl implements ChallengeService {
         challengeLogRepository.deleteByChallengeAndUser(challenge, user);
     }
 
+    @Override
+    public void deleteChallenge(Long challengeId) {
+        try {
+            challengeRepository.deleteById(challengeId);
+        } catch (IllegalArgumentException e) {
+            throw new CChallengeNotFoundException();
+        }
+    }
+
 }
