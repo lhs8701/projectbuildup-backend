@@ -1,9 +1,6 @@
 package projectbuildup.saver.domain.challenge.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
@@ -17,27 +14,40 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Challenge")
+@RequiredArgsConstructor
 public class ChallengeEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * yyyy.MM.dd
+     */
+    @NonNull
     @Column(length = 40)
     private String startDate;
 
+    /**
+     * yyyy.MM.dd
+     */
+    @NonNull
     @Column(length = 40)
     private String endDate;
 
+    @NonNull
     @Column(length = 30)
     private String mainTitle;
 
+    @NonNull
     @Column(length = 30)
     private String subTitle;
 
+    @NonNull
     @Column(length = 200)
     private String content;
 
+    @NonNull
     @Column(length = 30)
     private Long savingAmount;
 

@@ -26,4 +26,9 @@ public class ChallengeLogEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="challenge_id")
     private ChallengeEntity challenge;
+
+    public void joinChallenge(UserEntity user, ChallengeEntity challenge) {
+        this.user = user;
+        this.challenge = challenge;
+    }
 }

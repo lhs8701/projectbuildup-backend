@@ -209,8 +209,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new CUserAlreadyJoinedException();
         }
         ChallengeLogEntity log = new ChallengeLogEntity();
-        log.setChallenge(challenge);
-        log.setUser(user);
+        log.joinChallenge(user, challenge);
         challengeLogRepository.save(log);
     }
 
