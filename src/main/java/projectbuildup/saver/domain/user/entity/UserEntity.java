@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
-import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
+import projectbuildup.saver.domain.notification.entity.NotificationEntity;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.image.entity.ImageEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
@@ -107,10 +107,10 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     }
 
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> sendAlarmEntityList;
+    private List<NotificationEntity> sendNotificationEntityList;
 
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> receiveAlarmEntityList;
+    private List<NotificationEntity> receiveNotificationEntityList;
 }
 
 
