@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.alarm.entity;
+package projectbuildup.saver.domain.notification.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="Alarm")
-public class AlarmEntity extends BaseTimeEntity {
+@Entity(name="Notification")
+public class NotificationEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
