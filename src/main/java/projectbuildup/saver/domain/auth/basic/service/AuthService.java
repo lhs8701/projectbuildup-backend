@@ -41,7 +41,6 @@ public class AuthService {
     public Long signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByIdToken(signupRequestDto.getIdToken()).isPresent())
             throw new CUserExistException();
-        log.info(signupRequestDto.getPassword());
         return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
     }
 
@@ -63,9 +62,7 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(String accessToken) {
-        Authentication authentication = jwtProvider.getAuthentication(accessToken);
-        UserEntity user = (UserEntity) authentication.getPrincipal();
+    public void logout(String accessToken, UserEntity user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
         refreshTokenRedisRepository.deleteById(user.getId());
@@ -73,10 +70,7 @@ public class AuthService {
     }
 
     public void withdrawal(String accessToken, UserEntity user) {
-        long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
-
-        refreshTokenRedisRepository.deleteById(user.getId());
-        logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, user.getId(), remainMilliSeconds));
+        logout(accessToken, user);
         userJpaRepository.deleteById(user.getId());
     }
 

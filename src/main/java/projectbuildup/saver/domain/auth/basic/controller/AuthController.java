@@ -22,9 +22,9 @@ import projectbuildup.saver.domain.user.entity.UserEntity;
 import javax.validation.Valid;
 
 @Slf4j
-@Api(tags = {"Basic Auth"})
+@Api(tags = {"Auth Controller"})
 @RequiredArgsConstructor
-@RequestMapping("/open/auth")
+@RequestMapping("/auth")
 @RestController
 public class AuthController {
 
@@ -54,8 +54,13 @@ public class AuthController {
     })
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout", headers = "X-AUTH-TOKEN")
+<<<<<<< HEAD
     public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken) {
         authService.logout(accessToken);
+=======
+    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal UserEntity user) {
+        authService.logout(accessToken, user);
+>>>>>>> a9dba029b2f90974109a251932263f1008cf0cc5
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

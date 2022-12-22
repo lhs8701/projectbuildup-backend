@@ -8,6 +8,7 @@ import lombok.*;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.image.entity.ImageEntity;
+import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
@@ -54,6 +55,13 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SavingEntity> savingEntityList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RankingEntity> rankingEntityList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AlarmEntity> alarmEntityList;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
