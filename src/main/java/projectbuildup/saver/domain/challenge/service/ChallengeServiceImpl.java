@@ -24,6 +24,7 @@ import java.sql.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -111,8 +112,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                 return !loginId.equals(user.getLoginId());
                             }
                             return true;
-                        })
-                        .toList()
+                        }).collect(Collectors.toList())
                 );
 
 
@@ -150,7 +150,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                                                         (long) challenge.getChallengeLogEntityList().size()
                                                                 );
                                                             })
-                                                            .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -184,7 +184,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                     }
                     return false;
                 })
-                .toList();
+                .collect(Collectors.toList());
         return (List<GetChallengeResDto>) userChallenges
                 .stream()
                 .map((challenge) -> {
@@ -199,7 +199,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                             (long) challenge.getChallengeLogEntityList().size()
                     );
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
