@@ -16,8 +16,8 @@ import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
-import projectbuildup.saver.domain.saving.repository.SavingRepository;
+import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.challengeRecord.repository.ChallengeRecordRepository;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserRepository;
@@ -35,7 +35,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeLogRepository challengeLogRepository;
     private final UserRepository userRepository;
-    private final SavingRepository savingRepository;
+    private final ChallengeRecordRepository challengeRecordRepository;
 
     @Override
     public GetChallengeParticipantsResDto getChallengeParticipants(Long challengeId) {
@@ -52,9 +52,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 
             // 본 유저가 본 챌린지에 모았던 기록들을 모두 가져 온 후 총액을 계산함.
-            List<SavingEntity> savingEntityList = savingRepository.findByChallengeIdAndUserId(challengeId, userEntity.getId());
+            List<ChallengeRecordEntity> challengeRecordEntityList = challengeRecordRepository.findByChallengeIdAndUserId(challengeId, userEntity.getId());
             Long savingAmount = 0L;
-            for(SavingEntity saving : savingEntityList) {
+            for(ChallengeRecordEntity saving : challengeRecordEntityList) {
                 savingAmount += saving.getAmount();
             }
 

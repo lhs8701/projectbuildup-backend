@@ -4,7 +4,7 @@ import lombok.*;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
+import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -53,7 +53,7 @@ public class ChallengeEntity extends BaseTimeEntity {
     private Long savingAmount;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SavingEntity> savingEntityList;
+    private List<ChallengeRecordEntity> challengeRecordEntityList;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
