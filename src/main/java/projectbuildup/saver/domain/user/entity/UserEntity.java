@@ -8,6 +8,7 @@ import lombok.*;
 import projectbuildup.saver.domain.alarm.entity.AlarmEntity;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.image.entity.ImageEntity;
+import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
@@ -30,7 +31,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     @Column(length = 100, unique = true)
-    private String loginId;
+    private String idToken;
 
     @Column(length = 300)
     private String password;
@@ -55,6 +56,13 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SavingEntity> savingEntityList;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RankingEntity> rankingEntityList;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AlarmEntity> alarmEntityList;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
@@ -65,7 +73,7 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.loginId;
+        return this.idToken;
     }
 
     @Override

@@ -12,14 +12,22 @@ import java.util.Collections;
 @Getter
 @NoArgsConstructor
 public class SignupRequestDto {
-    private String loginId;
+    private String idToken;
     private String password;
+    private String nickName;
 
     private String nickName;
 
+    private String phoneNumber;
+
     public UserEntity toEntity(PasswordEncoder passwordEncoder) {
         return UserEntity.builder()
-                .loginId(loginId)
+<<<<<<< HEAD
+=======
+                .loginId(this.loginId)
+                .nickName(this.nickName)
+                .phoneNumber(this.phoneNumber)
+>>>>>>> a9dba029b2f90974109a251932263f1008cf0cc5
                 .password(passwordEncoder.encode(password))
                 .nickName(nickName)
                 .roles(Collections.singletonList("ROLE_USER"))

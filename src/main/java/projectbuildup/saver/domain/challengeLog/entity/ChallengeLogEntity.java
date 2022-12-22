@@ -31,5 +31,4 @@ public class ChallengeLogEntity extends BaseTimeEntity {
         this.user = user;
         this.challenge = challenge;
     }
-
 }

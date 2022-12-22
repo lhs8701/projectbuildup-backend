@@ -20,12 +20,14 @@ public class PhoneController {
 
     PhoneService phoneService;
 
+    // 유효한 전화번호인지 확인하는 API
     @PostMapping("/auth/number")
     public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody PhoneAuthDto phoneAuthDto) {
         PhoneAuthResponseDto ans = phoneService.getNumber(phoneAuthDto.getPhoneNumber());
         return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    //인증번호 검증 ->
     @PostMapping("/auth/verify")
     public ResponseEntity<PhoneAuthResponseDto> verifyNumber(@RequestBody PhoneAuthDto phoneAuthDto) {
         PhoneAuthResponseDto ans = phoneService.verifyNumber(phoneAuthDto.getPhoneNumber(), phoneAuthDto.getCode());

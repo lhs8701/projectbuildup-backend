@@ -6,5 +6,5 @@ import projectbuildup.saver.domain.user.entity.UserEntity;
 import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<UserEntity,Long> {
-    Optional<UserEntity> findByLoginId(String loginId);
+    Optional<UserEntity> findByIdToken(String idToken);
 }
