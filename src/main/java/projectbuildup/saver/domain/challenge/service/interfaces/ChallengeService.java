@@ -44,7 +44,7 @@ public interface ChallengeService {
 
     /**
      * 챌린지 참여
-     * @param loginId {String} 유저 아이디
+     * @param idToken {String} 유저 아이디
      * @param challengeId {Long} 챌린지 아이디 
      */
     void joinChallenge(String idToken, Long challengeId);
