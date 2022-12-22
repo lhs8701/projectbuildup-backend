@@ -25,6 +25,7 @@ import projectbuildup.saver.domain.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -113,7 +114,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                             }
                             return true;
                         })
-                        .toList()
+                        .collect(Collectors.toList())
                 );
 
 
@@ -150,7 +151,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                             (long) challenge.getChallengeLogEntityList().size()
                     );
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         // Dto로 변환 후 리턴.
         return GetChallengeListResDto.builder()
@@ -191,7 +192,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                     }
                     return false;
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         List<GetChallengeResDto> challengeList = (List<GetChallengeResDto>) userChallenges
                 .stream()
@@ -207,7 +208,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                             (long) challenge.getChallengeLogEntityList().size()
                     );
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         // Dto로 변환 후 리턴.
         return GetChallengeListResDto.builder()
