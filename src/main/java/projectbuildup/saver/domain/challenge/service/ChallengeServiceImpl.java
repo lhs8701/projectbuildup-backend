@@ -11,6 +11,7 @@ import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.challengeLog.repository.ChallengeLogRepository;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
@@ -96,7 +97,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<GetChallengeResDto> getAvailableChallenges(Long sortType, Boolean ascending, String loginId) {
+    public GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId) {
 
         // 모든 챌린지 가져옴
         List<ChallengeEntity> challenges = challengeRepository.findAll();
@@ -135,22 +136,27 @@ public class ChallengeServiceImpl implements ChallengeService {
             return null;
         }
 
+        List<GetChallengeResDto> challengeList = (List<GetChallengeResDto>) selectedChallenges
+                .stream()
+                .map((challenge) -> {
+                    return new GetChallengeResDto(
+                            challenge.getId(),
+                            challenge.getStartDate(),
+                            challenge.getEndDate(),
+                            challenge.getMainTitle(),
+                            challenge.getSubTitle(),
+                            challenge.getContent(),
+                            challenge.getSavingAmount(),
+                            (long) challenge.getChallengeLogEntityList().size()
+                    );
+                })
+                .toList();
+
         // Dto로 변환 후 리턴.
-        return (List<GetChallengeResDto>) selectedChallenges
-                                                            .stream()
-                                                            .map((challenge) -> {
-                                                                return new GetChallengeResDto(
-                                                                        challenge.getId(),
-                                                                        challenge.getStartDate(),
-                                                                        challenge.getEndDate(),
-                                                                        challenge.getMainTitle(),
-                                                                        challenge.getSubTitle(),
-                                                                        challenge.getContent(),
-                                                                        challenge.getSavingAmount(),
-                                                                        (long) challenge.getChallengeLogEntityList().size()
-                                                                );
-                                                            })
-                                                            .toList();
+        return GetChallengeListResDto.builder()
+                .challengCnt((long) challengeList.size())
+                .challengeList(challengeList)
+                .build();
     }
 
     @Override
@@ -169,9 +175,10 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<GetChallengeResDto> getMyChallenges(String loginId) {
+    public GetChallengeListResDto getMyChallenges(String loginId) {
         // 전부 찾아서 loginId가 같은 user가 있는 챌린지만 추려낸 후 리턴.
         List<ChallengeEntity> challenges = challengeRepository.findAll();
+
         List<ChallengeEntity> userChallenges = challenges
                 .stream()
                 .filter((challenge) -> {
@@ -185,7 +192,8 @@ public class ChallengeServiceImpl implements ChallengeService {
                     return false;
                 })
                 .toList();
-        return (List<GetChallengeResDto>) userChallenges
+
+        List<GetChallengeResDto> challengeList = (List<GetChallengeResDto>) userChallenges
                 .stream()
                 .map((challenge) -> {
                     return new GetChallengeResDto(
@@ -200,6 +208,12 @@ public class ChallengeServiceImpl implements ChallengeService {
                     );
                 })
                 .toList();
+
+        // Dto로 변환 후 리턴.
+        return GetChallengeListResDto.builder()
+                .challengCnt((long) challengeList.size())
+                .challengeList(challengeList)
+                .build();
     }
 
     @Override

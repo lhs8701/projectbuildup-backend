@@ -1,6 +1,7 @@
 package projectbuildup.saver.domain.challenge.service.interfaces;
 
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 
@@ -26,7 +27,7 @@ public interface ChallengeService {
      * @param ascending {Boolean} 오름차순인지 내림차순인지
      * @return
      */
-    List<GetChallengeResDto> getAvailableChallenges(Long sortType, Boolean ascending, String loginId);
+    GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId);
 
     /**
      * 단일 챌린지 리턴.
@@ -40,7 +41,7 @@ public interface ChallengeService {
      * @param loginId {String} 유저 로그인 아아디
      * @return 유저가 참여중인 챌린지들의 리스트
      */
-    List<GetChallengeResDto> getMyChallenges(String loginId);
+    GetChallengeListResDto getMyChallenges(String loginId);
 
     /**
      * 챌린지 참여
