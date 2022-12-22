@@ -11,6 +11,7 @@ import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.challengeLog.repository.ChallengeLogRepository;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantResDto;
@@ -243,5 +244,13 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new CChallengeNotFoundException();
         }
     }
+
+    @Override
+    public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
+        ChallengeEntity challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
+        challenge.updateChallenge(updated);
+        challengeRepository.save(challenge);
+    }
+
 
 }

@@ -9,6 +9,7 @@ import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.LeftChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
@@ -79,6 +80,12 @@ public class ChallengeController {
     @DeleteMapping("/{challengeId}")
     public ResponseEntity<HttpStatus> deleteChallenge(@PathVariable Long challengeId) {
         challengeService.deleteChallenge(challengeId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{challengeId}")
+    public ResponseEntity<HttpStatus> updateChallenge(@PathVariable Long challengeId, @RequestBody UpdateChallengeReqDto updated) {
+        challengeService.updateChallenge(challengeId, updated);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

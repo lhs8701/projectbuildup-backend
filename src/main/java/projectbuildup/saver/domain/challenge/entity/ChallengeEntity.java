@@ -2,6 +2,7 @@ package projectbuildup.saver.domain.challenge.entity;
 
 import lombok.*;
 import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
@@ -59,5 +60,14 @@ public class ChallengeEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ChallengeLogEntity> challengeLogEntityList;
+
+    public void updateChallenge(UpdateChallengeReqDto updated) {
+        this.startDate = updated.getStartDate();
+        this.endDate = updated.getEndDate();
+        this.mainTitle = updated.getMainTitle();
+        this.subTitle = updated.getSubTitle();
+        this.content = updated.getContent();
+        this.savingAmount = updated.getSavingAmount();
+    }
 
 }

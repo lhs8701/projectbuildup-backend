@@ -1,6 +1,8 @@
 package projectbuildup.saver.domain.challenge.service.interfaces;
 
+import org.hibernate.sql.Update;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
@@ -62,5 +64,12 @@ public interface ChallengeService {
      * @param challengeId {Long} 챌린지 아이디
      */
     void deleteChallenge(Long challengeId);
+
+    /**
+     * 챌린지 업데이트
+     * @param challengeId
+     */
+    void updateChallenge(Long challengeId, UpdateChallengeReqDto updated);
+
 
 }
