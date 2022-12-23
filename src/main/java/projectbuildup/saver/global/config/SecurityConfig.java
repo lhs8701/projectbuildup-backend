@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import projectbuildup.saver.global.security.*;
+import projectbuildup.saver.global.security.filter.JwtAuthenticationFilter;
 
 
 @RequiredArgsConstructor

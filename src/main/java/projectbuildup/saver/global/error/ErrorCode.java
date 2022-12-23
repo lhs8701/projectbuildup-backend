@@ -14,6 +14,8 @@ public enum ErrorCode {
     CHALLENGE_NOT_FOUND_EXCEPTION(-1001, "해당 챌린지를 조회할 수 없습니다.", HttpStatus.NOT_FOUND),
     FILE_NOT_FOUND_EXCEPTION(-1008, "해당 파일을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     USER_ALREADY_JOINED_EXCEPTION(-1009, "이미 참여 중인 챌린지 입니다.", HttpStatus.CONFLICT),
+    RECENT_SAVING_NOT_FOUND_EXCEPTION(-1010, "최근 절약 내역이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+
 
     //2
     WRONG_PASSWORD_EXCEPTION(-3000, "잘못된 비밀번호 입니다.", HttpStatus.BAD_REQUEST),

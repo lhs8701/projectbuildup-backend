@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateUserResDto;
 import projectbuildup.saver.domain.dto.res.GetUserResDto;
+import projectbuildup.saver.domain.recentsaving.service.RecentSavingService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileImageUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
@@ -28,6 +29,7 @@ import projectbuildup.saver.global.common.ConstValue;
 public class UserController {
 
     private final UserService userService;
+    private final RecentSavingService recentSavingService;
 
     @ApiOperation(value = "회원 비밀번호 변경",
             notes = """
@@ -84,5 +86,19 @@ public class UserController {
     @PostMapping("/profile/image")
     public ResponseEntity<?> changeProfileImage(@RequestBody UserIdRequestParam userIdRequestParam, @RequestPart MultipartFile imageFile) {
         return new ResponseEntity<>(userService.changeProfileImage(userIdRequestParam, imageFile), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "현재 절약 상황 조회",
+            notes = """
+                    현재 회원의 절약 상황을 조회합니다.
+                    \nparameter : 아이디 토큰
+                    \nresponse : 회원의 절약 상황
+                    """
+    )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{idToken}/recent")
+    public ResponseEntity<?> getSavingStatus(@PathVariable String idToken) {
+        return new ResponseEntity<>(recentSavingService.getRecentSaving(idToken), HttpStatus.OK);
     }
 }
