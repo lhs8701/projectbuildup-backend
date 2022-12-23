@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
+import projectbuildup.saver.domain.recentsaving.service.RecentSavingService;
 import projectbuildup.saver.domain.saving.entity.SavingEntity;
 import projectbuildup.saver.domain.saving.repository.SavingRepository;
 import projectbuildup.saver.domain.user.entity.UserEntity;
@@ -13,6 +14,7 @@ import projectbuildup.saver.domain.user.entity.UserEntity;
 public class SavingServiceImpl implements SavingService{
 
     private final SavingRepository savingRepository;
+    private final RecentSavingService recentSavingService;
 
     @Override
     public void saveSaving(SaveSavingReqDto saveSavingReqDto) {
@@ -31,5 +33,6 @@ public class SavingServiceImpl implements SavingService{
                 .build();
 
         savingRepository.save(savingEntity);
+        recentSavingService.updateRecentSaving(userEntity, savingEntity);
     }
 }
