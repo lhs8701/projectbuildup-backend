@@ -10,9 +10,8 @@ import projectbuildup.saver.domain.challengeLog.entity.ChallengeLogEntity;
 import projectbuildup.saver.domain.image.entity.ImageEntity;
 import projectbuildup.saver.domain.ranking.entity.RankingEntity;
 import projectbuildup.saver.domain.recentsaving.entity.RecentSaving;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
+import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,13 +54,13 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     private List<ChallengeLogEntity> challengeLogEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<SavingEntity> savingEntityList;
+    private List<ChallengeRecordEntity> challengeRecordEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AlarmEntity> alarmEntityList;
+    private List<NotificationEntity> notificationEntityList;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private RecentSaving recentSaving;

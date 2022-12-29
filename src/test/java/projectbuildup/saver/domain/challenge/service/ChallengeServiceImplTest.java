@@ -5,7 +5,7 @@ import org.mockito.Mock;
 import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
 import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
 import projectbuildup.saver.domain.challengeLog.repository.ChallengeLogRepository;
-import projectbuildup.saver.domain.saving.repository.SavingRepository;
+import projectbuildup.saver.domain.challengeRecord.repository.ChallengeRecordRepository;
 import projectbuildup.saver.domain.user.repository.UserRepository;
 
 
@@ -24,7 +24,7 @@ class ChallengeServiceImplTest {
     UserRepository userRepository;
 
     @Mock
-    SavingRepository savingRepository;
+    ChallengeRecordRepository challengeRecordRepository;
 
     // Unit test 대상
     @InjectMocks

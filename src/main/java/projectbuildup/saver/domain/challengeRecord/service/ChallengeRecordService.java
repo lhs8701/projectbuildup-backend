@@ -1,8 +1,8 @@
-package projectbuildup.saver.domain.saving.service;
+package projectbuildup.saver.domain.challengeRecord.service;
 
 import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
 
-public interface SavingService {
+public interface ChallengeRecordService {
 
     void saveSaving(SaveSavingReqDto saveSavingReqDto);
 }

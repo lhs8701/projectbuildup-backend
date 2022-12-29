@@ -2,17 +2,13 @@ package projectbuildup.saver.domain.recentsaving.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
 import projectbuildup.saver.domain.recentsaving.dto.RecentSavingResponseDto;
 import projectbuildup.saver.domain.recentsaving.entity.RecentSaving;
-import projectbuildup.saver.domain.recentsaving.error.exception.CRecentSavingNotFoundException;
 import projectbuildup.saver.domain.recentsaving.repository.RecentSavingRepository;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
-import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserJpaRepository;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +38,7 @@ public class RecentSavingService {
      * @param user   유저
      * @param saving 송금 정보
      */
-    public void updateRecentSaving(UserEntity user, SavingEntity saving) {
+    public void updateRecentSaving(UserEntity user, ChallengeRecordEntity saving) {
         RecentSaving recentSaving = recentSavingRepository.findByUserEntity(user).orElse(null);
         if (recentSaving == null) {
             createRecentSaving(user, saving);
@@ -56,7 +52,7 @@ public class RecentSavingService {
      * @param user 유저
      * @param saving 송금 정보
      */
-    private void createRecentSaving(UserEntity user, SavingEntity saving) {
+    private void createRecentSaving(UserEntity user, ChallengeRecordEntity saving) {
         RecentSaving recentInformation = RecentSaving.builder()
                 .totalAmount(saving.getAmount())
                 .totalCount(1)

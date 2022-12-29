@@ -1,20 +1,20 @@
-package projectbuildup.saver.domain.saving.service;
+package projectbuildup.saver.domain.challengeRecord.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
 import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
 import projectbuildup.saver.domain.recentsaving.service.RecentSavingService;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
-import projectbuildup.saver.domain.saving.repository.SavingRepository;
+import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.challengeRecord.repository.ChallengeRecordRepository;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 
 @Service
 @RequiredArgsConstructor
-public class SavingServiceImpl implements SavingService{
+public class ChallengeRecordServiceImpl implements ChallengeRecordService {
 
-    private final SavingRepository savingRepository;
     private final RecentSavingService recentSavingService;
+    private final ChallengeRecordRepository challengeRecordRepository;
 
     @Override
     public void saveSaving(SaveSavingReqDto saveSavingReqDto) {
@@ -26,13 +26,13 @@ public class SavingServiceImpl implements SavingService{
                 .id(saveSavingReqDto.getUserId())
                 .build();
 
-        SavingEntity savingEntity = SavingEntity.builder()
+        ChallengeRecordEntity challengeRecordEntity = ChallengeRecordEntity.builder()
                 .challenge(challengeEntity)
                 .user(userEntity)
                 .amount(saveSavingReqDto.getAmount())
                 .build();
 
-        savingRepository.save(savingEntity);
-        recentSavingService.updateRecentSaving(userEntity, savingEntity);
+        recentSavingService.updateRecentSaving(userEntity, challengeRecordEntity);
+        challengeRecordRepository.save(challengeRecordEntity);
     }
 }

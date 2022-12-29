@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.saving.entity;
+package projectbuildup.saver.domain.challengeRecord.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +14,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Saving")
-public class SavingEntity extends BaseTimeEntity {
+@Entity(name = "ChallengeRecord")
+public class ChallengeRecordEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

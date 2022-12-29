@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.saving.entity.SavingEntity;
+import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
 import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
@@ -29,7 +29,7 @@ public class RecentSaving extends BaseTimeEntity {
     @JoinColumn(name="user_id")
     private UserEntity user;
 
-    public void update(SavingEntity saving){
+    public void update(ChallengeRecordEntity saving){
         this.totalAmount += saving.getAmount();
         this.totalCount++;
     }

@@ -1,22 +1,22 @@
-package projectbuildup.saver.domain.saving.controller;
+package projectbuildup.saver.domain.challengeRecord.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
-import projectbuildup.saver.domain.saving.service.SavingService;
+import projectbuildup.saver.domain.challengeRecord.service.ChallengeRecordService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/saving")
-public class SavingController {
+@RequestMapping("/challengeRecord")
+public class ChallengeRecordController {
 
-    private final SavingService savingService;
+    private final ChallengeRecordService challengeRecordService;
 
     @PostMapping("")
     public ResponseEntity<Void> saveSaving(@RequestBody SaveSavingReqDto saveSavingReqDto) {
-        savingService.saveSaving(saveSavingReqDto);
+        challengeRecordService.saveSaving(saveSavingReqDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
