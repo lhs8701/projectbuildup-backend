@@ -18,7 +18,7 @@ import projectbuildup.saver.domain.auth.jwt.entity.LogoutAccessToken;
 import projectbuildup.saver.domain.auth.jwt.entity.RefreshToken;
 import projectbuildup.saver.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import projectbuildup.saver.domain.auth.jwt.repository.RefreshTokenRedisRepository;
-import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
@@ -45,7 +45,7 @@ public class AuthService {
     }
 
     public TokenResponseDto login(LoginRequestDto loginRequestDto){
-        UserEntity user = userJpaRepository.findByIdToken(loginRequestDto.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userJpaRepository.findByIdToken(loginRequestDto.getIdToken()).orElseThrow(CUserNotFoundException::new);
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
@@ -62,14 +62,14 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(String accessToken, UserEntity user) {
+    public void logout(String accessToken, User user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
         refreshTokenRedisRepository.deleteById(user.getId());
         logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, user.getId(), remainMilliSeconds));
     }
 
-    public void withdrawal(String accessToken, UserEntity user) {
+    public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
         userJpaRepository.deleteById(user.getId());
     }
@@ -78,7 +78,7 @@ public class AuthService {
 
         String existAccessToken = tokenRequestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
-        UserEntity user = (UserEntity)authentication.getPrincipal();
+        User user = (User)authentication.getPrincipal();
 
         String existRefreshToken = tokenRequestDto.getRefreshToken();
         RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getId()).orElseThrow(CRefreshTokenExpiredException::new);

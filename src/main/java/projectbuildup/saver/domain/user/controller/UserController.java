@@ -7,18 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import projectbuildup.saver.domain.dto.req.CreateUserReqDto;
-import projectbuildup.saver.domain.dto.req.UpdateUserResDto;
-import projectbuildup.saver.domain.dto.res.GetUserResDto;
 import projectbuildup.saver.domain.recentsaving.service.RecentSavingService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
-import projectbuildup.saver.domain.user.dto.ProfileImageUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
-import projectbuildup.saver.domain.user.entity.UserEntity;
 import projectbuildup.saver.domain.user.service.interfaces.UserService;
 import projectbuildup.saver.global.common.ConstValue;
 

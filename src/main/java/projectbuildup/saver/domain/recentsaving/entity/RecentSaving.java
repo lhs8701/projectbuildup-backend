@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
-import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class RecentSaving extends BaseTimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private UserEntity user;
+    private User user;
 
     public void update(ChallengeRecordEntity saving){
         this.totalAmount += saving.getAmount();

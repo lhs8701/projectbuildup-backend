@@ -1,7 +1,7 @@
 package projectbuildup.saver.domain.image.entity;
 
 import lombok.*;
-import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.entity.User;
 
 import javax.persistence.*;
 
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Builder
-public class ImageEntity {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,5 +23,5 @@ public class ImageEntity {
     private String fileUrl; // 저장할 경로
 
     @OneToOne(mappedBy = "profileImage", fetch = FetchType.LAZY)
-    private UserEntity uploader;
+    private User uploader;
 }

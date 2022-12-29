@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.challenge.entity.ChallengeEntity;
-import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.challenge.entity.Challenge;
+import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -27,9 +27,9 @@ public class ChallengeRecordEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private UserEntity user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
-    private ChallengeEntity challenge;
+    private Challenge challenge;
 }

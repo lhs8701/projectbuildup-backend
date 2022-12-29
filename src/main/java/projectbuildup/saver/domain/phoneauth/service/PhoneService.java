@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
-import projectbuildup.saver.domain.phoneauth.entity.PhoneEntity;
+import projectbuildup.saver.domain.phoneauth.entity.Phone;
 import projectbuildup.saver.domain.phoneauth.repository.PhoneRepository;
 
 import javax.transaction.Transactional;
@@ -25,7 +25,6 @@ import java.net.URL;
 import java.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import projectbuildup.saver.domain.phoneauth.service.interfaces.PhoneService;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -34,7 +33,7 @@ import javax.crypto.spec.SecretKeySpec;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class PhoneServiceImpl implements PhoneService {
+public class PhoneService {
 
     PhoneRepository phoneRepository;
 
@@ -163,7 +162,6 @@ public class PhoneServiceImpl implements PhoneService {
                 .toString();
     }
 
-    @Override
     @Transactional
     public PhoneAuthResponseDto getNumber(String phoneNumber) {
         try {
@@ -175,17 +173,17 @@ public class PhoneServiceImpl implements PhoneService {
 
 
             // 현재 저장되어 있는 전화번호가 있는지 확인하기 위함.
-            Optional<PhoneEntity> phone = phoneRepository.findByPhoneNumber(phoneNumber);
+            Optional<Phone> phone = phoneRepository.findByPhoneNumber(phoneNumber);
             String code = getRandomCode();
 
             // 전화번호가 저장되어 있으면 코드만 변경해주고, 없을시 새로 생성해준다.
             if(phone.isPresent()) {
-                PhoneEntity unwrappedPhone = phone.get();
+                Phone unwrappedPhone = phone.get();
                 unwrappedPhone.setCode(code);
                 unwrappedPhone.setTried(0L);
                 phoneRepository.save(unwrappedPhone);
             } else {
-                PhoneEntity newPhone = new PhoneEntity(phoneNumber, code, 0L);
+                Phone newPhone = new Phone(phoneNumber, code, 0L);
                 phoneRepository.save(newPhone);
             }
 
@@ -199,11 +197,10 @@ public class PhoneServiceImpl implements PhoneService {
         return new PhoneAuthResponseDto(true, "성공했습니다.");
     }
 
-    @Override
     @Transactional
     public PhoneAuthResponseDto verifyNumber(String phoneNumber, String code) {
         try {
-            Optional<PhoneEntity> phone = phoneRepository.findByPhoneNumber(phoneNumber);
+            Optional<Phone> phone = phoneRepository.findByPhoneNumber(phoneNumber);
 
             // 값 검증
             if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
@@ -218,7 +215,7 @@ public class PhoneServiceImpl implements PhoneService {
                 return new PhoneAuthResponseDto(false, "인증 중이 아닙니다, 인증번호 전송 버튼을 눌러주세요");
             }
 
-            PhoneEntity unwrappedPhone = phone.get();
+            Phone unwrappedPhone = phone.get();
 
             // 이미 시도를 너무 많이 했으면 거절
             if(unwrappedPhone.getTried() >= 5) {

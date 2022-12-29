@@ -1,13 +1,56 @@
 package projectbuildup.saver.domain.file.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FileService {
-    public void makeDirectory(String path);
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
-    public String makeFileName(String fileOriName);
+@Service
+public class FileService {
 
-    public String makeFileUrlByDate(String fileName);
+    @Value("${location.root}")
+    private String ROOT_PATH;
 
-    public void transferFile(MultipartFile file, String transferUrl);
+    @Value("${location.image-dir}")
+    private String MEDIA_PATH;
+
+    public void makeDirectory(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    public String makeFileName(String fileOriName) {
+        int idx = fileOriName.lastIndexOf(".");
+        String ext = fileOriName.substring(idx);
+        String uuid = UUID.randomUUID().toString();
+        return uuid + ext;
+    }
+
+    public String makeFileUrlByDate(String fileName) {
+        String str_date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        String fileUrl = MEDIA_PATH + str_date + "/" + fileName;
+        String folderPath = ROOT_PATH + fileUrl;
+        makeDirectory(folderPath);
+
+        return fileUrl;
+    }
+
+    public void transferFile(MultipartFile file, String transferUrl) {
+        Path savePath = Paths.get(transferUrl);
+
+        try {
+            file.transferTo(savePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

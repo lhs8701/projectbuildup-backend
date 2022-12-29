@@ -5,14 +5,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import projectbuildup.saver.domain.image.dto.ImageDto;
-import projectbuildup.saver.domain.image.entity.ImageEntity;
+import projectbuildup.saver.domain.image.entity.Image;
 import projectbuildup.saver.domain.image.repository.ImageRepository;
 import projectbuildup.saver.domain.image.service.ImageService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
 import projectbuildup.saver.domain.user.dto.UserProfileResponseDto;
-import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserRepository;
 import projectbuildup.saver.domain.user.service.interfaces.UserService;
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void changePassword(PasswordUpdateParam passwordUpdateParam) {
-        UserEntity user = userRepository.findByIdToken(passwordUpdateParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userRepository.findByIdToken(passwordUpdateParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
         userRepository.save(user);
     }
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserProfileResponseDto getProfile(UserIdRequestParam userIdRequestParam) {
-        UserEntity user = userRepository.findByIdToken(userIdRequestParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userRepository.findByIdToken(userIdRequestParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
         return new UserProfileResponseDto(user);
     }
 
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Long updateProfile(ProfileUpdateParam profileUpdateParam) {
-        UserEntity user = userRepository.findByIdToken(profileUpdateParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userRepository.findByIdToken(profileUpdateParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
         user.setNickName(profileUpdateParam.getNickName());
         userRepository.save(user);
         return user.getId();
@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Long changeProfileImage(UserIdRequestParam userIdRequestParam, MultipartFile imageFile) {
-        UserEntity user = userRepository.findByIdToken(userIdRequestParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userRepository.findByIdToken(userIdRequestParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
         ImageDto imageDto = imageService.uploadImage(imageFile);
-        ImageEntity image = imageDto.toEntity();
+        Image image = imageDto.toEntity();
         imageRepository.save(image);
         imageService.removeImage(user.getProfileImage());
         user.setProfileImage(image);

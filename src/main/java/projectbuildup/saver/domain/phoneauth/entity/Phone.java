@@ -2,7 +2,6 @@ package projectbuildup.saver.domain.phoneauth.entity;
 
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Required;
 
 import javax.persistence.*;
 
@@ -13,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "phone_authentication")
-public class PhoneEntity {
+public class Phone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
