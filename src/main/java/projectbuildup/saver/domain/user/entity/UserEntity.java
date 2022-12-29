@@ -59,12 +59,14 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RankingEntity> rankingEntityList;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<NotificationEntity> notificationEntityList;
-
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private RecentSaving recentSaving;
 
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<NotificationEntity> sendNotificationEntityList;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<NotificationEntity> receiveNotificationEntityList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -108,12 +110,6 @@ public class UserEntity extends BaseTimeEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<NotificationEntity> sendNotificationEntityList;
-
-    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<NotificationEntity> receiveNotificationEntityList;
 }
 
 

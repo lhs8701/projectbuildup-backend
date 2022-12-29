@@ -25,7 +25,7 @@ public class RecentSavingService {
      */
     public RecentSavingResponseDto getRecentSaving(String idToken) {
         UserEntity user = userJpaRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
-        RecentSaving recentSaving = recentSavingRepository.findByUserEntity(user).orElse(null);
+        RecentSaving recentSaving = recentSavingRepository.findByUser(user).orElse(null);
         if (recentSaving == null) {
             return null;
         }
@@ -39,7 +39,7 @@ public class RecentSavingService {
      * @param saving 송금 정보
      */
     public void updateRecentSaving(UserEntity user, ChallengeRecordEntity saving) {
-        RecentSaving recentSaving = recentSavingRepository.findByUserEntity(user).orElse(null);
+        RecentSaving recentSaving = recentSavingRepository.findByUser(user).orElse(null);
         if (recentSaving == null) {
             createRecentSaving(user, saving);
             return;

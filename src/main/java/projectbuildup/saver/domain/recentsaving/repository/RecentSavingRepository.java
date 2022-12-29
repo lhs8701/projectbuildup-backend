@@ -7,5 +7,5 @@ import projectbuildup.saver.domain.user.entity.UserEntity;
 import java.util.Optional;
 
 public interface RecentSavingRepository extends JpaRepository<RecentSaving, Long> {
-    Optional<RecentSaving> findByUserEntity(UserEntity user);
+    Optional<RecentSaving> findByUser(UserEntity user);
 }
