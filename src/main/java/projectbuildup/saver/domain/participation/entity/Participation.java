@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.challengeLog.entity;
+package projectbuildup.saver.domain.participation.entity;
 
 import lombok.*;
 import projectbuildup.saver.domain.challenge.entity.Challenge;
@@ -12,19 +12,19 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "ChallengeLog")
-public class ChallengeLog extends BaseTimeEntity {
+@Entity
+public class Participation extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="challenge_id")
+    @JoinColumn
     private Challenge challenge;
 
     public void joinChallenge(User user, Challenge challenge) {
