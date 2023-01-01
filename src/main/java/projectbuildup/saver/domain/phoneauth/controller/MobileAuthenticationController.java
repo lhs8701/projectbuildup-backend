@@ -8,29 +8,30 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import projectbuildup.saver.domain.dto.req.PhoneAuthDto;
+import projectbuildup.saver.domain.dto.req.AuthenticationCodeCheckRequestDto;
+import projectbuildup.saver.domain.dto.req.AuthenticationCodeRequestDto;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
-import projectbuildup.saver.domain.phoneauth.service.PhoneService;
+import projectbuildup.saver.domain.phoneauth.service.MobileAuthenticationService;
 
 @RestController
 @AllArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*")
-public class PhoneController {
+public class MobileAuthenticationController {
 
-    PhoneService phoneService;
+    MobileAuthenticationService mobileAuthenticationService;
 
     // 유효한 전화번호인지 확인하는 API
     @PostMapping("/auth/number")
-    public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody PhoneAuthDto phoneAuthDto) {
-        PhoneAuthResponseDto ans = phoneService.getNumber(phoneAuthDto.getPhoneNumber());
+    public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody AuthenticationCodeRequestDto authenticationCodeRequestDto) {
+        PhoneAuthResponseDto ans = mobileAuthenticationService.getNumber(authenticationCodeRequestDto.getPhoneNumber());
         return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
     }
 
     //인증번호 검증 ->
     @PostMapping("/auth/verify")
-    public ResponseEntity<PhoneAuthResponseDto> verifyNumber(@RequestBody PhoneAuthDto phoneAuthDto) {
-        PhoneAuthResponseDto ans = phoneService.verifyNumber(phoneAuthDto.getPhoneNumber(), phoneAuthDto.getCode());
+    public ResponseEntity<PhoneAuthResponseDto> verifyNumber(@RequestBody AuthenticationCodeCheckRequestDto authenticationCodeCheckRequestDto) {
+        PhoneAuthResponseDto ans = mobileAuthenticationService.verifyNumber(authenticationCodeCheckRequestDto.getPhoneNumber(), authenticationCodeCheckRequestDto.getCode());
         return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
     }
 }

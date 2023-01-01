@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PhoneAuthDto {
+public class AuthenticationCodeRequestDto {
     private String phoneNumber;
-    private String code;
 }

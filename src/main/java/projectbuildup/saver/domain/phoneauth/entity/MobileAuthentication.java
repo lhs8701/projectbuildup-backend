@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "phone_authentication")
-public class Phone {
+public class MobileAuthentication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

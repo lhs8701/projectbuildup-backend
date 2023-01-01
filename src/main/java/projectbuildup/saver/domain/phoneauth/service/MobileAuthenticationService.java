@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
-import projectbuildup.saver.domain.phoneauth.entity.Phone;
-import projectbuildup.saver.domain.phoneauth.repository.PhoneRepository;
+import projectbuildup.saver.domain.phoneauth.entity.MobileAuthentication;
+import projectbuildup.saver.domain.phoneauth.repository.MobileAuthenticationJpaRepository;
 
 import javax.transaction.Transactional;
 import java.security.InvalidKeyException;
@@ -33,9 +33,9 @@ import javax.crypto.spec.SecretKeySpec;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class PhoneService {
+public class MobileAuthenticationService {
 
-    PhoneRepository phoneRepository;
+    MobileAuthenticationJpaRepository mobileAuthenticationJpaRepository;
 
     private final Environment env;
 
@@ -173,18 +173,18 @@ public class PhoneService {
 
 
             // 현재 저장되어 있는 전화번호가 있는지 확인하기 위함.
-            Optional<Phone> phone = phoneRepository.findByPhoneNumber(phoneNumber);
+            Optional<MobileAuthentication> phone = mobileAuthenticationJpaRepository.findByPhoneNumber(phoneNumber);
             String code = getRandomCode();
 
             // 전화번호가 저장되어 있으면 코드만 변경해주고, 없을시 새로 생성해준다.
             if(phone.isPresent()) {
-                Phone unwrappedPhone = phone.get();
-                unwrappedPhone.setCode(code);
-                unwrappedPhone.setTried(0L);
-                phoneRepository.save(unwrappedPhone);
+                MobileAuthentication unwrappedMobileAuthentication = phone.get();
+                unwrappedMobileAuthentication.setCode(code);
+                unwrappedMobileAuthentication.setTried(0L);
+                mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
             } else {
-                Phone newPhone = new Phone(phoneNumber, code, 0L);
-                phoneRepository.save(newPhone);
+                MobileAuthentication newMobileAuthentication = new MobileAuthentication(phoneNumber, code, 0L);
+                mobileAuthenticationJpaRepository.save(newMobileAuthentication);
             }
 
             sendSMS("01021634980", phoneNumber, code);
@@ -200,7 +200,7 @@ public class PhoneService {
     @Transactional
     public PhoneAuthResponseDto verifyNumber(String phoneNumber, String code) {
         try {
-            Optional<Phone> phone = phoneRepository.findByPhoneNumber(phoneNumber);
+            Optional<MobileAuthentication> phone = mobileAuthenticationJpaRepository.findByPhoneNumber(phoneNumber);
 
             // 값 검증
             if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
@@ -215,23 +215,23 @@ public class PhoneService {
                 return new PhoneAuthResponseDto(false, "인증 중이 아닙니다, 인증번호 전송 버튼을 눌러주세요");
             }
 
-            Phone unwrappedPhone = phone.get();
+            MobileAuthentication unwrappedMobileAuthentication = phone.get();
 
             // 이미 시도를 너무 많이 했으면 거절
-            if(unwrappedPhone.getTried() >= 5) {
+            if(unwrappedMobileAuthentication.getTried() >= 5) {
                 return new PhoneAuthResponseDto(false, "코드 입력 횟수가 초과되었습니다, 다시 인증해주세요");
             }
 
-            log.info(String.format("%s %s", unwrappedPhone.getCode(), code));
+            log.info(String.format("%s %s", unwrappedMobileAuthentication.getCode(), code));
 
             // 인증 확인 혹은 실패
-            if(code.equals(unwrappedPhone.getCode())) {
-                phoneRepository.delete(unwrappedPhone);
+            if(code.equals(unwrappedMobileAuthentication.getCode())) {
+                mobileAuthenticationJpaRepository.delete(unwrappedMobileAuthentication);
                 return new PhoneAuthResponseDto(true, "성공했습니다.");
             } else {
-                unwrappedPhone.setTried(unwrappedPhone.getTried()+1);
-                phoneRepository.save(unwrappedPhone);
-                return new PhoneAuthResponseDto(false, String.format("인증에 실패하였습니다, 남은 횟수는 %d 회입니다.", 5L - unwrappedPhone.getTried()));
+                unwrappedMobileAuthentication.setTried(unwrappedMobileAuthentication.getTried()+1);
+                mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
+                return new PhoneAuthResponseDto(false, String.format("인증에 실패하였습니다, 남은 횟수는 %d 회입니다.", 5L - unwrappedMobileAuthentication.getTried()));
             }
         } catch (Exception e) {
             return new PhoneAuthResponseDto(false, "에러가 발생했습니다.");
