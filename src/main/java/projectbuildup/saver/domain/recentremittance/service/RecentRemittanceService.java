@@ -15,7 +15,9 @@ import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 public class RecentRemittanceService {
 
     private final UserJpaRepository userJpaRepository;
-    private final RecentRemittanceJpaRepository recentSavingRepository;
+    private final RecentRemittanceJpaRepository recentRemittanceJpaRepository;
+
+    private final RecentRemittanceFindService recentRemittanceFindService;
 
     /**
      * 사용자의 최근 절약 정보를 반환한다.
@@ -25,7 +27,8 @@ public class RecentRemittanceService {
      */
     public RecentRemittanceResponseDto getRecentSaving(String idToken) {
         User user = userJpaRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
-        RecentRemittance recentRemittance = recentSavingRepository.findByUser(user).orElse(null);
+        RecentRemittance recentRemittance = recentRemittanceFindService.findByUserOrGetNull(user);
+
         if (recentRemittance == null) {
             return null;
         }
@@ -39,7 +42,7 @@ public class RecentRemittanceService {
      * @param saving 송금 정보
      */
     public void updateRecentSaving(User user, Remittance saving) {
-        RecentRemittance recentRemittance = recentSavingRepository.findByUser(user).orElse(null);
+        RecentRemittance recentRemittance = recentRemittanceFindService.findByUserOrGetNull(user);
         if (recentRemittance == null) {
             createRecentSaving(user, saving);
             return;
@@ -58,6 +61,6 @@ public class RecentRemittanceService {
                 .totalCount(1)
                 .user(user)
                 .build();
-        recentSavingRepository.save(recentInformation);
+        recentRemittanceJpaRepository.save(recentInformation);
     }
 }
