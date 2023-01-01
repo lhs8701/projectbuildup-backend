@@ -23,6 +23,8 @@ import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.auth.basic.error.exception.CWrongPasswordException;
+import projectbuildup.saver.domain.user.service.UserFindService;
+import projectbuildup.saver.domain.user.service.UserService;
 import projectbuildup.saver.global.security.JwtProvider;
 
 
@@ -32,20 +34,20 @@ import projectbuildup.saver.global.security.JwtProvider;
 @Transactional
 public class AuthService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserFindService userFindService;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
     public Long signup(SignupRequestDto signupRequestDto) {
-        if (userJpaRepository.findByIdToken(signupRequestDto.getIdToken()).isPresent())
-            throw new CUserExistException();
-        return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
+        userFindService.validateUserExistence(signupRequestDto.getIdToken());
+        return userService.createUserBySignUp(signupRequestDto);
     }
 
     public TokenResponseDto login(LoginRequestDto loginRequestDto){
-        User user = userJpaRepository.findByIdToken(loginRequestDto.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(loginRequestDto.getIdToken());
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
@@ -71,7 +73,7 @@ public class AuthService {
 
     public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
-        userJpaRepository.deleteById(user.getId());
+        userService.deleteById(user.getId());
     }
 
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {

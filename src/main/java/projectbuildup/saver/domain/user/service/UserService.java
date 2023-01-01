@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import projectbuildup.saver.domain.auth.basic.dto.SignupRequestDto;
 import projectbuildup.saver.domain.image.dto.ImageDto;
 import projectbuildup.saver.domain.image.entity.Image;
 import projectbuildup.saver.domain.image.repository.ImageRepository;
@@ -77,5 +78,22 @@ public class UserService {
         userJpaRepository.save(user);
 
         return user.getId();
+    }
+
+    /**
+     * 회원가입 시, 회원을 생성합니다.
+     * @param signupRequestDto 회원가입 시 받는 필드 (아이디토큰, 비밀번호, 닉네임, 전화번호)
+     * @return 유저 아이디
+     */
+    public Long createUserBySignUp(SignupRequestDto signupRequestDto){
+        User user = signupRequestDto.toEntity(passwordEncoder);
+        return userJpaRepository.save(user).getId();
+    }
+
+    /** 회원을 삭제합니다.
+     * @param userId 유저 아이디
+     */
+    public void deleteById(Long userId){
+        userJpaRepository.deleteById(userId);
     }
 }

@@ -8,13 +8,13 @@ import projectbuildup.saver.domain.recentremittance.entity.RecentRemittance;
 import projectbuildup.saver.domain.recentremittance.repository.RecentRemittanceJpaRepository;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
-import projectbuildup.saver.domain.user.repository.UserJpaRepository;
+import projectbuildup.saver.domain.user.service.UserFindService;
 
 @Service
 @RequiredArgsConstructor
 public class RecentRemittanceService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserFindService userFindService;
     private final RecentRemittanceJpaRepository recentRemittanceJpaRepository;
 
     private final RecentRemittanceFindService recentRemittanceFindService;
@@ -26,7 +26,7 @@ public class RecentRemittanceService {
      * @return 총 절약 횟수, 총 절약 금액, 최근 절약일
      */
     public RecentRemittanceResponseDto getRecentSaving(String idToken) {
-        User user = userJpaRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(idToken);
         RecentRemittance recentRemittance = recentRemittanceFindService.findByUserOrGetNull(user);
 
         if (recentRemittance == null) {
