@@ -1,21 +1,21 @@
-package projectbuildup.saver.domain.recentsaving.service;
+package projectbuildup.saver.domain.recentremittance.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
-import projectbuildup.saver.domain.recentsaving.dto.RecentSavingResponseDto;
-import projectbuildup.saver.domain.recentsaving.entity.RecentSaving;
-import projectbuildup.saver.domain.recentsaving.repository.RecentSavingRepository;
+import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.recentremittance.dto.RecentRemittanceResponseDto;
+import projectbuildup.saver.domain.recentremittance.entity.RecentRemittance;
+import projectbuildup.saver.domain.recentremittance.repository.RecentRemittanceJpaRepository;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 
 @Service
 @RequiredArgsConstructor
-public class RecentSavingService {
+public class RecentRemittanceService {
 
     private final UserJpaRepository userJpaRepository;
-    private final RecentSavingRepository recentSavingRepository;
+    private final RecentRemittanceJpaRepository recentSavingRepository;
 
     /**
      * 사용자의 최근 절약 정보를 반환한다.
@@ -23,13 +23,13 @@ public class RecentSavingService {
      * @param idToken 아이디 토큰
      * @return 총 절약 횟수, 총 절약 금액, 최근 절약일
      */
-    public RecentSavingResponseDto getRecentSaving(String idToken) {
+    public RecentRemittanceResponseDto getRecentSaving(String idToken) {
         User user = userJpaRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
-        RecentSaving recentSaving = recentSavingRepository.findByUser(user).orElse(null);
-        if (recentSaving == null) {
+        RecentRemittance recentRemittance = recentSavingRepository.findByUser(user).orElse(null);
+        if (recentRemittance == null) {
             return null;
         }
-        return new RecentSavingResponseDto(recentSaving);
+        return new RecentRemittanceResponseDto(recentRemittance);
     }
 
     /**
@@ -38,13 +38,13 @@ public class RecentSavingService {
      * @param user   유저
      * @param saving 송금 정보
      */
-    public void updateRecentSaving(User user, ChallengeRecordEntity saving) {
-        RecentSaving recentSaving = recentSavingRepository.findByUser(user).orElse(null);
-        if (recentSaving == null) {
+    public void updateRecentSaving(User user, Remittance saving) {
+        RecentRemittance recentRemittance = recentSavingRepository.findByUser(user).orElse(null);
+        if (recentRemittance == null) {
             createRecentSaving(user, saving);
             return;
         }
-        recentSaving.update(saving);
+        recentRemittance.update(saving);
     }
 
     /**
@@ -52,8 +52,8 @@ public class RecentSavingService {
      * @param user 유저
      * @param saving 송금 정보
      */
-    private void createRecentSaving(User user, ChallengeRecordEntity saving) {
-        RecentSaving recentInformation = RecentSaving.builder()
+    private void createRecentSaving(User user, Remittance saving) {
+        RecentRemittance recentInformation = RecentRemittance.builder()
                 .totalAmount(saving.getAmount())
                 .totalCount(1)
                 .user(user)

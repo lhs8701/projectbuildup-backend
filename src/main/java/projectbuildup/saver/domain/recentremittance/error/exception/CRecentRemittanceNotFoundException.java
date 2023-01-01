@@ -1,13 +1,13 @@
-package projectbuildup.saver.domain.recentsaving.error.exception;
+package projectbuildup.saver.domain.recentremittance.error.exception;
 
 import lombok.Getter;
 import projectbuildup.saver.global.error.ErrorCode;
 
 @Getter
-public class CRecentSavingNotFoundException extends RuntimeException{
+public class CRecentRemittanceNotFoundException extends RuntimeException{
     private final ErrorCode errorCode;
 
-    public CRecentSavingNotFoundException(){
+    public CRecentRemittanceNotFoundException(){
         super();
         errorCode = ErrorCode.RECENT_SAVING_NOT_FOUND_EXCEPTION;
     }

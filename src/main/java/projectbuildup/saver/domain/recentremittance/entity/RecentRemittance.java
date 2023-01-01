@@ -1,10 +1,10 @@
-package projectbuildup.saver.domain.recentsaving.entity;
+package projectbuildup.saver.domain.recentremittance.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecentSaving extends BaseTimeEntity {
+public class RecentRemittance extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,10 @@ public class RecentSaving extends BaseTimeEntity {
     private long totalAmount;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn
     private User user;
 
-    public void update(ChallengeRecordEntity saving){
+    public void update(Remittance saving){
         this.totalAmount += saving.getAmount();
         this.totalCount++;
     }

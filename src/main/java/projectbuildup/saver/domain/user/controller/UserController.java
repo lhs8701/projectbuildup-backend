@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import projectbuildup.saver.domain.recentsaving.service.RecentSavingService;
+import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
@@ -23,7 +23,7 @@ import projectbuildup.saver.global.common.ConstValue;
 public class UserController {
 
     private final UserService userService;
-    private final RecentSavingService recentSavingService;
+    private final RecentRemittanceService recentRemittanceService;
 
     @ApiOperation(value = "회원 비밀번호 변경",
             notes = """
@@ -93,6 +93,6 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{idToken}/recent")
     public ResponseEntity<?> getSavingStatus(@PathVariable String idToken) {
-        return new ResponseEntity<>(recentSavingService.getRecentSaving(idToken), HttpStatus.OK);
+        return new ResponseEntity<>(recentRemittanceService.getRecentSaving(idToken), HttpStatus.OK);
     }
 }
