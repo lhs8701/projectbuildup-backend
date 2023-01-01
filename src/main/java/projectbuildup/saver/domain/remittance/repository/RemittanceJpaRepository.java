@@ -1,7 +1,7 @@
-package projectbuildup.saver.domain.challengeRecord.repository;
+package projectbuildup.saver.domain.remittance.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.remittance.entity.Remittance;
 
 import java.util.List;
 

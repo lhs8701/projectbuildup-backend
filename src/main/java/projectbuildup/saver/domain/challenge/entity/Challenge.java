@@ -4,7 +4,7 @@ import lombok.*;
 import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.ranking.entity.Ranking;
-import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;

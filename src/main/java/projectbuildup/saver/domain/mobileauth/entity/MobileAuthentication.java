@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.phoneauth.entity;
+package projectbuildup.saver.domain.mobileauth.entity;
 
 
 import lombok.*;

@@ -1,12 +1,12 @@
-package projectbuildup.saver.domain.challengeRecord.service;
+package projectbuildup.saver.domain.remittance.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.Challenge;
 import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
 import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceService;
-import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
-import projectbuildup.saver.domain.challengeRecord.repository.RemittanceJpaRepository;
+import projectbuildup.saver.domain.remittance.entity.Remittance;
+import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
 import projectbuildup.saver.domain.user.entity.User;
 
 @Service

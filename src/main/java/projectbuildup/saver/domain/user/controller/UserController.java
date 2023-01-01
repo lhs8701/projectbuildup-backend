@@ -13,7 +13,7 @@ import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceServ
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
-import projectbuildup.saver.domain.user.service.interfaces.UserService;
+import projectbuildup.saver.domain.user.service.UserService;
 import projectbuildup.saver.global.common.ConstValue;
 
 @Api(tags = {"User"})

@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.challengeRecord.entity;
+package projectbuildup.saver.domain.remittance.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

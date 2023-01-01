@@ -1,12 +1,12 @@
-package projectbuildup.saver.domain.phoneauth.service;
+package projectbuildup.saver.domain.mobileauth.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
-import projectbuildup.saver.domain.phoneauth.entity.MobileAuthentication;
-import projectbuildup.saver.domain.phoneauth.repository.MobileAuthenticationJpaRepository;
+import projectbuildup.saver.domain.mobileauth.entity.MobileAuthentication;
+import projectbuildup.saver.domain.mobileauth.repository.MobileAuthenticationJpaRepository;
 
 import javax.transaction.Transactional;
 import java.security.InvalidKeyException;

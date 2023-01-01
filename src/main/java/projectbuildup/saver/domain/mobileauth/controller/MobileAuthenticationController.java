@@ -1,4 +1,4 @@
-package projectbuildup.saver.domain.phoneauth.controller;
+package projectbuildup.saver.domain.mobileauth.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import projectbuildup.saver.domain.dto.req.AuthenticationCodeCheckRequestDto;
 import projectbuildup.saver.domain.dto.req.AuthenticationCodeRequestDto;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
-import projectbuildup.saver.domain.phoneauth.service.MobileAuthenticationService;
+import projectbuildup.saver.domain.mobileauth.service.MobileAuthenticationService;
 
 @RestController
 @AllArgsConstructor

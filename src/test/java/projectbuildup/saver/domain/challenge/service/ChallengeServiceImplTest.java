@@ -4,7 +4,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
 import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
-import projectbuildup.saver.domain.challengeRecord.repository.RemittanceJpaRepository;
+import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
 import projectbuildup.saver.domain.user.repository.UserRepository;
 
 

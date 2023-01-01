@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 

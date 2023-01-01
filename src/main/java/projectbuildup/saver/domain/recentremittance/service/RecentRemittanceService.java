@@ -2,7 +2,7 @@ package projectbuildup.saver.domain.recentremittance.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.domain.recentremittance.dto.RecentRemittanceResponseDto;
 import projectbuildup.saver.domain.recentremittance.entity.RecentRemittance;
 import projectbuildup.saver.domain.recentremittance.repository.RecentRemittanceJpaRepository;

@@ -10,7 +10,7 @@ import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.image.entity.Image;
 import projectbuildup.saver.domain.ranking.entity.Ranking;
 import projectbuildup.saver.domain.recentremittance.entity.RecentRemittance;
-import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 import javax.persistence.*;
 import java.util.ArrayList;

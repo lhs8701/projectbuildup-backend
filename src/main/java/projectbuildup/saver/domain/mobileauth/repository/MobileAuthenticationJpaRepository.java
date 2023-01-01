@@ -1,8 +1,8 @@
-package projectbuildup.saver.domain.phoneauth.repository;
+package projectbuildup.saver.domain.mobileauth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import projectbuildup.saver.domain.phoneauth.entity.MobileAuthentication;
+import projectbuildup.saver.domain.mobileauth.entity.MobileAuthentication;
 
 import java.util.Optional;
 
