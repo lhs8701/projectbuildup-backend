@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.Challenge;
 import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundException;
 import projectbuildup.saver.domain.challenge.error.exception.CUserAlreadyJoinedException;
-import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
+import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
 import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
@@ -31,7 +31,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChallengeService {
 
-    private final ChallengeRepository challengeRepository;
+    private final ChallengeJpaRepository challengeJpaRepository;
+    private final ChallengeFindService challengeFindService;
+
     private final ParticipationJpaRepository participationJpaRepository;
     private final UserRepository userRepository;
     private final RemittanceJpaRepository remittanceJpaRepository;
@@ -91,13 +93,13 @@ public class ChallengeService {
                 .savingAmount(challengeReqDto.getSavingAmount())
                 .build();
 
-        challengeRepository.save(challenge);
+        challengeJpaRepository.save(challenge);
     }
 
     public GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId) {
 
         // 모든 챌린지 가져옴
-        List<Challenge> challenges = challengeRepository.findAll();
+        List<Challenge> challenges = challengeFindService.findAll();
 
         List<Challenge> selectedChallenges = new ArrayList<>(
                 challenges
@@ -157,7 +159,7 @@ public class ChallengeService {
     }
 
     public GetChallengeResDto getChallenge(Long challengeId) {
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
+        Challenge challenge = challengeFindService.findById(challengeId);
         return new GetChallengeResDto(
                     challenge.getId(),
                     challenge.getStartDate(),
@@ -172,7 +174,7 @@ public class ChallengeService {
 
     public GetChallengeListResDto getMyChallenges(String loginId) {
         // 전부 찾아서 loginId가 같은 user가 있는 챌린지만 추려낸 후 리턴.
-        List<Challenge> challenges = challengeRepository.findAll();
+        List<Challenge> challenges = challengeFindService.findAll();
 
         List<Challenge> userChallenges = challenges
                 .stream()
@@ -212,7 +214,7 @@ public class ChallengeService {
     }
 
     public void joinChallenge(String idToken, Long challengeId) {
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
+        Challenge challenge = challengeFindService.findById(challengeId);
         User user = userRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
         if(participationJpaRepository.findByChallengeAndUser(challenge, user).isPresent()) {
             throw new CUserAlreadyJoinedException();
@@ -223,22 +225,22 @@ public class ChallengeService {
     }
 
     public void leftChallenge(String idToken, Long challengeId) {
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
+        Challenge challenge = challengeFindService.findById(challengeId);
         User user = userRepository.findByIdToken(idToken).orElseThrow(CUserAlreadyJoinedException::new);
         participationJpaRepository.deleteByChallengeAndUser(challenge, user);
     }
 
+    public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
+        Challenge challenge = challengeFindService.findById(challengeId);
+        challenge.update(updated);
+        challengeJpaRepository.save(challenge);
+    }
+
     public void deleteChallenge(Long challengeId) {
         try {
-            challengeRepository.deleteById(challengeId);
+            challengeJpaRepository.deleteById(challengeId);
         } catch (IllegalArgumentException e) {
             throw new CChallengeNotFoundException();
         }
-    }
-
-    public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
-        challenge.updateChallenge(updated);
-        challengeRepository.save(challenge);
     }
 }

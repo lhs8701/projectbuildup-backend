@@ -61,7 +61,7 @@ public class Challenge extends BaseTimeEntity {
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Participation> participationList;
 
-    public void updateChallenge(UpdateChallengeReqDto updated) {
+    public void update(UpdateChallengeReqDto updated) {
         this.startDate = updated.getStartDate();
         this.endDate = updated.getEndDate();
         this.mainTitle = updated.getMainTitle();
