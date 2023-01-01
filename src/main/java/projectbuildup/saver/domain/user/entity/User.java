@@ -6,11 +6,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 import projectbuildup.saver.domain.notification.entity.Notification;
-import projectbuildup.saver.domain.challengeLog.entity.ChallengeLog;
+import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.image.entity.Image;
 import projectbuildup.saver.domain.ranking.entity.Ranking;
-import projectbuildup.saver.domain.recentsaving.entity.RecentSaving;
-import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.recentremittance.entity.RecentRemittance;
+import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -51,16 +51,16 @@ public class User extends BaseTimeEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ChallengeLog> challengeLogList;
+    private List<Participation> participationList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ChallengeRecordEntity> challengeRecordEntityList;
+    private List<Remittance> remittanceList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Ranking> rankingEntityList;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private RecentSaving recentSaving;
+    private RecentRemittance recentRemittance;
 
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Notification> sendNotificationList;

@@ -7,16 +7,16 @@ import projectbuildup.saver.domain.challenge.entity.Challenge;
 import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundException;
 import projectbuildup.saver.domain.challenge.error.exception.CUserAlreadyJoinedException;
 import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
-import projectbuildup.saver.domain.challengeLog.entity.ChallengeLog;
-import projectbuildup.saver.domain.challengeLog.repository.ChallengeLogRepository;
+import projectbuildup.saver.domain.participation.entity.Participation;
+import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
 import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantResDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
-import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
-import projectbuildup.saver.domain.challengeRecord.repository.ChallengeRecordRepository;
+import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
+import projectbuildup.saver.domain.challengeRecord.repository.RemittanceJpaRepository;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.user.repository.UserRepository;
@@ -32,27 +32,27 @@ import java.util.stream.Collectors;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
-    private final ChallengeLogRepository challengeLogRepository;
+    private final ParticipationJpaRepository participationJpaRepository;
     private final UserRepository userRepository;
-    private final ChallengeRecordRepository challengeRecordRepository;
+    private final RemittanceJpaRepository remittanceJpaRepository;
 
     public GetChallengeParticipantsResDto getChallengeParticipants(Long challengeId) {
         // 챌린지에 참여한 사람 확인
-        List<ChallengeLog> challengeLogList = challengeLogRepository.findByChallenge_Id(challengeId);
+        List<Participation> participationList = participationJpaRepository.findByChallenge_Id(challengeId);
 
         List<ParticipantResDto> participantResDtoList = new ArrayList<>();
 
         // 참여한 모든 유저에 대해 For Loop
-        for(ChallengeLog c : challengeLogList) {
+        for(Participation c : participationList) {
             // id를 통해 유저 Entity를 가져옴
             // 유저가 없을시 Exception throw -> 404 NOT FOUND
             User userEntity = userRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
 
 
             // 본 유저가 본 챌린지에 모았던 기록들을 모두 가져 온 후 총액을 계산함.
-            List<ChallengeRecordEntity> challengeRecordEntityList = challengeRecordRepository.findByChallengeIdAndUserId(challengeId, userEntity.getId());
+            List<Remittance> remittanceList = remittanceJpaRepository.findByChallengeIdAndUserId(challengeId, userEntity.getId());
             Long savingAmount = 0L;
-            for(ChallengeRecordEntity saving : challengeRecordEntityList) {
+            for(Remittance saving : remittanceList) {
                 savingAmount += saving.getAmount();
             }
 
@@ -104,7 +104,7 @@ public class ChallengeService {
                         .stream()
                         .filter((challenge) -> {
                     // 챌린지 중 자신의 loginId가 있는 챌린지는 제외함.
-                            for(ChallengeLog c: challenge.getChallengeLogList()) {
+                            for(Participation c: challenge.getParticipationList()) {
                                 User user = userRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
                                 return !loginId.equals(user.getIdToken());
                             }
@@ -117,7 +117,7 @@ public class ChallengeService {
         // sort 방식에 따라 정렬함.
         if(sortType == 1) {
             selectedChallenges.sort((a, b) -> {
-                return ascending ? a.getChallengeLogList().size() - b.getChallengeLogList().size() : b.getChallengeLogList().size() - a.getChallengeLogList().size();
+                return ascending ? a.getParticipationList().size() - b.getParticipationList().size() : b.getParticipationList().size() - a.getParticipationList().size();
             });
         } else if (sortType == 2) {
             selectedChallenges.sort((a, b) -> {
@@ -144,7 +144,7 @@ public class ChallengeService {
                             challenge.getSubTitle(),
                             challenge.getContent(),
                             challenge.getSavingAmount(),
-                            (long) challenge.getChallengeLogList().size()
+                            (long) challenge.getParticipationList().size()
                     );
                 })
                 .collect(Collectors.toList());
@@ -166,7 +166,7 @@ public class ChallengeService {
                     challenge.getSubTitle(),
                     challenge.getContent(),
                     challenge.getSavingAmount(),
-                    (long) challenge.getChallengeLogList().size()
+                    (long) challenge.getParticipationList().size()
                 );
     }
 
@@ -177,8 +177,8 @@ public class ChallengeService {
         List<Challenge> userChallenges = challenges
                 .stream()
                 .filter((challenge) -> {
-                    List<ChallengeLog> challengeLogs = challenge.getChallengeLogList();
-                    for(ChallengeLog c: challengeLogs) {
+                    List<Participation> participations = challenge.getParticipationList();
+                    for(Participation c: participations) {
                         User user = userRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
                         if (loginId.equals(user.getIdToken())) {
                             return true;
@@ -199,7 +199,7 @@ public class ChallengeService {
                             challenge.getSubTitle(),
                             challenge.getContent(),
                             challenge.getSavingAmount(),
-                            (long) challenge.getChallengeLogList().size()
+                            (long) challenge.getParticipationList().size()
                     );
                 })
                 .collect(Collectors.toList());
@@ -214,18 +214,18 @@ public class ChallengeService {
     public void joinChallenge(String idToken, Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
         User user = userRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
-        if(challengeLogRepository.findByChallengeAndUser(challenge, user).isPresent()) {
+        if(participationJpaRepository.findByChallengeAndUser(challenge, user).isPresent()) {
             throw new CUserAlreadyJoinedException();
         }
-        ChallengeLog log = new ChallengeLog();
+        Participation log = new Participation();
         log.joinChallenge(user, challenge);
-        challengeLogRepository.save(log);
+        participationJpaRepository.save(log);
     }
 
     public void leftChallenge(String idToken, Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(CChallengeNotFoundException::new);
         User user = userRepository.findByIdToken(idToken).orElseThrow(CUserAlreadyJoinedException::new);
-        challengeLogRepository.deleteByChallengeAndUser(challenge, user);
+        participationJpaRepository.deleteByChallengeAndUser(challenge, user);
     }
 
     public void deleteChallenge(Long challengeId) {

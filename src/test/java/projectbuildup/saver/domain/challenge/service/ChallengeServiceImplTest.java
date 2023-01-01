@@ -3,9 +3,8 @@ package projectbuildup.saver.domain.challenge.service;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
-import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
-import projectbuildup.saver.domain.challengeLog.repository.ChallengeLogRepository;
-import projectbuildup.saver.domain.challengeRecord.repository.ChallengeRecordRepository;
+import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
+import projectbuildup.saver.domain.challengeRecord.repository.RemittanceJpaRepository;
 import projectbuildup.saver.domain.user.repository.UserRepository;
 
 
@@ -18,17 +17,16 @@ class ChallengeServiceImplTest {
     ChallengeRepository challengeRepository;
 
     @Mock
-    ChallengeLogRepository challengeLogRepository;
+    ParticipationJpaRepository participationJpaRepository;
 
     @Mock
     UserRepository userRepository;
 
     @Mock
-    ChallengeRecordRepository challengeRecordRepository;
+    RemittanceJpaRepository remittanceJpaRepository;
 
     // Unit test 대상
     @InjectMocks
     ChallengeService challengeService;
-
 
 }

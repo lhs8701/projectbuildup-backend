@@ -1,10 +1,10 @@
 package projectbuildup.saver.domain.challenge.entity;
 
 import lombok.*;
-import projectbuildup.saver.domain.challengeLog.entity.ChallengeLog;
+import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.ranking.entity.Ranking;
-import projectbuildup.saver.domain.challengeRecord.entity.ChallengeRecordEntity;
+import projectbuildup.saver.domain.challengeRecord.entity.Remittance;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -53,13 +53,13 @@ public class Challenge extends BaseTimeEntity {
     private Long savingAmount;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ChallengeRecordEntity> challengeRecordEntityList;
+    private List<Remittance> remittanceList;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Ranking> rankingEntityList;
 
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ChallengeLog> challengeLogList;
+    private List<Participation> participationList;
 
     public void updateChallenge(UpdateChallengeReqDto updated) {
         this.startDate = updated.getStartDate();
