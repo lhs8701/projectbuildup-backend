@@ -41,7 +41,7 @@ public class RecentRemittanceService {
      * @param user   유저
      * @param saving 송금 정보
      */
-    public void updateRecentSaving(User user, Remittance saving) {
+    public void updateRecentInformation(User user, Remittance saving) {
         RecentRemittance recentRemittance = recentRemittanceFindService.findByUserOrGetNull(user);
         if (recentRemittance == null) {
             createRecentSaving(user, saving);

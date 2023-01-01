@@ -3,7 +3,7 @@ package projectbuildup.saver.domain.remittance.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.Challenge;
-import projectbuildup.saver.domain.dto.req.SaveSavingReqDto;
+import projectbuildup.saver.domain.dto.req.RemitRequestDto;
 import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceService;
 import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
@@ -16,22 +16,22 @@ public class RemittanceService {
     private final RecentRemittanceService recentRemittanceService;
     private final RemittanceJpaRepository remittanceJpaRepository;
 
-    public void saveSaving(SaveSavingReqDto saveSavingReqDto) {
+    public void remit(RemitRequestDto remitRequestDto) {
         Challenge challenge = Challenge.builder()
-                .id(saveSavingReqDto.getChallengeId())
+                .id(remitRequestDto.getChallengeId())
                 .build();
 
         User userEntity = User.builder()
-                .id(saveSavingReqDto.getUserId())
+                .id(remitRequestDto.getUserId())
                 .build();
 
         Remittance remittance = Remittance.builder()
                 .challenge(challenge)
                 .user(userEntity)
-                .amount(saveSavingReqDto.getAmount())
+                .amount(remitRequestDto.getAmount())
                 .build();
 
-        recentRemittanceService.updateRecentSaving(userEntity, remittance);
+        recentRemittanceService.updateRecentInformation(userEntity, remittance);
         remittanceJpaRepository.save(remittance);
     }
 }

@@ -5,9 +5,6 @@ import org.mockito.Mock;
 import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
 import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
 import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
-import projectbuildup.saver.domain.user.repository.UserRepository;
-
-
 
 
 class ChallengeServiceImplTest {

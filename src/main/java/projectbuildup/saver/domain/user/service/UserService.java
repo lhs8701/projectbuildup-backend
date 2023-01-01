@@ -13,14 +13,14 @@ import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
 import projectbuildup.saver.domain.user.dto.UserProfileResponseDto;
 import projectbuildup.saver.domain.user.entity.User;
-import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
-import projectbuildup.saver.domain.user.repository.UserRepository;
+import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
+    private final UserFindService userFindService;
     private final PasswordEncoder passwordEncoder;
 
     private final ImageService imageService;
@@ -31,10 +31,11 @@ public class UserService {
      * @param passwordUpdateParam 변경할 유저 아이디, 변경할 비밀번호
      */
     public void changePassword(PasswordUpdateParam passwordUpdateParam) {
-        User user = userRepository.findByIdToken(passwordUpdateParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(passwordUpdateParam.getIdToken());
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
-        userRepository.save(user);
+        userJpaRepository.save(user);
     }
+
 
     /**
      * 사용자의 프로필을 조회합니다.
@@ -42,9 +43,10 @@ public class UserService {
      * @return 유저 프로필(닉네임, 프로필 사진 URL)
      */
     public UserProfileResponseDto getProfile(UserIdRequestParam userIdRequestParam) {
-        User user = userRepository.findByIdToken(userIdRequestParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(userIdRequestParam.getIdToken());
         return new UserProfileResponseDto(user);
     }
+
 
     /**
      * 사용자의 프로필을 수정합니다.
@@ -52,11 +54,12 @@ public class UserService {
      * @return 수정한 사용자의 아이디
      */
     public Long updateProfile(ProfileUpdateParam profileUpdateParam) {
-        User user = userRepository.findByIdToken(profileUpdateParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(profileUpdateParam.getIdToken());
         user.setNickName(profileUpdateParam.getNickName());
-        userRepository.save(user);
+        userJpaRepository.save(user);
         return user.getId();
     }
+
 
     /**
      * 프로필 사진을 변경합니다.
@@ -65,16 +68,14 @@ public class UserService {
      * @return 변경한 사용자의 아이디
      */
     public Long changeProfileImage(UserIdRequestParam userIdRequestParam, MultipartFile imageFile) {
-        User user = userRepository.findByIdToken(userIdRequestParam.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(userIdRequestParam.getIdToken());
         ImageDto imageDto = imageService.uploadImage(imageFile);
         Image image = imageDto.toEntity();
         imageRepository.save(image);
         imageService.removeImage(user.getProfileImage());
         user.setProfileImage(image);
-        userRepository.save(user);
+        userJpaRepository.save(user);
 
         return user.getId();
     }
-
-
 }
