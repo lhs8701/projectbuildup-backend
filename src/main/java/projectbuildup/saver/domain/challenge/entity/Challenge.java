@@ -1,6 +1,7 @@
 package projectbuildup.saver.domain.challenge.entity;
 
 import lombok.*;
+import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
 import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.ranking.entity.Ranking;
@@ -8,9 +9,10 @@ import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 
-@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,20 +23,6 @@ public class Challenge extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /**
-     * yyyy.MM.dd
-     */
-    @NonNull
-    @Column(length = 40)
-    private String startDate;
-
-    /**
-     * yyyy.MM.dd
-     */
-    @NonNull
-    @Column(length = 40)
-    private String endDate;
 
     @NonNull
     @Column(length = 30)
@@ -52,6 +40,12 @@ public class Challenge extends BaseTimeEntity {
     @Column(length = 30)
     private Long savingAmount;
 
+    @NonNull
+    private LocalDate startDate;
+
+    @NonNull
+    private LocalDate endDate;
+
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Remittance> remittanceList;
 
@@ -61,13 +55,22 @@ public class Challenge extends BaseTimeEntity {
     @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Participation> participationList;
 
-    public void update(UpdateChallengeReqDto updated) {
-        this.startDate = updated.getStartDate();
-        this.endDate = updated.getEndDate();
+    public void update(UpdateChallengeReqDto updated, LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.mainTitle = updated.getMainTitle();
         this.subTitle = updated.getSubTitle();
         this.content = updated.getContent();
         this.savingAmount = updated.getSavingAmount();
     }
 
+    @Builder
+    public Challenge(CreateChallengeReqDto challengeReqDto, LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.mainTitle = challengeReqDto.getMainTitle();
+        this.subTitle = challengeReqDto.getSubTitle();
+        this.content = challengeReqDto.getContent();
+        this.savingAmount = challengeReqDto.getSavingAmount();
+    }
 }

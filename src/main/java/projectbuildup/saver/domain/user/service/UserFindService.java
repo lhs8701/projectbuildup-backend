@@ -17,6 +17,10 @@ public class UserFindService {
         return userJpaRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
     }
 
+    public User findById(Long userId){
+        return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+    }
+
     public void validateUserExistence(String idToken){
         if (userJpaRepository.findByIdToken(idToken).isPresent()) {
             throw new CUserExistException();

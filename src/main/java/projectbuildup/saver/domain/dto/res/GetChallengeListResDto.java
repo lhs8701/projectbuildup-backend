@@ -11,5 +11,5 @@ import java.util.List;
 @Builder
 public class GetChallengeListResDto {
     private Long challengCnt;
-    private List<GetChallengeResDto> challengeList;
+    private List<GetChallengeResponseDto> challengeList;
 }
