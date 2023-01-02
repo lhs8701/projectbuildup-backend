@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.challenge.entity.Challenge;
 import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundException;
-import projectbuildup.saver.domain.challenge.error.exception.CUserAlreadyJoinedException;
 import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
 import projectbuildup.saver.domain.dto.req.CreateChallengeRequestDto;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
@@ -14,6 +13,7 @@ import projectbuildup.saver.domain.dto.res.ChallengeResponseDto;
 import projectbuildup.saver.domain.dto.res.ParticipantDto;
 import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
+import projectbuildup.saver.domain.participation.service.ParticipationFindService;
 import projectbuildup.saver.domain.participation.service.ParticipationService;
 import projectbuildup.saver.domain.remittance.service.RemittanceFindService;
 import projectbuildup.saver.domain.remittance.service.RemittanceService;
@@ -33,8 +33,8 @@ public class ChallengeService {
 
     private final ChallengeJpaRepository challengeJpaRepository;
     private final ChallengeFindService challengeFindService;
-    private final ParticipationJpaRepository participationJpaRepository;
 
+    private final ParticipationFindService participationFindService;
     private final ParticipationService participationService;
     private final UserFindService userFindService;
     private final RemittanceFindService remittanceFindService;
@@ -43,7 +43,7 @@ public class ChallengeService {
 
     public ParticipantsResponseDto getChallengeParticipants(Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        List<Participation> participationList = participationJpaRepository.findByChallenge_Id(challengeId);
+        List<Participation> participationList = participationFindService.findAllByChallenge(challenge);
         List<ParticipantDto> responseDtoList = new ArrayList<>();
         for (Participation c : participationList) {
             User user = userFindService.findById(c.getId());
@@ -83,17 +83,13 @@ public class ChallengeService {
         Challenge challenge = challengeFindService.findById(challengeId);
         User user = userFindService.findByIdToken(idToken);
         participationService.validateParticipationExistence(challenge, user);
-        Participation participation = Participation.builder()
-                .user(user)
-                .challenge(challenge)
-                .build();
-        participationJpaRepository.save(participation);
+        participationService.makeParticipation(challenge, user);
     }
 
-    public void leftChallenge(String idToken, Long challengeId) {
+    public void giveUpChallenge(String idToken, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
         User user = userFindService.findByIdToken(idToken);
-        participationJpaRepository.deleteByChallengeAndUser(challenge, user);
+        participationService.deleteByChallengeAndUser(challenge, user);
     }
 
     public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {

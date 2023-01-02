@@ -50,7 +50,7 @@ public class ChallengeController {
 
     @PostMapping("/left")
     public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
-        challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+        challengeService.giveUpChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

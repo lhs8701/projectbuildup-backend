@@ -8,6 +8,8 @@ import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepo
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.global.error.exception.CParticipationNotFoundException;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParticipationFindService {
@@ -18,4 +20,7 @@ public class ParticipationFindService {
         return participationJpaRepository.findByChallengeAndUser(challenge, user).orElseThrow(CParticipationNotFoundException::new);
     }
 
+    public List<Participation> findAllByChallenge(Challenge challenge) {
+        return participationJpaRepository.findAllByChallenge(challenge);
+    }
 }
