@@ -11,6 +11,8 @@ import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.service.UserFindService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RemittanceService {
@@ -18,6 +20,7 @@ public class RemittanceService {
     private final UserFindService userFindService;
     private final RecentRemittanceService recentRemittanceService;
     private final RemittanceJpaRepository remittanceJpaRepository;
+    private final RemittanceFindService remittanceFindService;
 
     public void remit(RemitRequestDto remitRequestDto) {
         Challenge challenge = challengeFindService.findById(remitRequestDto.getChallengeId());
@@ -30,5 +33,14 @@ public class RemittanceService {
 
         recentRemittanceService.updateRecentInformation(user, remittance);
         remittanceJpaRepository.save(remittance);
+    }
+
+    public Long calculateSum(User user, Challenge challenge){
+        List<Remittance> remittanceList = remittanceFindService.findAllByChallengeAndUser(challenge, user);
+        Long sum = 0L;
+        for (Remittance saving : remittanceList) {
+            sum += saving.getAmount();
+        }
+        return sum;
     }
 }

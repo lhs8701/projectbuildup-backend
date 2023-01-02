@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @ToString
-public class GetChallengeResponseDto {
+public class ChallengeResponseDto {
     private Long challengeId;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -18,7 +18,7 @@ public class GetChallengeResponseDto {
     private Long savingAmount;
     private Long joinedNumber;
 
-    public GetChallengeResponseDto(Challenge challenge) {
+    public ChallengeResponseDto(Challenge challenge) {
         this.challengeId = challenge.getId();
         this.startDate = challenge.getStartDate();
         this.endDate = challenge.getEndDate();

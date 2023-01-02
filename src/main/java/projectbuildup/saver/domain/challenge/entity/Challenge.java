@@ -1,7 +1,7 @@
 package projectbuildup.saver.domain.challenge.entity;
 
 import lombok.*;
-import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.dto.req.CreateChallengeRequestDto;
 import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.ranking.entity.Ranking;
@@ -10,7 +10,6 @@ import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.List;
 
 @Getter
@@ -65,7 +64,7 @@ public class Challenge extends BaseTimeEntity {
     }
 
     @Builder
-    public Challenge(CreateChallengeReqDto challengeReqDto, LocalDate startDate, LocalDate endDate) {
+    public Challenge(CreateChallengeRequestDto challengeReqDto, LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.mainTitle = challengeReqDto.getMainTitle();

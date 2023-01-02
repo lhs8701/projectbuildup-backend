@@ -1,17 +1,16 @@
 package projectbuildup.saver.domain.participation.entity;
 
 import lombok.*;
+import org.junit.jupiter.params.ParameterizedTest;
 import projectbuildup.saver.domain.challenge.entity.Challenge;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
 
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Participation extends BaseTimeEntity {
 
@@ -27,7 +26,8 @@ public class Participation extends BaseTimeEntity {
     @JoinColumn
     private Challenge challenge;
 
-    public void joinChallenge(User user, Challenge challenge) {
+    @Builder
+    public Participation(User user, Challenge challenge){
         this.user = user;
         this.challenge = challenge;
     }

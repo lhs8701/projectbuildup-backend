@@ -7,25 +7,24 @@ import projectbuildup.saver.domain.challenge.entity.Challenge;
 import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundException;
 import projectbuildup.saver.domain.challenge.error.exception.CUserAlreadyJoinedException;
 import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
+import projectbuildup.saver.domain.dto.req.CreateChallengeRequestDto;
+import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.ParticipantsResponseDto;
+import projectbuildup.saver.domain.dto.res.ChallengeResponseDto;
+import projectbuildup.saver.domain.dto.res.ParticipantDto;
 import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
-import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
-import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeResponseDto;
-import projectbuildup.saver.domain.dto.res.ParticipantResDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
-import projectbuildup.saver.domain.remittance.entity.Remittance;
-import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
+import projectbuildup.saver.domain.participation.service.ParticipationService;
+import projectbuildup.saver.domain.remittance.service.RemittanceFindService;
+import projectbuildup.saver.domain.remittance.service.RemittanceService;
 import projectbuildup.saver.domain.user.entity.User;
-import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
-import projectbuildup.saver.domain.user.repository.UserJpaRepository;
+import projectbuildup.saver.domain.user.service.UserFindService;
 import projectbuildup.saver.global.util.StringDateConverter;
 
 import java.time.LocalDate;
-import java.time.Year;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -34,59 +33,35 @@ public class ChallengeService {
 
     private final ChallengeJpaRepository challengeJpaRepository;
     private final ChallengeFindService challengeFindService;
-
     private final ParticipationJpaRepository participationJpaRepository;
-    private final UserJpaRepository userJpaRepository;
-    private final RemittanceJpaRepository remittanceJpaRepository;
 
+    private final ParticipationService participationService;
+    private final UserFindService userFindService;
+    private final RemittanceFindService remittanceFindService;
+    private final RemittanceService remittanceService;
     private final StringDateConverter stringDateConverter;
 
-    public GetChallengeParticipantsResDto getChallengeParticipants(Long challengeId) {
-        // 챌린지에 참여한 사람 확인
+    public ParticipantsResponseDto getChallengeParticipants(Long challengeId) {
+        Challenge challenge = challengeFindService.findById(challengeId);
         List<Participation> participationList = participationJpaRepository.findByChallenge_Id(challengeId);
-
-        List<ParticipantResDto> participantResDtoList = new ArrayList<>();
-
-        // 참여한 모든 유저에 대해 For Loop
+        List<ParticipantDto> responseDtoList = new ArrayList<>();
         for (Participation c : participationList) {
-            // id를 통해 유저 Entity를 가져옴
-            // 유저가 없을시 Exception throw -> 404 NOT FOUND
-            User userEntity = userJpaRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
-
-
-            // 본 유저가 본 챌린지에 모았던 기록들을 모두 가져 온 후 총액을 계산함.
-            List<Remittance> remittanceList = remittanceJpaRepository.findByChallengeIdAndUserId(challengeId, userEntity.getId());
-            Long savingAmount = 0L;
-            for (Remittance saving : remittanceList) {
-                savingAmount += saving.getAmount();
-            }
-
-            // 참여자 추가.
-            ParticipantResDto participantResDto = ParticipantResDto.builder()
-                    .loginId(userEntity.getIdToken())
-                    .nickName(userEntity.getNickName())
-                    .savingAmount(savingAmount)
-                    .build();
-            participantResDtoList.add(participantResDto);
+            User user = userFindService.findById(c.getId());
+            Long totalAmount = remittanceService.calculateSum(user, challenge);
+            ParticipantDto participantDto = new ParticipantDto(user, totalAmount);
+            responseDtoList.add(participantDto);
         }
-
         //정렬 알고리즘 구현
-        Comparator<ParticipantResDto> comparator = (p1, p2) -> {
-            long difference = (p1.getSavingAmount() - p2.getSavingAmount());
+        Comparator<ParticipantDto> comparator = (p1, p2) -> {
+            long difference = (p1.getTotalAmount() - p2.getTotalAmount());
             return (int) difference;
         };
 
-        participantResDtoList.sort(comparator);
-
-        // 결과들 ViewChallengeResDto에 집어넣고
-        // 리스트 반환
-        return GetChallengeParticipantsResDto.builder()
-                .participantResDtoList(participantResDtoList)
-                .participantCnt((long) participantResDtoList.size())
-                .build();
+        responseDtoList.sort(comparator);
+        return new ParticipantsResponseDto(responseDtoList);
     }
 
-    public void createChallenge(CreateChallengeReqDto challengeReqDto) {
+    public void createChallenge(CreateChallengeRequestDto challengeReqDto) {
         LocalDate startDate = stringDateConverter.convertToLocalDate(challengeReqDto.getStartDate());
         LocalDate endDate = stringDateConverter.convertToLocalDate(challengeReqDto.getEndDate());
         Challenge challenge = Challenge.builder()
@@ -96,6 +71,45 @@ public class ChallengeService {
                 .build();
 
         challengeJpaRepository.save(challenge);
+    }
+
+    public ChallengeResponseDto getChallenge(Long challengeId) {
+        Challenge challenge = challengeFindService.findById(challengeId);
+        return new ChallengeResponseDto(challenge);
+    }
+
+
+    public void joinChallenge(String idToken, Long challengeId) {
+        Challenge challenge = challengeFindService.findById(challengeId);
+        User user = userFindService.findByIdToken(idToken);
+        participationService.validateParticipationExistence(challenge, user);
+        Participation participation = Participation.builder()
+                .user(user)
+                .challenge(challenge)
+                .build();
+        participationJpaRepository.save(participation);
+    }
+
+    public void leftChallenge(String idToken, Long challengeId) {
+        Challenge challenge = challengeFindService.findById(challengeId);
+        User user = userFindService.findByIdToken(idToken);
+        participationJpaRepository.deleteByChallengeAndUser(challenge, user);
+    }
+
+    public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
+        LocalDate startDate = stringDateConverter.convertToLocalDate(updated.getStartDate());
+        LocalDate endDate = stringDateConverter.convertToLocalDate(updated.getEndDate());
+        Challenge challenge = challengeFindService.findById(challengeId);
+        challenge.update(updated, startDate, endDate);
+        challengeJpaRepository.save(challenge);
+    }
+
+    public void deleteChallenge(Long challengeId) {
+        try {
+            challengeJpaRepository.deleteById(challengeId);
+        } catch (IllegalArgumentException e) {
+            throw new CChallengeNotFoundException();
+        }
     }
 
 //    public GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId) {
@@ -162,10 +176,7 @@ public class ChallengeService {
 //                .build();
 //    }
 
-    public GetChallengeResponseDto getChallenge(Long challengeId) {
-        Challenge challenge = challengeFindService.findById(challengeId);
-        return new GetChallengeResponseDto(challenge);
-    }
+
 
 //    public GetChallengeListResDto getMyChallenges(String loginId) {
 //        // 전부 찾아서 loginId가 같은 user가 있는 챌린지만 추려낸 후 리턴.
@@ -207,35 +218,4 @@ public class ChallengeService {
 //                .build();
 //    }
 
-    public void joinChallenge(String idToken, Long challengeId) {
-        Challenge challenge = challengeFindService.findById(challengeId);
-        User user = userJpaRepository.findByIdToken(idToken).orElseThrow(CUserNotFoundException::new);
-        if (participationJpaRepository.findByChallengeAndUser(challenge, user).isPresent()) {
-            throw new CUserAlreadyJoinedException();
-        }
-        Participation log = new Participation();
-        log.joinChallenge(user, challenge);
-        participationJpaRepository.save(log);
-    }
-
-    public void leftChallenge(String idToken, Long challengeId) {
-        Challenge challenge = challengeFindService.findById(challengeId);
-        User user = userJpaRepository.findByIdToken(idToken).orElseThrow(CUserAlreadyJoinedException::new);
-        participationJpaRepository.deleteByChallengeAndUser(challenge, user);
-    }
-
-    public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
-        LocalDate testDate = Year.of(2023).atMonth(1).atDay(2);
-        Challenge challenge = challengeFindService.findById(challengeId);
-        challenge.update(updated, testDate, testDate);
-        challengeJpaRepository.save(challenge);
-    }
-
-    public void deleteChallenge(Long challengeId) {
-        try {
-            challengeJpaRepository.deleteById(challengeId);
-        } catch (IllegalArgumentException e) {
-            throw new CChallengeNotFoundException();
-        }
-    }
 }
