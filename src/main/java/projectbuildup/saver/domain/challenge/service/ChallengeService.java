@@ -8,14 +8,13 @@ import projectbuildup.saver.domain.challenge.error.exception.CChallengeNotFoundE
 import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
 import projectbuildup.saver.domain.dto.req.CreateChallengeRequestDto;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantsResponseDto;
 import projectbuildup.saver.domain.dto.res.ChallengeResponseDto;
 import projectbuildup.saver.domain.dto.res.ParticipantDto;
 import projectbuildup.saver.domain.participation.entity.Participation;
-import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
 import projectbuildup.saver.domain.participation.service.ParticipationFindService;
 import projectbuildup.saver.domain.participation.service.ParticipationService;
-import projectbuildup.saver.domain.remittance.service.RemittanceFindService;
 import projectbuildup.saver.domain.remittance.service.RemittanceService;
 import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.service.UserFindService;
@@ -25,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,9 +37,10 @@ public class ChallengeService {
     private final ParticipationFindService participationFindService;
     private final ParticipationService participationService;
     private final UserFindService userFindService;
-    private final RemittanceFindService remittanceFindService;
     private final RemittanceService remittanceService;
     private final StringDateConverter stringDateConverter;
+
+    private final ChallengeSortService challengeSortService;
 
     public ParticipantsResponseDto getChallengeParticipants(Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
@@ -51,14 +52,17 @@ public class ChallengeService {
             ParticipantDto participantDto = new ParticipantDto(user, totalAmount);
             responseDtoList.add(participantDto);
         }
-        //정렬 알고리즘 구현
+        sortByTotalAmountDesc(responseDtoList);
+        return new ParticipantsResponseDto(responseDtoList);
+    }
+
+    private void sortByTotalAmountDesc(List<ParticipantDto> responseDtoList) {
         Comparator<ParticipantDto> comparator = (p1, p2) -> {
             long difference = (p1.getTotalAmount() - p2.getTotalAmount());
             return (int) difference;
         };
 
         responseDtoList.sort(comparator);
-        return new ParticipantsResponseDto(responseDtoList);
     }
 
     public void createChallenge(CreateChallengeRequestDto challengeReqDto) {
@@ -77,7 +81,6 @@ public class ChallengeService {
         Challenge challenge = challengeFindService.findById(challengeId);
         return new ChallengeResponseDto(challenge);
     }
-
 
     public void joinChallenge(String idToken, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
@@ -108,70 +111,41 @@ public class ChallengeService {
         }
     }
 
-//    public GetChallengeListResDto getAvailableChallenges(Long sortType, Boolean ascending, String loginId) {
-//
-//        // 모든 챌린지 가져옴
-//        List<Challenge> challenges = challengeFindService.findAll();
-//
-//        List<Challenge> selectedChallenges = new ArrayList<>(
-//                challenges
-//                        .stream()
-//                        .filter((challenge) -> {
-//                            // 챌린지 중 자신의 loginId가 있는 챌린지는 제외함.
-//                            for (Participation c : challenge.getParticipationList()) {
-//                                User user = userJpaRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
-//                                return !loginId.equals(user.getIdToken());
-//                            }
-//                            return true;
-//                        })
-//                        .collect(Collectors.toList())
-//        );
-//
-//
-//        // sort 방식에 따라 정렬함.
-//        if (sortType == 1) {
-//            selectedChallenges.sort((a, b) -> {
-//                return ascending ? a.getParticipationList().size() - b.getParticipationList().size() : b.getParticipationList().size() - a.getParticipationList().size();
-//            });
-//        } else if (sortType == 2) {
-//            selectedChallenges.sort((a, b) -> {
-//                return ascending ? (int) (a.getSavingAmount() - b.getSavingAmount()) : (int) (b.getSavingAmount() - a.getSavingAmount());
-//            });
-//        }
-////        else if (sortType == 3) {
-////            selectedChallenges.sort((a, b) -> {
-////                LocalDate aDate = LocalDate.parse(a.getEndDate(), DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-////                LocalDate bDate = LocalDate.parse(b.getEndDate(), DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-////                return ascending ? aDate.compareTo(bDate) : bDate.compareTo(aDate);
-////            });
-////        }
-//        else {
-//            return null;
-//        }
-//
-//        List<GetChallengeResDto> challengeList = (List<GetChallengeResDto>) selectedChallenges
-//                .stream()
-//                .map((challenge) -> {
-//                    return new GetChallengeResDto(
-//                            challenge.getId(),
-//                            challenge.getStartDate(),
-//                            challenge.getEndDate(),
-//                            challenge.getMainTitle(),
-//                            challenge.getSubTitle(),
-//                            challenge.getContent(),
-//                            challenge.getSavingAmount(),
-//                            (long) challenge.getParticipationList().size()
-//                    );
-//                })
-//                .collect(Collectors.toList());
-//
-//        // Dto로 변환 후 리턴.
-//        return GetChallengeListResDto.builder()
-//                .challengCnt((long) challengeList.size())
-//                .challengeList(challengeList)
-//                .build();
-//    }
+    public GetChallengeListResDto getAvailableChallenges(int sortType, boolean ascending, String loginId) {
+        List<Challenge> challenges = challengeFindService.findAll();
+        List<Challenge> availableChallenges = challenges
+                .stream()
+                .filter(challenge -> isJoinable(challenge, loginId))
+                .collect(Collectors.toList());
 
+        sortByType(sortType, ascending, availableChallenges);
+        List<ChallengeResponseDto> sortedAvailableChallenges = availableChallenges
+                .stream()
+                .map(ChallengeResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new GetChallengeListResDto(sortedAvailableChallenges);
+    }
+
+    private void sortByType(int sortType, boolean ascending, List<Challenge> challenges) {
+        if (sortType == 1) {
+            challengeSortService.sortByParticipantNumber(ascending, challenges);
+            return;
+        }
+        if (sortType == 2) {
+            challengeSortService.sortByTotalAmount(ascending, challenges);
+            return;
+        }
+        challengeSortService.sortByEndDate(ascending, challenges);
+    }
+
+    private boolean isJoinable(Challenge challenge, String loginId) {
+        for (Participation c : challenge.getParticipationList()) {
+            User user = userFindService.findById(c.getUser().getId());
+            return !loginId.equals(user.getIdToken());
+        }
+        return true;
+    }
 
 
 //    public GetChallengeListResDto getMyChallenges(String loginId) {
