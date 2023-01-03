@@ -1,10 +1,16 @@
 package projectbuildup.saver.global.util;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.List;
 
+@Component
+@Primary
 public class StringDateConverterWithPoint implements StringDateConverter {
     static final String DELIMITER = "\\.";
 

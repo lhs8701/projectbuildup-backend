@@ -1,5 +1,8 @@
 package projectbuildup.saver.global.util;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.Arrays;
