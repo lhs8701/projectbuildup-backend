@@ -148,44 +148,15 @@ public class ChallengeService {
     }
 
 
-//    public GetChallengeListResDto getMyChallenges(String loginId) {
-//        // 전부 찾아서 loginId가 같은 user가 있는 챌린지만 추려낸 후 리턴.
-//        List<Challenge> challenges = challengeFindService.findAll();
-//        List<Challenge> userChallenges = challenges
-//                .stream()
-//                .filter((challenge) -> {
-//                    List<Participation> participations = challenge.getParticipationList();
-//                    for (Participation c : participations) {
-//                        User user = userJpaRepository.findById(c.getUser().getId()).orElseThrow(CUserNotFoundException::new);
-//                        if (loginId.equals(user.getIdToken())) {
-//                            return true;
-//                        }
-//                    }
-//                    return false;
-//                })
-//                .collect(Collectors.toList());
-//
-//        List<GetChallengeResponseDto> challengeList = (List<GetChallengeResponseDto>) userChallenges
-//                .stream()
-//                .map((challenge) -> {
-//                    return new GetChallengeResponseDto(
-//                            challenge.getId(),
-//                            challenge.getStartDate(),
-//                            challenge.getEndDate(),
-//                            challenge.getMainTitle(),
-//                            challenge.getSubTitle(),
-//                            challenge.getContent(),
-//                            challenge.getSavingAmount(),
-//                            (long) challenge.getParticipationList().size()
-//                    );
-//                })
-//                .collect(Collectors.toList());
-//
-//        // Dto로 변환 후 리턴.
-//        return GetChallengeListResDto.builder()
-//                .challengCnt((long) challengeList.size())
-//                .challengeList(challengeList)
-//                .build();
-//    }
+    public GetChallengeListResDto getMyChallenges(String idToken) {
+        List<Challenge> challenges = challengeFindService.findAll();
+        User user = userFindService.findByIdToken(idToken);
+        List<Participation> participations = participationFindService.findAllByUser(user);
 
+        List<ChallengeResponseDto> myChallenges = participations
+                .stream()
+                .map(participation -> new ChallengeResponseDto(participation.getChallenge()))
+                .collect(Collectors.toList());
+        return new GetChallengeListResDto(myChallenges);
+    }
 }

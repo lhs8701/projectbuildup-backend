@@ -23,4 +23,7 @@ public class ParticipationFindService {
     public List<Participation> findAllByChallenge(Challenge challenge) {
         return participationJpaRepository.findAllByChallenge(challenge);
     }
+    public List<Participation> findAllByUser(User user){
+        return participationJpaRepository.findAllByUser(user);
+    }
 }

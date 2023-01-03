@@ -38,14 +38,12 @@ public class ChallengeController {
     @GetMapping("/{challengeId}/participants")
     public ResponseEntity<ParticipantsResponseDto> getChallengeParticipants(@PathVariable Long challengeId) {
         ParticipantsResponseDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
-        log.info(getChallengeParticipantsResDto.toString());
         return new ResponseEntity<>(getChallengeParticipantsResDto, HttpStatus.OK);
     }
 
     @GetMapping("/{challengeId}")
     public ResponseEntity<ChallengeResponseDto> getChallenge(@PathVariable Long challengeId) {
         ChallengeResponseDto getChallengeResDto = challengeService.getChallenge(challengeId);
-        log.info(getChallengeResDto.toString());
         return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
     }
 
@@ -69,18 +67,12 @@ public class ChallengeController {
 
     @GetMapping("/available")
     public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam int sort, @RequestParam boolean ascending, @RequestParam String loginId) {
-        GetChallengeListResDto challenges = challengeService.getAvailableChallenges(sort, ascending, loginId);
-        return new ResponseEntity<>(challenges, HttpStatus.OK);
+        return new ResponseEntity<>(challengeService.getAvailableChallenges(sort, ascending, loginId), HttpStatus.OK);
     }
-//
-//    @GetMapping("/my")
-//    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String loginId) {
-//        GetChallengeListResDto challenges = challengeService.getMyChallenges(loginId);
-//        if (challenges != null) {
-//            return new ResponseEntity<>(challenges, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//    }
+
+    @GetMapping("/my")
+    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String idToken) {
+        return new ResponseEntity<>(challengeService.getMyChallenges(idToken), HttpStatus.OK);
+    }
 
 }

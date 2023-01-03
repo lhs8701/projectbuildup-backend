@@ -13,4 +13,5 @@ public interface ParticipationJpaRepository extends JpaRepository<Participation,
     Optional<Participation> findByChallengeAndUser(Challenge challenge, User user);
     void deleteByChallengeAndUser(Challenge challenge, User user);
     List<Participation> findAllByChallenge(Challenge challenge);
+    List<Participation> findAllByUser(User user);
 }

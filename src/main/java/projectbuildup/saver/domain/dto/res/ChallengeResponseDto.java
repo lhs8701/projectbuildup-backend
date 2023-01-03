@@ -28,4 +28,6 @@ public class ChallengeResponseDto {
         this.savingAmount = challenge.getSavingAmount();
         this.joinedNumber = (long) challenge.getParticipationList().size();
     }
+
+
 }
