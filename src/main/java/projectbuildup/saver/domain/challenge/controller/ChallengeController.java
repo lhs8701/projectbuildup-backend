@@ -5,16 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
-import projectbuildup.saver.domain.dto.req.CreateChallengeReqDto;
+import projectbuildup.saver.domain.challenge.service.ChallengeService;
+import projectbuildup.saver.domain.dto.req.CreateChallengeRequestDto;
 import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.LeftChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
+import projectbuildup.saver.domain.dto.res.ChallengeResponseDto;
 import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeParticipantsResDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeResDto;
-
-import java.util.List;
+import projectbuildup.saver.domain.dto.res.ParticipantsResponseDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,7 +24,7 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping("")
-    public ResponseEntity<Void> createChallenge(@RequestBody CreateChallengeReqDto challengeReqDto) {
+    public ResponseEntity<Void> createChallenge(@RequestBody CreateChallengeRequestDto challengeReqDto) {
         challengeService.createChallenge(challengeReqDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -38,42 +36,20 @@ public class ChallengeController {
     }
 
     @GetMapping("/{challengeId}/participants")
-    public ResponseEntity<GetChallengeParticipantsResDto> getChallengeParticipants(@PathVariable Long challengeId) {
-        GetChallengeParticipantsResDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
-        log.info(getChallengeParticipantsResDto.toString());
+    public ResponseEntity<ParticipantsResponseDto> getChallengeParticipants(@PathVariable Long challengeId) {
+        ParticipantsResponseDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
         return new ResponseEntity<>(getChallengeParticipantsResDto, HttpStatus.OK);
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam Long sortType, @RequestParam Boolean ascending, @RequestParam String loginId) {
-        GetChallengeListResDto challenges = challengeService.getAvailableChallenges(sortType, ascending, loginId);
-        if (challenges != null) {
-            return new ResponseEntity<>(challenges, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @GetMapping("/my")
-    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String loginId) {
-        GetChallengeListResDto challenges = challengeService.getMyChallenges(loginId);
-        if (challenges != null) {
-            return new ResponseEntity<>(challenges, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
     @GetMapping("/{challengeId}")
-    public ResponseEntity<GetChallengeResDto> getChallenge(@PathVariable Long challengeId) {
-        GetChallengeResDto getChallengeResDto = challengeService.getChallenge(challengeId);
-        log.info(getChallengeResDto.toString());
+    public ResponseEntity<ChallengeResponseDto> getChallenge(@PathVariable Long challengeId) {
+        ChallengeResponseDto getChallengeResDto = challengeService.getChallenge(challengeId);
         return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
     }
 
     @PostMapping("/left")
     public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
-        challengeService.leftChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+        challengeService.giveUpChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -87,6 +63,16 @@ public class ChallengeController {
     public ResponseEntity<HttpStatus> updateChallenge(@PathVariable Long challengeId, @RequestBody UpdateChallengeReqDto updated) {
         challengeService.updateChallenge(challengeId, updated);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam int sort, @RequestParam boolean ascending, @RequestParam String loginId) {
+        return new ResponseEntity<>(challengeService.getAvailableChallenges(sort, ascending, loginId), HttpStatus.OK);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String idToken) {
+        return new ResponseEntity<>(challengeService.getMyChallenges(idToken), HttpStatus.OK);
     }
 
 }

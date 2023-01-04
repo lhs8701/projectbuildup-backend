@@ -15,6 +15,7 @@ public enum ErrorCode {
     FILE_NOT_FOUND_EXCEPTION(-1008, "해당 파일을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     USER_ALREADY_JOINED_EXCEPTION(-1009, "이미 참여 중인 챌린지 입니다.", HttpStatus.CONFLICT),
     RECENT_SAVING_NOT_FOUND_EXCEPTION(-1010, "최근 절약 내역이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    PARTICIPATION_NOT_FOUND_EXCEPTION(-1011, "해당 챌린지에 참여하고 있지 않습니다.", HttpStatus.NOT_FOUND),
 
 
     //2

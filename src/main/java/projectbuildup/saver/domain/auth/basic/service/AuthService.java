@@ -18,11 +18,13 @@ import projectbuildup.saver.domain.auth.jwt.entity.LogoutAccessToken;
 import projectbuildup.saver.domain.auth.jwt.entity.RefreshToken;
 import projectbuildup.saver.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import projectbuildup.saver.domain.auth.jwt.repository.RefreshTokenRedisRepository;
-import projectbuildup.saver.domain.user.entity.UserEntity;
+import projectbuildup.saver.domain.user.entity.User;
 import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
 import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.domain.auth.basic.error.exception.CWrongPasswordException;
+import projectbuildup.saver.domain.user.service.UserFindService;
+import projectbuildup.saver.domain.user.service.UserService;
 import projectbuildup.saver.global.security.JwtProvider;
 
 
@@ -32,20 +34,20 @@ import projectbuildup.saver.global.security.JwtProvider;
 @Transactional
 public class AuthService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserFindService userFindService;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
     public Long signup(SignupRequestDto signupRequestDto) {
-        if (userJpaRepository.findByIdToken(signupRequestDto.getIdToken()).isPresent())
-            throw new CUserExistException();
-        return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
+        userFindService.validateUserExistence(signupRequestDto.getIdToken());
+        return userService.createUserBySignUp(signupRequestDto);
     }
 
     public TokenResponseDto login(LoginRequestDto loginRequestDto){
-        UserEntity user = userJpaRepository.findByIdToken(loginRequestDto.getIdToken()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.findByIdToken(loginRequestDto.getIdToken());
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
@@ -62,23 +64,23 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(String accessToken, UserEntity user) {
+    public void logout(String accessToken, User user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
         refreshTokenRedisRepository.deleteById(user.getId());
         logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, user.getId(), remainMilliSeconds));
     }
 
-    public void withdrawal(String accessToken, UserEntity user) {
+    public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
-        userJpaRepository.deleteById(user.getId());
+        userService.deleteById(user.getId());
     }
 
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
 
         String existAccessToken = tokenRequestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
-        UserEntity user = (UserEntity)authentication.getPrincipal();
+        User user = (User)authentication.getPrincipal();
 
         String existRefreshToken = tokenRequestDto.getRefreshToken();
         RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getId()).orElseThrow(CRefreshTokenExpiredException::new);

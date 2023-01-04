@@ -2,33 +2,29 @@ package projectbuildup.saver.domain.challenge.service;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import projectbuildup.saver.domain.challenge.repository.ChallengeRepository;
-import projectbuildup.saver.domain.challenge.service.interfaces.ChallengeService;
-import projectbuildup.saver.domain.challengeLog.repository.ChallengeLogRepository;
-import projectbuildup.saver.domain.challengeRecord.repository.ChallengeRecordRepository;
-import projectbuildup.saver.domain.user.repository.UserRepository;
-
-
+import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
+import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
+import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
+import projectbuildup.saver.domain.user.repository.UserJpaRepository;
 
 
 class ChallengeServiceImplTest {
 
     // Unit test 에 사용될 Mock
     @Mock
-    ChallengeRepository challengeRepository;
+    ChallengeJpaRepository challengeJpaRepository;
 
     @Mock
-    ChallengeLogRepository challengeLogRepository;
+    ParticipationJpaRepository participationJpaRepository;
 
     @Mock
-    UserRepository userRepository;
+    UserJpaRepository userRepository;
 
     @Mock
-    ChallengeRecordRepository challengeRecordRepository;
+    RemittanceJpaRepository remittanceJpaRepository;
 
     // Unit test 대상
     @InjectMocks
     ChallengeService challengeService;
-
 
 }
