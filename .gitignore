@@ -39,12 +39,4 @@ out/
 #-----------------------Custom----------------------#
 /src/images/
 
-### properties ###
-/src/main/resources/application.yml
-/src/main/resources/application-dev.yml
-/src/main/resources/application-private.yml
-/src/main/resources/application-prod.yml
-/src/main/resources/application-local.yml
 
-### test ###
-/src/main/java/projectbuildup/saver/domain/test/
