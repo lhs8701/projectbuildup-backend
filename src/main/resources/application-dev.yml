@@ -1,26 +1,8 @@
 spring:
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    properties:
-      hibernate:
-        jdbc:
-          time_zone: Asia/Seoul
-        enable_lazy_load_no_trans: true
-        format_sql: true
-        hbm2ddl:
-          auto: update
-    show-sql: true
-  url:
-    base: http://34.64.39.209:8080
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
   datasource:
-    url: jdbc:mysql://localhost:3306/saver_db?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
+    url: jdbc:mysql://localhost:3306/mivv_dev?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: root
-    password: root
+    password: fromhaedal22!
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-test-query: select 1 from dual
