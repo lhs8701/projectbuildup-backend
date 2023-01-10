@@ -19,6 +19,6 @@ public class RecentRemittanceResponseDto {
         }
         this.totalCount = recentRemittance.getTotalCount();
         this.totalAmount = recentRemittance.getTotalCount();
-        this.recentSavingDate = recentRemittance.getModifiedDate();
+        this.recentSavingDate = recentRemittance.getModifiedTime();
     }
 }
