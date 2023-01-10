@@ -12,6 +12,8 @@ import projectbuildup.saver.domain.dto.req.CreateChallengeRequestDto;
 import projectbuildup.saver.global.config.JpaAuditingConfig;
 import projectbuildup.saver.global.constant.ExampleValue;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
@@ -43,4 +45,28 @@ public class ChallengeRepositoryTest {
         // then
         assertThat(dto.getMainTitle()).isEqualTo(found.getMainTitle());
     }
+
+    @Test
+    @DisplayName("DB에서 챌린지를 삭제한다.")
+    public void DB에서_챌린지를_삭제한다() {
+        // given
+        CreateChallengeRequestDto dto = CreateChallengeRequestDto.builder()
+                .startDate(ExampleValue.challenge.START_DATE)
+                .endDate(ExampleValue.challenge.END_DATE)
+                .mainTitle(ExampleValue.challenge.MAIN_TITLE)
+                .subTitle(ExampleValue.challenge.SUBTITLE)
+                .content(ExampleValue.challenge.CONTENT)
+                .savingAmount(ExampleValue.challenge.AMOUNT)
+                .build();
+
+        Challenge created = challengeJpaRepository.save(dto.toEntity());
+
+        // when
+        challengeJpaRepository.deleteById(created.getId());
+
+        // then
+        Optional<Challenge> found = challengeJpaRepository.findById(created.getId());
+        assertThat(found.isEmpty()).isEqualTo(true);
+    }
+
 }
