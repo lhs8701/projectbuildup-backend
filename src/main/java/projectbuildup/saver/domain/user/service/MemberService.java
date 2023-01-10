@@ -18,7 +18,7 @@ import projectbuildup.saver.domain.user.repository.MemberJpaRepository;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
     private final UserFindService userFindService;

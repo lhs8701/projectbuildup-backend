@@ -9,6 +9,5 @@ import java.util.List;
 
 public interface RemittanceJpaRepository extends JpaRepository<Remittance, Long> {
 
-    List<Remittance> findByChallengeIdAndUserId(Long challengeId, Long userId);
-    List<Remittance> findAllByChallengeAndUser(Challenge challenge, Member member);
+    List<Remittance> findAllByChallengeAndMember(Challenge challenge, Member member);
 }

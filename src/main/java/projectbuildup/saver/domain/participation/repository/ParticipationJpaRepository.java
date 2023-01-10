@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface ParticipationJpaRepository extends JpaRepository<Participation, Long> {
     List<Participation> findByChallenge_Id(Long challengeId);
-    Optional<Participation> findByChallengeAndUser(Challenge challenge, Member member);
-    void deleteByChallengeAndUser(Challenge challenge, Member member);
+    Optional<Participation> findByChallengeAndMember(Challenge challenge, Member member);
+    void deleteByChallengeAndMember(Challenge challenge, Member member);
     List<Participation> findAllByChallenge(Challenge challenge);
-    List<Participation> findAllByUser(Member member);
+    List<Participation> findAllByMember(Member member);
 }

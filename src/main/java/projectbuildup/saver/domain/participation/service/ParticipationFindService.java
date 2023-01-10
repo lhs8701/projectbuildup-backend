@@ -17,13 +17,13 @@ public class ParticipationFindService {
     private final ParticipationJpaRepository participationJpaRepository;
 
     public Participation findByChallengeAndUser(Challenge challenge, Member member) {
-        return participationJpaRepository.findByChallengeAndUser(challenge, member).orElseThrow(CParticipationNotFoundException::new);
+        return participationJpaRepository.findByChallengeAndMember(challenge, member).orElseThrow(CParticipationNotFoundException::new);
     }
 
     public List<Participation> findAllByChallenge(Challenge challenge) {
         return participationJpaRepository.findAllByChallenge(challenge);
     }
     public List<Participation> findAllByUser(Member member){
-        return participationJpaRepository.findAllByUser(member);
+        return participationJpaRepository.findAllByMember(member);
     }
 }

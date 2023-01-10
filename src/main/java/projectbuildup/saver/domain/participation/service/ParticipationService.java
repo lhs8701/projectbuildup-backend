@@ -14,14 +14,14 @@ public class ParticipationService {
 
     private final ParticipationJpaRepository participationJpaRepository;
     public void validateParticipationExistence(Challenge challenge, Member member){
-        if (participationJpaRepository.findByChallengeAndUser(challenge, member).isPresent()){
+        if (participationJpaRepository.findByChallengeAndMember(challenge, member).isPresent()){
             throw new CUserAlreadyJoinedException();
         }
     }
 
     public void makeParticipation(Challenge challenge, Member member) {
         Participation participation = Participation.builder()
-                .user(member)
+                .member(member)
                 .challenge(challenge)
                 .build();
 
@@ -29,6 +29,6 @@ public class ParticipationService {
     }
 
     public void deleteByChallengeAndUser(Challenge challenge, Member member) {
-        participationJpaRepository.deleteByChallengeAndUser(challenge, member);
+        participationJpaRepository.deleteByChallengeAndMember(challenge, member);
     }
 }

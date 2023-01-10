@@ -13,6 +13,6 @@ public class RecentRemittanceFindService {
     private final RecentRemittanceJpaRepository recentRemittanceJpaRepository;
 
     public RecentRemittance findByUserOrGetNull(Member member){
-        return recentRemittanceJpaRepository.findByUser(member).orElse(null);
+        return recentRemittanceJpaRepository.findByMember(member).orElse(null);
     }
 }

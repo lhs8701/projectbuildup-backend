@@ -7,5 +7,5 @@ import projectbuildup.saver.domain.user.entity.Member;
 import java.util.Optional;
 
 public interface RecentRemittanceJpaRepository extends JpaRepository<RecentRemittance, Long> {
-    Optional<RecentRemittance> findByUser(Member member);
+    Optional<RecentRemittance> findByMember(Member member);
 }

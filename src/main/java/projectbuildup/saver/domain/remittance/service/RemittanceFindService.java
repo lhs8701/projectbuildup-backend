@@ -15,6 +15,6 @@ public class RemittanceFindService {
     private final RemittanceJpaRepository remittanceJpaRepository;
 
     public List<Remittance> findAllByChallengeAndUser(Challenge challenge, Member member) {
-        return remittanceJpaRepository.findAllByChallengeAndUser(challenge, member);
+        return remittanceJpaRepository.findAllByChallengeAndMember(challenge, member);
     }
 }
