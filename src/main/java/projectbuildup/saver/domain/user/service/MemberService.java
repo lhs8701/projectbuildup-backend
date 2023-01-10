@@ -86,7 +86,8 @@ public class MemberService {
      * @return 유저 아이디
      */
     public Long createUserBySignUp(SignupRequestDto signupRequestDto){
-        Member member = signupRequestDto.toEntity(passwordEncoder);
+        String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
+        Member member = signupRequestDto.toEntity(encodedPassword);
         return memberJpaRepository.save(member).getId();
     }
 
