@@ -1,7 +1,7 @@
 package projectbuildup.saver.domain.image.entity;
 
 import lombok.*;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 
 import javax.persistence.*;
 
@@ -23,5 +23,5 @@ public class Image {
     private String fileUrl; // 저장할 경로
 
     @OneToOne(mappedBy = "profileImage", fetch = FetchType.LAZY)
-    private User uploader;
+    private Member uploader;
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 
 @Getter
 @Builder
@@ -16,9 +16,9 @@ public class ParticipantDto {
 //    private Long recentRanking;
     private Long totalAmount;
 
-    public ParticipantDto(User user, Long totalAmount){
-        this.idToken =  user.getIdToken();
-        this.nickName = user.getNickName();
+    public ParticipantDto(Member member, Long totalAmount){
+        this.idToken =  member.getIdToken();
+        this.nickName = member.getNickName();
         this.totalAmount = totalAmount;
     }
 }

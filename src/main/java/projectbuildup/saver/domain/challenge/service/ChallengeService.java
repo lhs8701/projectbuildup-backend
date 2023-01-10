@@ -16,7 +16,7 @@ import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.participation.service.ParticipationFindService;
 import projectbuildup.saver.domain.participation.service.ParticipationService;
 import projectbuildup.saver.domain.remittance.service.RemittanceService;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 import projectbuildup.saver.domain.user.service.UserFindService;
 import projectbuildup.saver.global.util.StringDateConverter;
 
@@ -47,9 +47,9 @@ public class ChallengeService {
         List<Participation> participationList = participationFindService.findAllByChallenge(challenge);
         List<ParticipantDto> responseDtoList = new ArrayList<>();
         for (Participation c : participationList) {
-            User user = userFindService.findById(c.getId());
-            Long totalAmount = remittanceService.calculateSum(user, challenge);
-            ParticipantDto participantDto = new ParticipantDto(user, totalAmount);
+            Member member = userFindService.findById(c.getId());
+            Long totalAmount = remittanceService.calculateSum(member, challenge);
+            ParticipantDto participantDto = new ParticipantDto(member, totalAmount);
             responseDtoList.add(participantDto);
         }
         sortByTotalAmountDesc(responseDtoList);
@@ -84,15 +84,15 @@ public class ChallengeService {
 
     public void joinChallenge(String idToken, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        User user = userFindService.findByIdToken(idToken);
-        participationService.validateParticipationExistence(challenge, user);
-        participationService.makeParticipation(challenge, user);
+        Member member = userFindService.findByIdToken(idToken);
+        participationService.validateParticipationExistence(challenge, member);
+        participationService.makeParticipation(challenge, member);
     }
 
     public void giveUpChallenge(String idToken, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        User user = userFindService.findByIdToken(idToken);
-        participationService.deleteByChallengeAndUser(challenge, user);
+        Member member = userFindService.findByIdToken(idToken);
+        participationService.deleteByChallengeAndUser(challenge, member);
     }
 
     public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
@@ -141,8 +141,8 @@ public class ChallengeService {
 
     private boolean isJoinable(Challenge challenge, String loginId) {
         for (Participation c : challenge.getParticipationList()) {
-            User user = userFindService.findById(c.getUser().getId());
-            return !loginId.equals(user.getIdToken());
+            Member member = userFindService.findById(c.getMember().getId());
+            return !loginId.equals(member.getIdToken());
         }
         return true;
     }
@@ -150,8 +150,8 @@ public class ChallengeService {
 
     public GetChallengeListResDto getMyChallenges(String idToken) {
         List<Challenge> challenges = challengeFindService.findAll();
-        User user = userFindService.findByIdToken(idToken);
-        List<Participation> participations = participationFindService.findAllByUser(user);
+        Member member = userFindService.findByIdToken(idToken);
+        List<Participation> participations = participationFindService.findAllByUser(member);
 
         List<ChallengeResponseDto> myChallenges = participations
                 .stream()

@@ -24,6 +24,14 @@ public enum ErrorCode {
 
 
     /* 권한 & 인증 영역 */
+
+    NOT_AUTHORIZED(-7000, "해당 리소스에 접근하기 위한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    AUTHENTICATION_ERROR (-7001, "인증 과정에서 문제가 발생했습니다.", HttpStatus. UNAUTHORIZED),
+
+    JWT_INVALID(-7002, "유효하지 않은 토큰 형식입니다.", HttpStatus.UNAUTHORIZED),
+    JWT_EXPIRED(-7003, "토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
+
+
     REFRESH_TOKEN_INVALID_EXCEPTION(-5001, "리프레쉬 토큰이 잘못되었습니다.", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_EXPIRED_EXCEPTION(-5002, "리프레쉬 토큰이 만료되었습니다. 로그인을 다시 해주세요.", HttpStatus.UNAUTHORIZED),
     AUTHENTICATION_ENTRY_POINT_EXCEPTION(-5003, "해당 리소스에 접근하기 위한 권한이 없습니다.", HttpStatus.FORBIDDEN),
@@ -36,9 +44,9 @@ public enum ErrorCode {
 
 
     /* 외부 영역 */
-    ILLEGAL_ARGUMENT_EXCEPTION(-7000, "잘못된 형식입니다.", HttpStatus.BAD_REQUEST),
-    WRONG_APPROACH(-7001, "잘못된 접근입니다.", HttpStatus.BAD_REQUEST),
-    WRONG_FILE_TYPE_EXCEPTION(-7002, "올바르지 않은 파일 형식입니다.", HttpStatus.BAD_REQUEST),
+    ILLEGAL_ARGUMENT_EXCEPTION(-8000, "잘못된 형식입니다.", HttpStatus.BAD_REQUEST),
+    WRONG_APPROACH(-8001, "잘못된 접근입니다.", HttpStatus.BAD_REQUEST),
+    WRONG_FILE_TYPE_EXCEPTION(-8002, "올바르지 않은 파일 형식입니다.", HttpStatus.BAD_REQUEST),
 
 
     /* 서버 오류 */

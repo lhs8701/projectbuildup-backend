@@ -5,7 +5,7 @@ import org.mockito.Mock;
 import projectbuildup.saver.domain.challenge.repository.ChallengeJpaRepository;
 import projectbuildup.saver.domain.participation.repository.ParticipationJpaRepository;
 import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
-import projectbuildup.saver.domain.user.repository.UserJpaRepository;
+import projectbuildup.saver.domain.user.repository.MemberJpaRepository;
 
 
 class ChallengeServiceImplTest {
@@ -18,7 +18,7 @@ class ChallengeServiceImplTest {
     ParticipationJpaRepository participationJpaRepository;
 
     @Mock
-    UserJpaRepository userRepository;
+    MemberJpaRepository userRepository;
 
     @Mock
     RemittanceJpaRepository remittanceJpaRepository;

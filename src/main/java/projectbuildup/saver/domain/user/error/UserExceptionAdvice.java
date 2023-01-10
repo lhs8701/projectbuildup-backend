@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.domain.user.error.exception.CUserExistException;
-import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
+import projectbuildup.saver.domain.user.error.exception.CResourceNotFoundException;
 import projectbuildup.saver.global.common.response.ErrorResponseDto;
 import projectbuildup.saver.global.error.ErrorCode;
 
@@ -18,8 +18,8 @@ public class UserExceptionAdvice {
     /**
      * 해당 유저를 찾을 수 없을 경우 발생시키는 예외
      */
-    @ExceptionHandler(CUserNotFoundException.class)
-    protected ResponseEntity<?> handle(CUserNotFoundException e) {
+    @ExceptionHandler(CResourceNotFoundException.class)
+    protected ResponseEntity<?> handle(CResourceNotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
         return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }

@@ -15,7 +15,7 @@ import projectbuildup.saver.domain.auth.basic.dto.LoginRequestDto;
 import projectbuildup.saver.domain.auth.basic.dto.SignupRequestDto;
 import projectbuildup.saver.domain.auth.basic.service.AuthService;
 import projectbuildup.saver.domain.auth.jwt.dto.TokenRequestDto;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 
 import javax.validation.Valid;
 
@@ -44,15 +44,15 @@ public class AuthController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout", headers = "X-AUTH-TOKEN")
-    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal User user) {
-        authService.logout(accessToken, user);
+    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal Member member) {
+        authService.logout(accessToken, member);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/withdrawal", headers = "X-AUTH-TOKEN")
-    public ResponseEntity<?> withdrawal(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal User user) {
-        authService.withdrawal(accessToken, user);
+    public ResponseEntity<?> withdrawal(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal Member member) {
+        authService.withdrawal(accessToken, member);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

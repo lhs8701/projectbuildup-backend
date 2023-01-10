@@ -3,7 +3,7 @@ package projectbuildup.saver.domain.auth.basic.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 
 import java.util.Collections;
 
@@ -16,8 +16,8 @@ public class SignupRequestDto {
 
     private String phoneNumber;
 
-    public User toEntity(PasswordEncoder passwordEncoder) {
-        return User.builder()
+    public Member toEntity(PasswordEncoder passwordEncoder) {
+        return Member.builder()
                 .idToken(this.idToken)
                 .nickName(this.nickName)
                 .phoneNumber(this.phoneNumber)

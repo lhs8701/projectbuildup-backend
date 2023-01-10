@@ -13,14 +13,14 @@ import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
 import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
 import projectbuildup.saver.domain.user.dto.UserProfileResponseDto;
-import projectbuildup.saver.domain.user.entity.User;
-import projectbuildup.saver.domain.user.repository.UserJpaRepository;
+import projectbuildup.saver.domain.user.entity.Member;
+import projectbuildup.saver.domain.user.repository.MemberJpaRepository;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final MemberJpaRepository memberJpaRepository;
     private final UserFindService userFindService;
     private final PasswordEncoder passwordEncoder;
 
@@ -32,9 +32,9 @@ public class UserService {
      * @param passwordUpdateParam 변경할 유저 아이디, 변경할 비밀번호
      */
     public void changePassword(PasswordUpdateParam passwordUpdateParam) {
-        User user = userFindService.findByIdToken(passwordUpdateParam.getIdToken());
-        user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
-        userJpaRepository.save(user);
+        Member member = userFindService.findByIdToken(passwordUpdateParam.getIdToken());
+        member.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
+        memberJpaRepository.save(member);
     }
 
 
@@ -44,8 +44,8 @@ public class UserService {
      * @return 유저 프로필(닉네임, 프로필 사진 URL)
      */
     public UserProfileResponseDto getProfile(UserIdRequestParam userIdRequestParam) {
-        User user = userFindService.findByIdToken(userIdRequestParam.getIdToken());
-        return new UserProfileResponseDto(user);
+        Member member = userFindService.findByIdToken(userIdRequestParam.getIdToken());
+        return new UserProfileResponseDto(member);
     }
 
 
@@ -55,10 +55,10 @@ public class UserService {
      * @return 수정한 사용자의 아이디
      */
     public Long updateProfile(ProfileUpdateParam profileUpdateParam) {
-        User user = userFindService.findByIdToken(profileUpdateParam.getIdToken());
-        user.setNickName(profileUpdateParam.getNickName());
-        userJpaRepository.save(user);
-        return user.getId();
+        Member member = userFindService.findByIdToken(profileUpdateParam.getIdToken());
+        member.setNickName(profileUpdateParam.getNickName());
+        memberJpaRepository.save(member);
+        return member.getId();
     }
 
 
@@ -69,15 +69,15 @@ public class UserService {
      * @return 변경한 사용자의 아이디
      */
     public Long changeProfileImage(UserIdRequestParam userIdRequestParam, MultipartFile imageFile) {
-        User user = userFindService.findByIdToken(userIdRequestParam.getIdToken());
+        Member member = userFindService.findByIdToken(userIdRequestParam.getIdToken());
         ImageDto imageDto = imageService.uploadImage(imageFile);
         Image image = imageDto.toEntity();
         imageRepository.save(image);
-        imageService.removeImage(user.getProfileImage());
-        user.setProfileImage(image);
-        userJpaRepository.save(user);
+        imageService.removeImage(member.getProfileImage());
+        member.setProfileImage(image);
+        memberJpaRepository.save(member);
 
-        return user.getId();
+        return member.getId();
     }
 
     /**
@@ -86,14 +86,14 @@ public class UserService {
      * @return 유저 아이디
      */
     public Long createUserBySignUp(SignupRequestDto signupRequestDto){
-        User user = signupRequestDto.toEntity(passwordEncoder);
-        return userJpaRepository.save(user).getId();
+        Member member = signupRequestDto.toEntity(passwordEncoder);
+        return memberJpaRepository.save(member).getId();
     }
 
     /** 회원을 삭제합니다.
      * @param userId 유저 아이디
      */
     public void deleteById(Long userId){
-        userJpaRepository.deleteById(userId);
+        memberJpaRepository.deleteById(userId);
     }
 }
