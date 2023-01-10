@@ -45,4 +45,28 @@ public class MemberRepositoryTest {
         // then
         assertThat(foundMember.getIdToken()).isEqualTo(memberCreationRequestDto.getIdToken());
     }
+
+
+    @Test
+    @DisplayName("DB에서 회원을 삭제한다.")
+    public void DB에서_회원을_삭제한다() {
+        // given
+        SignupRequestDto memberCreationRequestDto = SignupRequestDto.builder()
+                .idToken(ExampleValue.Member.ID_TOKEN)
+                .password(ExampleValue.Member.PASSWORD)
+                .nickname(ExampleValue.Member.NICKNAME)
+                .phoneNumber(ExampleValue.Member.MOBILE)
+                .build();
+
+
+        Member createdMember = memberJpaRepository.save(memberCreationRequestDto.toEntity("encodedPassword"));
+
+        // when
+        memberJpaRepository.deleteById(createdMember.getId());
+
+        // then
+        Optional<Member> found = memberJpaRepository.findById(createdMember.getId());
+        assertThat(found.isEmpty()).isEqualTo(true);
+    }
+
 }
