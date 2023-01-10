@@ -10,14 +10,12 @@ import projectbuildup.saver.domain.auth.basic.error.exception.CUnsupportedTokenE
 import projectbuildup.saver.domain.auth.basic.error.exception.CWrongTypeTokenException;
 import projectbuildup.saver.domain.auth.basic.error.exception.CAccessDeniedException;
 import projectbuildup.saver.global.error.exception.CAuthenticationEntryPointException;
-import projectbuildup.saver.global.error.exception.CIllegalArgumentException;
-import springfox.documentation.annotations.ApiIgnore;
+
 
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/exception")
-@ApiIgnore
 public class SecurityExceptionController {
     @GetMapping("/entrypoint")
     public void entrypointException() {
