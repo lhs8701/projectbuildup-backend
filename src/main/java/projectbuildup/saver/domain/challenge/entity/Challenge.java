@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity(name = "Challenge")
 @RequiredArgsConstructor
+@Builder
 public class Challenge extends BaseTimeEntity {
 
     @Id
@@ -61,15 +62,5 @@ public class Challenge extends BaseTimeEntity {
         this.subTitle = updated.getSubTitle();
         this.content = updated.getContent();
         this.savingAmount = updated.getSavingAmount();
-    }
-
-    @Builder
-    public Challenge(CreateChallengeRequestDto challengeReqDto, LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.mainTitle = challengeReqDto.getMainTitle();
-        this.subTitle = challengeReqDto.getSubTitle();
-        this.content = challengeReqDto.getContent();
-        this.savingAmount = challengeReqDto.getSavingAmount();
     }
 }

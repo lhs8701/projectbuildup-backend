@@ -66,13 +66,7 @@ public class ChallengeService {
     }
 
     public void createChallenge(CreateChallengeRequestDto challengeReqDto) {
-        LocalDate startDate = stringDateConverter.convertToLocalDate(challengeReqDto.getStartDate());
-        LocalDate endDate = stringDateConverter.convertToLocalDate(challengeReqDto.getEndDate());
-        Challenge challenge = Challenge.builder()
-                .challengeReqDto(challengeReqDto)
-                .startDate(startDate)
-                .endDate(endDate)
-                .build();
+        Challenge challenge = challengeReqDto.toEntity();
 
         challengeJpaRepository.save(challenge);
     }
