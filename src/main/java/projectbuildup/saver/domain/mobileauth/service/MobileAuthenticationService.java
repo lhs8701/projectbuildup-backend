@@ -6,9 +6,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
 import projectbuildup.saver.domain.mobileauth.entity.MobileAuthentication;
+import projectbuildup.saver.domain.mobileauth.error.exception.SmsNotSendException;
 import projectbuildup.saver.domain.mobileauth.repository.MobileAuthenticationJpaRepository;
 
 import javax.transaction.Transactional;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -16,10 +19,6 @@ import java.util.Random;
 
 import java.util.regex.Pattern;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -40,7 +39,7 @@ public class MobileAuthenticationService {
     private final Environment env;
 
 
-    public String makeSignature(String url, String timestamp, String method, String accessKey, String secretKey) {
+    public String makeSignature(String url, String timestamp, String method, String accessKey, String secretKey) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
         String space = " ";                    // one space
         String newLine = "\n";                 // new line
 
@@ -57,28 +56,17 @@ public class MobileAuthenticationService {
 
         SecretKeySpec signingKey;
         String encodeBase64String;
-        try {
-
-            signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(signingKey);
-            byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
-            encodeBase64String = Base64.getEncoder().encodeToString(rawHmac);
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            encodeBase64String = e.toString();
-        } catch (NoSuchAlgorithmException e) {
-            encodeBase64String = e.toString();
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
-
+        signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+        Mac mac = Mac.getInstance("HmacSHA256");
+        mac.init(signingKey);
+        byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
+        encodeBase64String = Base64.getEncoder().encodeToString(rawHmac);
 
         return encodeBase64String;
     }
 
 
-    public void sendSMS(String from, String to, String code) {
+    public void sendSMS(String from, String to, String code) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         String hostNameUrl = "https://sens.apigw.ntruss.com";     		// + 호스트 URL
         String requestUrl= "/sms/v2/services/";                   		// + 요청 URL
         String requestUrlType = "/messages";                      		// + 요청 URL
@@ -107,46 +95,41 @@ public class MobileAuthenticationService {
 
         System.out.println(body);
 
-        try {
-            URL url = new URL(apiUrl);
+        URL url = new URL(apiUrl);
 
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setUseCaches(false);
-            con.setDoOutput(true);
-            con.setDoInput(true);
-            con.setRequestProperty("content-type", "application/json");
-            con.setRequestProperty("x-ncp-apigw-timestamp", timestamp);
-            con.setRequestProperty("x-ncp-iam-access-key", accessKey);
-            con.setRequestProperty("x-ncp-apigw-signature-v2", makeSignature(requestUrl, timestamp, method, accessKey, secretKey));
-            con.setRequestMethod(method);
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setUseCaches(false);
+        con.setDoOutput(true);
+        con.setDoInput(true);
+        con.setRequestProperty("content-type", "application/json");
+        con.setRequestProperty("x-ncp-apigw-timestamp", timestamp);
+        con.setRequestProperty("x-ncp-iam-access-key", accessKey);
+        con.setRequestProperty("x-ncp-apigw-signature-v2", makeSignature(requestUrl, timestamp, method, accessKey, secretKey));
+        con.setRequestMethod(method);
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
-            wr.write(body.getBytes());
-            wr.flush();
-            wr.close();
+        wr.write(body.getBytes());
+        wr.flush();
+        wr.close();
 
-            int responseCode = con.getResponseCode();
-            BufferedReader br;
-            System.out.println("responseCode" +" " + responseCode);
-            if(responseCode == 202) { // 정상 호출
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            } else { // 에러 발생
-                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-            }
-
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = br.readLine()) != null) {
-                response.append(inputLine);
-            }
-            br.close();
-
-            System.out.println(response.toString());
-
-        } catch (Exception e) {
-            System.out.println(e);
+        int responseCode = con.getResponseCode();
+        BufferedReader br;
+        System.out.println("responseCode" +" " + responseCode);
+        if(responseCode == 202) { // 정상 호출
+            br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } else { // 에러 발생
+            throw new SmsNotSendException();
         }
+
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = br.readLine()) != null) {
+            response.append(inputLine);
+        }
+        br.close();
+
+        System.out.println(response.toString());
     }
 
 
@@ -163,78 +146,69 @@ public class MobileAuthenticationService {
     }
 
     @Transactional
-    public PhoneAuthResponseDto getNumber(String phoneNumber) {
-        try {
-
-            // 값 검증
-            if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
-                return new PhoneAuthResponseDto(false, "올바르지 않은 전화번호입니다.");
-            }
-
-
-            // 현재 저장되어 있는 전화번호가 있는지 확인하기 위함.
-            Optional<MobileAuthentication> phone = mobileAuthenticationJpaRepository.findByPhoneNumber(phoneNumber);
-            String code = getRandomCode();
-
-            // 전화번호가 저장되어 있으면 코드만 변경해주고, 없을시 새로 생성해준다.
-            if(phone.isPresent()) {
-                MobileAuthentication unwrappedMobileAuthentication = phone.get();
-                unwrappedMobileAuthentication.setCode(code);
-                unwrappedMobileAuthentication.setTried(0L);
-                mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
-            } else {
-                MobileAuthentication newMobileAuthentication = new MobileAuthentication(phoneNumber, code, 0L);
-                mobileAuthenticationJpaRepository.save(newMobileAuthentication);
-            }
-
-            sendSMS("01021634980", phoneNumber, code);
-
-            log.info(String.format("%s %s", phoneNumber, code));
-        } catch (Exception e) {
-            return new PhoneAuthResponseDto(false, "에러가 발생했습니다.");
+    public PhoneAuthResponseDto getNumber(String phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+        // 값 검증
+        if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
+            return new PhoneAuthResponseDto(false, "올바르지 않은 전화번호입니다.");
         }
+
+
+        // 현재 저장되어 있는 전화번호가 있는지 확인하기 위함.
+        Optional<MobileAuthentication> phone = mobileAuthenticationJpaRepository.findByPhoneNumber(phoneNumber);
+        String code = getRandomCode();
+
+        // 전화번호가 저장되어 있으면 코드만 변경해주고, 없을시 새로 생성해준다.
+        if(phone.isPresent()) {
+            MobileAuthentication unwrappedMobileAuthentication = phone.get();
+            unwrappedMobileAuthentication.setCode(code);
+            unwrappedMobileAuthentication.setTried(0L);
+            mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
+        } else {
+            MobileAuthentication newMobileAuthentication = new MobileAuthentication(phoneNumber, code, 0L);
+            mobileAuthenticationJpaRepository.save(newMobileAuthentication);
+        }
+
+        sendSMS("01021634980", phoneNumber, code);
+
+        log.info(String.format("%s %s", phoneNumber, code));
 
         return new PhoneAuthResponseDto(true, "성공했습니다.");
     }
 
     @Transactional
     public PhoneAuthResponseDto verifyNumber(String phoneNumber, String code) {
-        try {
-            Optional<MobileAuthentication> phone = mobileAuthenticationJpaRepository.findByPhoneNumber(phoneNumber);
+        Optional<MobileAuthentication> phone = mobileAuthenticationJpaRepository.findByPhoneNumber(phoneNumber);
 
-            // 값 검증
-            if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
-                return new PhoneAuthResponseDto(false, "올바르지 않은 전화번호입니다.");
-            }
-            if(!Pattern.matches("[0-9]{6}", code)) {
-                return new PhoneAuthResponseDto(false, "올바르지 않은 코드입니다.");
-            }
+        // 값 검증
+        if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
+            return new PhoneAuthResponseDto(false, "올바르지 않은 전화번호입니다.");
+        }
+        if(!Pattern.matches("[0-9]{6}", code)) {
+            return new PhoneAuthResponseDto(false, "올바르지 않은 코드입니다.");
+        }
 
-            // 받아온 전화번호에 인증 정보가 있는지 확인
-            if(phone.isEmpty()) {
-                return new PhoneAuthResponseDto(false, "인증 중이 아닙니다, 인증번호 전송 버튼을 눌러주세요");
-            }
+        // 받아온 전화번호에 인증 정보가 있는지 확인
+        if(phone.isEmpty()) {
+            return new PhoneAuthResponseDto(false, "인증 중이 아닙니다, 인증번호 전송 버튼을 눌러주세요");
+        }
 
-            MobileAuthentication unwrappedMobileAuthentication = phone.get();
+        MobileAuthentication unwrappedMobileAuthentication = phone.get();
 
-            // 이미 시도를 너무 많이 했으면 거절
-            if(unwrappedMobileAuthentication.getTried() >= 5) {
-                return new PhoneAuthResponseDto(false, "코드 입력 횟수가 초과되었습니다, 다시 인증해주세요");
-            }
+        // 이미 시도를 너무 많이 했으면 거절
+        if(unwrappedMobileAuthentication.getTried() >= 5) {
+            return new PhoneAuthResponseDto(false, "코드 입력 횟수가 초과되었습니다, 다시 인증해주세요");
+        }
 
-            log.info(String.format("%s %s", unwrappedMobileAuthentication.getCode(), code));
+        log.info(String.format("%s %s", unwrappedMobileAuthentication.getCode(), code));
 
-            // 인증 확인 혹은 실패
-            if(code.equals(unwrappedMobileAuthentication.getCode())) {
-                mobileAuthenticationJpaRepository.delete(unwrappedMobileAuthentication);
-                return new PhoneAuthResponseDto(true, "성공했습니다.");
-            } else {
-                unwrappedMobileAuthentication.setTried(unwrappedMobileAuthentication.getTried()+1);
-                mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
-                return new PhoneAuthResponseDto(false, String.format("인증에 실패하였습니다, 남은 횟수는 %d 회입니다.", 5L - unwrappedMobileAuthentication.getTried()));
-            }
-        } catch (Exception e) {
-            return new PhoneAuthResponseDto(false, "에러가 발생했습니다.");
+        // 인증 확인 혹은 실패
+        if(code.equals(unwrappedMobileAuthentication.getCode())) {
+            mobileAuthenticationJpaRepository.delete(unwrappedMobileAuthentication);
+            return new PhoneAuthResponseDto(true, "성공했습니다.");
+        } else {
+            unwrappedMobileAuthentication.setTried(unwrappedMobileAuthentication.getTried()+1);
+            mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
+            return new PhoneAuthResponseDto(false, String.format("인증에 실패하였습니다, 남은 횟수는 %d 회입니다.", 5L - unwrappedMobileAuthentication.getTried()));
         }
     }
 }

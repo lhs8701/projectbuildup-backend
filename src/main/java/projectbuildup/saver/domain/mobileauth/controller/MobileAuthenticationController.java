@@ -13,6 +13,10 @@ import projectbuildup.saver.domain.dto.req.AuthenticationCodeRequestDto;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
 import projectbuildup.saver.domain.mobileauth.service.MobileAuthenticationService;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @AllArgsConstructor
 @Slf4j
@@ -23,7 +27,7 @@ public class MobileAuthenticationController {
 
     // 유효한 전화번호인지 확인하는 API
     @PostMapping("/auth/number")
-    public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody AuthenticationCodeRequestDto authenticationCodeRequestDto) {
+    public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody AuthenticationCodeRequestDto authenticationCodeRequestDto) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         PhoneAuthResponseDto ans = mobileAuthenticationService.getNumber(authenticationCodeRequestDto.getPhoneNumber());
         return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
     }

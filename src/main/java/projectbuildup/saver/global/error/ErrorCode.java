@@ -34,6 +34,9 @@ public enum ErrorCode {
     UNSUPPORTED_TOKEN_EXCEPTION(-5008, "지원하지 않는 토큰입니다.", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_EXPIRED_EXCPEPTION(-5009, "리프레시 토큰이 만료되었습니다. 다시 로그인해주세요.", HttpStatus.FORBIDDEN),
 
+    /* 전화번호 인증 */
+
+    SMS_NOT_SEND_EXCEPTION(-6000, "문자가 보내지지 않습니다.", HttpStatus.BAD_GATEWAY),
 
     /* 외부 영역 */
     ILLEGAL_ARGUMENT_EXCEPTION(-7000, "잘못된 형식입니다.", HttpStatus.BAD_REQUEST),
