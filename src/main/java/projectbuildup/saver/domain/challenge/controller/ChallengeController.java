@@ -11,12 +11,11 @@ import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.LeftChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.ChallengeResponseDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantsResponseDto;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/challenge")
+@RequestMapping("/api/challenges")
 @Slf4j
 @CrossOrigin("*")
 public class ChallengeController {
@@ -31,14 +30,14 @@ public class ChallengeController {
 
     @PostMapping("/join")
     public ResponseEntity<HttpStatus> joinChallenge(@RequestBody JoinChallengeReqDto joinChallengeReqDto) {
-        challengeService.joinChallenge(joinChallengeReqDto.getLoginId(), joinChallengeReqDto.getChallengeId());
+        challengeService.joinChallenge(joinChallengeReqDto.getMemberId(), joinChallengeReqDto.getChallengeId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{challengeId}/participants")
-    public ResponseEntity<ParticipantsResponseDto> getChallengeParticipants(@PathVariable Long challengeId) {
-        ParticipantsResponseDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
-        return new ResponseEntity<>(getChallengeParticipantsResDto, HttpStatus.OK);
+    @PostMapping("/left")
+    public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
+        challengeService.giveUpChallenge(leftChallengeReqDto.getMemberId(), leftChallengeReqDto.getChallengeId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{challengeId}")
@@ -47,9 +46,9 @@ public class ChallengeController {
         return new ResponseEntity<>(getChallengeResDto, HttpStatus.OK);
     }
 
-    @PostMapping("/left")
-    public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
-        challengeService.giveUpChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+    @PutMapping("/{challengeId}")
+    public ResponseEntity<HttpStatus> updateChallenge(@PathVariable Long challengeId, @RequestBody UpdateChallengeReqDto updated) {
+        challengeService.updateChallenge(challengeId, updated);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -59,20 +58,9 @@ public class ChallengeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{challengeId}")
-    public ResponseEntity<HttpStatus> updateChallenge(@PathVariable Long challengeId, @RequestBody UpdateChallengeReqDto updated) {
-        challengeService.updateChallenge(challengeId, updated);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/{challengeId}/participants")
+    public ResponseEntity<ParticipantsResponseDto> getChallengeParticipants(@PathVariable Long challengeId) {
+        ParticipantsResponseDto getChallengeParticipantsResDto = challengeService.getChallengeParticipants(challengeId);
+        return new ResponseEntity<>(getChallengeParticipantsResDto, HttpStatus.OK);
     }
-
-    @GetMapping("/available")
-    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam int sort, @RequestParam boolean ascending, @RequestParam String loginId) {
-        return new ResponseEntity<>(challengeService.getAvailableChallenges(sort, ascending, loginId), HttpStatus.OK);
-    }
-
-    @GetMapping("/my")
-    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String idToken) {
-        return new ResponseEntity<>(challengeService.getMyChallenges(idToken), HttpStatus.OK);
-    }
-
 }

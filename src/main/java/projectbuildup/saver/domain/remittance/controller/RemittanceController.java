@@ -9,7 +9,7 @@ import projectbuildup.saver.domain.dto.req.RemitRequestDto;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/challengeRecord")
+@RequestMapping("/api/remittance")
 public class RemittanceController {
 
     private final RemittanceService remittanceService;

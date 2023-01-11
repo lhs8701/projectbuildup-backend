@@ -16,7 +16,7 @@ import projectbuildup.saver.domain.participation.entity.Participation;
 import projectbuildup.saver.domain.participation.service.ParticipationFindService;
 import projectbuildup.saver.domain.participation.service.ParticipationService;
 import projectbuildup.saver.domain.remittance.service.RemittanceService;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 import projectbuildup.saver.domain.user.service.UserFindService;
 import projectbuildup.saver.global.util.StringDateConverter;
 
@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,9 +48,9 @@ public class ChallengeService {
         List<Participation> participationList = participationFindService.findAllByChallenge(challenge);
         List<ParticipantDto> responseDtoList = new ArrayList<>();
         for (Participation c : participationList) {
-            User user = userFindService.findById(c.getId());
-            Long totalAmount = remittanceService.calculateSum(user, challenge);
-            ParticipantDto participantDto = new ParticipantDto(user, totalAmount);
+            Member member = userFindService.findById(c.getId());
+            Long totalAmount = remittanceService.calculateSum(member, challenge);
+            ParticipantDto participantDto = new ParticipantDto(member, totalAmount);
             responseDtoList.add(participantDto);
         }
         sortByTotalAmountDesc(responseDtoList);
@@ -66,13 +67,7 @@ public class ChallengeService {
     }
 
     public void createChallenge(CreateChallengeRequestDto challengeReqDto) {
-        LocalDate startDate = stringDateConverter.convertToLocalDate(challengeReqDto.getStartDate());
-        LocalDate endDate = stringDateConverter.convertToLocalDate(challengeReqDto.getEndDate());
-        Challenge challenge = Challenge.builder()
-                .challengeReqDto(challengeReqDto)
-                .startDate(startDate)
-                .endDate(endDate)
-                .build();
+        Challenge challenge = challengeReqDto.toEntity();
 
         challengeJpaRepository.save(challenge);
     }
@@ -82,17 +77,17 @@ public class ChallengeService {
         return new ChallengeResponseDto(challenge);
     }
 
-    public void joinChallenge(String idToken, Long challengeId) {
+    public void joinChallenge(Long memberId, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        User user = userFindService.findByIdToken(idToken);
-        participationService.validateParticipationExistence(challenge, user);
-        participationService.makeParticipation(challenge, user);
+        Member member = userFindService.findById(memberId);
+        participationService.validateParticipationExistence(challenge, member);
+        participationService.makeParticipation(challenge, member);
     }
 
-    public void giveUpChallenge(String idToken, Long challengeId) {
+    public void giveUpChallenge(Long memberId, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        User user = userFindService.findByIdToken(idToken);
-        participationService.deleteByChallengeAndUser(challenge, user);
+        Member member = userFindService.findById(memberId);
+        participationService.deleteByChallengeAndUser(challenge, member);
     }
 
     public void updateChallenge(Long challengeId, UpdateChallengeReqDto updated) {
@@ -111,11 +106,11 @@ public class ChallengeService {
         }
     }
 
-    public GetChallengeListResDto getAvailableChallenges(int sortType, boolean ascending, String loginId) {
+    public GetChallengeListResDto getAvailableChallenges(int sortType, boolean ascending, Long memberId) {
         List<Challenge> challenges = challengeFindService.findAll();
         List<Challenge> availableChallenges = challenges
                 .stream()
-                .filter(challenge -> isJoinable(challenge, loginId))
+                .filter(challenge -> isJoinable(challenge, memberId))
                 .collect(Collectors.toList());
 
         sortByType(sortType, ascending, availableChallenges);
@@ -139,19 +134,19 @@ public class ChallengeService {
         challengeSortService.sortByEndDate(ascending, challenges);
     }
 
-    private boolean isJoinable(Challenge challenge, String loginId) {
+    private boolean isJoinable(Challenge challenge, Long memberId) {
         for (Participation c : challenge.getParticipationList()) {
-            User user = userFindService.findById(c.getUser().getId());
-            return !loginId.equals(user.getIdToken());
+            Member member = userFindService.findById(c.getMember().getId());
+            return memberId == member.getId();
         }
         return true;
     }
 
 
-    public GetChallengeListResDto getMyChallenges(String idToken) {
+    public GetChallengeListResDto getMyChallenges(Long memberId) {
         List<Challenge> challenges = challengeFindService.findAll();
-        User user = userFindService.findByIdToken(idToken);
-        List<Participation> participations = participationFindService.findAllByUser(user);
+        Member member = userFindService.findById(memberId);
+        List<Participation> participations = participationFindService.findAllByUser(member);
 
         List<ChallengeResponseDto> myChallenges = participations
                 .stream()

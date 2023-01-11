@@ -1,10 +1,9 @@
 package projectbuildup.saver.domain.auth.basic.controller;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,20 +15,20 @@ import projectbuildup.saver.domain.auth.basic.dto.LoginRequestDto;
 import projectbuildup.saver.domain.auth.basic.dto.SignupRequestDto;
 import projectbuildup.saver.domain.auth.basic.service.AuthService;
 import projectbuildup.saver.domain.auth.jwt.dto.TokenRequestDto;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 
 import javax.validation.Valid;
 
 @Slf4j
-@Api(tags = {"Auth Controller"})
+@Tag(name = "[Member]", description = "회원과 관련된 API입니다.")
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RestController
 public class AuthController {
 
     private final AuthService authService;
 
-    @ApiOperation(value="회원가입")
+    @Operation(summary = "회원가입", description = "회원가입")
     @PreAuthorize("permitAll()")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequestDto signupRequestDto){
@@ -37,42 +36,26 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value="로그인")
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto){
         return new ResponseEntity<>(authService.login(loginRequestDto), HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "X-AUTH-TOKEN",
-                    value = "AccessToken",
-                    required = true, dataType = "String", paramType = "header"
-            )
-    })
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout", headers = "X-AUTH-TOKEN")
-    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal User user) {
-        authService.logout(accessToken, user);
+    public ResponseEntity<?> logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal Member member) {
+        authService.logout(accessToken, member);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "X-AUTH-TOKEN",
-                    value = "AccessToken",
-                    required = true, dataType = "String", paramType = "header"
-            )
-    })
     @PreAuthorize("isAuthenticated()")
-    @PostMapping(value = "/withdrawal", headers = "X-AUTH-TOKEN")
-    public ResponseEntity<?> withdrawal(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal User user) {
-        authService.withdrawal(accessToken, user);
+    @PostMapping(value = "/withdraw", headers = "X-AUTH-TOKEN")
+    public ResponseEntity<?> withdrawal(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal Member member) {
+        authService.withdrawal(accessToken, member);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "액세스, 리프레시 토큰 재발급")
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/reissue")
     public ResponseEntity<?> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {

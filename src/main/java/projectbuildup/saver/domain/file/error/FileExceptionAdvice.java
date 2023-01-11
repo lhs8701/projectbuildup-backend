@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import projectbuildup.saver.domain.file.error.exception.CFileNotFoundException;
-import projectbuildup.saver.domain.user.error.exception.CUserNotFoundException;
 import projectbuildup.saver.global.common.response.ErrorResponseDto;
 import projectbuildup.saver.global.error.ErrorCode;
 

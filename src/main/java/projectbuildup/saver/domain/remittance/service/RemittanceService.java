@@ -8,7 +8,7 @@ import projectbuildup.saver.domain.dto.req.RemitRequestDto;
 import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceService;
 import projectbuildup.saver.domain.remittance.entity.Remittance;
 import projectbuildup.saver.domain.remittance.repository.RemittanceJpaRepository;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 import projectbuildup.saver.domain.user.service.UserFindService;
 
 import java.util.List;
@@ -24,19 +24,19 @@ public class RemittanceService {
 
     public void remit(RemitRequestDto remitRequestDto) {
         Challenge challenge = challengeFindService.findById(remitRequestDto.getChallengeId());
-        User user = userFindService.findById(remitRequestDto.getUserId());
+        Member member = userFindService.findById(remitRequestDto.getUserId());
         Remittance remittance = Remittance.builder()
                 .challenge(challenge)
-                .user(user)
+                .member(member)
                 .amount(remitRequestDto.getAmount())
                 .build();
 
-        recentRemittanceService.updateRecentInformation(user, remittance);
+        recentRemittanceService.updateRecentInformation(member, remittance);
         remittanceJpaRepository.save(remittance);
     }
 
-    public Long calculateSum(User user, Challenge challenge){
-        List<Remittance> remittanceList = remittanceFindService.findAllByChallengeAndUser(challenge, user);
+    public Long calculateSum(Member member, Challenge challenge){
+        List<Remittance> remittanceList = remittanceFindService.findAllByChallengeAndUser(challenge, member);
         Long sum = 0L;
         for (Remittance saving : remittanceList) {
             sum += saving.getAmount();

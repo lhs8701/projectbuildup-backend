@@ -2,7 +2,7 @@ package projectbuildup.saver.domain.user.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import projectbuildup.saver.domain.user.entity.User;
+import projectbuildup.saver.domain.user.entity.Member;
 
 @NoArgsConstructor
 @Getter
@@ -11,8 +11,8 @@ public class UserProfileResponseDto {
     String profileImageUrl;
 
 
-    public UserProfileResponseDto(User user){
-        this.nickName = user.getNickName();
-        this.profileImageUrl = user.getProfileImage().getFileUrl();
+    public UserProfileResponseDto(Member member){
+        this.nickName = member.getNickName();
+        this.profileImageUrl = member.getProfileImage().getFileUrl();
     }
 }
