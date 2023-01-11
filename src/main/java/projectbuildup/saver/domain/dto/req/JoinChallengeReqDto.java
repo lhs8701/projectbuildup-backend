@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class JoinChallengeReqDto {
-    private String loginId;
+    private Long memberId;
     private Long challengeId;
 }

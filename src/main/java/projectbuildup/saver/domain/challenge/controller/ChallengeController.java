@@ -11,7 +11,6 @@ import projectbuildup.saver.domain.dto.req.JoinChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.LeftChallengeReqDto;
 import projectbuildup.saver.domain.dto.req.UpdateChallengeReqDto;
 import projectbuildup.saver.domain.dto.res.ChallengeResponseDto;
-import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.dto.res.ParticipantsResponseDto;
 
 @RequiredArgsConstructor
@@ -31,13 +30,13 @@ public class ChallengeController {
 
     @PostMapping("/join")
     public ResponseEntity<HttpStatus> joinChallenge(@RequestBody JoinChallengeReqDto joinChallengeReqDto) {
-        challengeService.joinChallenge(joinChallengeReqDto.getLoginId(), joinChallengeReqDto.getChallengeId());
+        challengeService.joinChallenge(joinChallengeReqDto.getMemberId(), joinChallengeReqDto.getChallengeId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/left")
     public ResponseEntity<HttpStatus> leftChallenge(@RequestBody LeftChallengeReqDto leftChallengeReqDto) {
-        challengeService.giveUpChallenge(leftChallengeReqDto.getLoginId(), leftChallengeReqDto.getChallengeId());
+        challengeService.giveUpChallenge(leftChallengeReqDto.getMemberId(), leftChallengeReqDto.getChallengeId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

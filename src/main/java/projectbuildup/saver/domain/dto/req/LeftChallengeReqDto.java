@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class LeftChallengeReqDto {
-    private String loginId;
+    private Long memberId;
     private Long challengeId;
 }

@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -76,16 +77,16 @@ public class ChallengeService {
         return new ChallengeResponseDto(challenge);
     }
 
-    public void joinChallenge(String idToken, Long challengeId) {
+    public void joinChallenge(Long memberId, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        Member member = userFindService.findByIdToken(idToken);
+        Member member = userFindService.findById(memberId);
         participationService.validateParticipationExistence(challenge, member);
         participationService.makeParticipation(challenge, member);
     }
 
-    public void giveUpChallenge(String idToken, Long challengeId) {
+    public void giveUpChallenge(Long memberId, Long challengeId) {
         Challenge challenge = challengeFindService.findById(challengeId);
-        Member member = userFindService.findByIdToken(idToken);
+        Member member = userFindService.findById(memberId);
         participationService.deleteByChallengeAndUser(challenge, member);
     }
 
@@ -105,11 +106,11 @@ public class ChallengeService {
         }
     }
 
-    public GetChallengeListResDto getAvailableChallenges(int sortType, boolean ascending, String loginId) {
+    public GetChallengeListResDto getAvailableChallenges(int sortType, boolean ascending, Long memberId) {
         List<Challenge> challenges = challengeFindService.findAll();
         List<Challenge> availableChallenges = challenges
                 .stream()
-                .filter(challenge -> isJoinable(challenge, loginId))
+                .filter(challenge -> isJoinable(challenge, memberId))
                 .collect(Collectors.toList());
 
         sortByType(sortType, ascending, availableChallenges);
@@ -133,18 +134,18 @@ public class ChallengeService {
         challengeSortService.sortByEndDate(ascending, challenges);
     }
 
-    private boolean isJoinable(Challenge challenge, String loginId) {
+    private boolean isJoinable(Challenge challenge, Long memberId) {
         for (Participation c : challenge.getParticipationList()) {
             Member member = userFindService.findById(c.getMember().getId());
-            return !loginId.equals(member.getIdToken());
+            return memberId == member.getId();
         }
         return true;
     }
 
 
-    public GetChallengeListResDto getMyChallenges(String idToken) {
+    public GetChallengeListResDto getMyChallenges(Long memberId) {
         List<Challenge> challenges = challengeFindService.findAll();
-        Member member = userFindService.findByIdToken(idToken);
+        Member member = userFindService.findById(memberId);
         List<Participation> participations = participationFindService.findAllByUser(member);
 
         List<ChallengeResponseDto> myChallenges = participations

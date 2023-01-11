@@ -52,17 +52,17 @@ public class MemberController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{memberId}/remittance")
-    public ResponseEntity<?> getRecentRemittance(@PathVariable String idToken) {
-        return new ResponseEntity<>(recentRemittanceService.getRecentRemittance(idToken), HttpStatus.OK);
+    public ResponseEntity<?> getRecentRemittance(@PathVariable Long memberId) {
+        return new ResponseEntity<>(recentRemittanceService.getRecentRemittance(memberId), HttpStatus.OK);
     }
 
     @GetMapping("/{memberId}/challenges/available")
-    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam int sort, @RequestParam boolean ascending, @RequestParam String loginId) {
-        return new ResponseEntity<>(challengeService.getAvailableChallenges(sort, ascending, loginId), HttpStatus.OK);
+    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam int sort, @RequestParam boolean ascending, @PathVariable Long memberId) {
+        return new ResponseEntity<>(challengeService.getAvailableChallenges(sort, ascending, memberId), HttpStatus.OK);
     }
 
     @GetMapping("/{memberId}/challenges")
-    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String idToken) {
-        return new ResponseEntity<>(challengeService.getMyChallenges(idToken), HttpStatus.OK);
+    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@PathVariable Long memberId) {
+        return new ResponseEntity<>(challengeService.getMyChallenges(memberId), HttpStatus.OK);
     }
 }

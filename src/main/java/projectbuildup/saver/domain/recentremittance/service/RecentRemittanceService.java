@@ -24,8 +24,8 @@ public class RecentRemittanceService {
      * @param idToken 아이디 토큰
      * @return 총 절약 횟수, 총 절약 금액, 최근 절약일
      */
-    public RecentRemittanceResponseDto getRecentRemittance(String idToken) {
-        Member member = userFindService.findByIdToken(idToken);
+    public RecentRemittanceResponseDto getRecentRemittance(Long memberId) {
+        Member member = userFindService.findById(memberId);
         RecentRemittance recentRemittance = recentRemittanceFindService.findByUserOrGetNull(member);
 
         if (recentRemittance == null) {
