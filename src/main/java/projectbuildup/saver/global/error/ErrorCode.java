@@ -34,6 +34,14 @@ public enum ErrorCode {
     UNSUPPORTED_TOKEN_EXCEPTION(-5008, "지원하지 않는 토큰입니다.", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_EXPIRED_EXCPEPTION(-5009, "리프레시 토큰이 만료되었습니다. 다시 로그인해주세요.", HttpStatus.FORBIDDEN),
 
+    /* 전화번호 인증 */
+    WRONG_SMS_SEND(-6000, "문자가 전송중 오류가 발생했습니다.", HttpStatus.BAD_GATEWAY),
+    WRONG_PHONE_NUMBER_FORM(-6001, "전화번호 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST),
+    WRONG_PHONE_AUTHENTICATION(-6002, "인증중이 아닙니다, 인증버튼을 새로 눌러주세요", HttpStatus.BAD_REQUEST),
+    ILLEGAL_VERIFY_TRY(-6003, "인증 횟수가 초과되었습니다, 새로 코드를 발급해주세요.", HttpStatus.BAD_REQUEST),
+    WRONG_VERIFY_CODE_FORM(-6004, "인증코드 양식이 잘못되었습니다.", HttpStatus.BAD_REQUEST),
+    WRONG_VERIFY_CODE(-6005, "인증번호가 잘못되었습니다", HttpStatus.BAD_REQUEST),
+
 
     /* 외부 영역 */
     ILLEGAL_ARGUMENT_EXCEPTION(-7000, "잘못된 형식입니다.", HttpStatus.BAD_REQUEST),

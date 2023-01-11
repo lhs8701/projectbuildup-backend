@@ -13,7 +13,6 @@ public class SignupRequestDto {
     private String idToken;
     private String password;
     private String nickName;
-
     private String phoneNumber;
 
     public User toEntity(PasswordEncoder passwordEncoder) {
