@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import projectbuildup.saver.domain.challenge.service.ChallengeService;
+import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
@@ -15,11 +17,13 @@ import projectbuildup.saver.domain.user.service.MemberService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/members")
 public class UserController {
 
     private final MemberService memberService;
     private final RecentRemittanceService recentRemittanceService;
+
+    private final ChallengeService challengeService;
 
 
     @PreAuthorize("hasRole('USER')")
@@ -55,5 +59,15 @@ public class UserController {
     @GetMapping("/{idToken}/recent")
     public ResponseEntity<?> getSavingStatus(@PathVariable String idToken) {
         return new ResponseEntity<>(recentRemittanceService.getRecentSaving(idToken), HttpStatus.OK);
+    }
+
+    @GetMapping("/{memberId}/challenges/available")
+    public ResponseEntity<GetChallengeListResDto> getAvailableChallenges(@RequestParam int sort, @RequestParam boolean ascending, @RequestParam String loginId) {
+        return new ResponseEntity<>(challengeService.getAvailableChallenges(sort, ascending, loginId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{memberId}/challenges")
+    public ResponseEntity<GetChallengeListResDto> getMyChallenges(@RequestParam String idToken) {
+        return new ResponseEntity<>(challengeService.getMyChallenges(idToken), HttpStatus.OK);
     }
 }

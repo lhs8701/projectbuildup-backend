@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @Slf4j
 @Tag(name = "[Member]", description = "회원과 관련된 API입니다.")
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RestController
 public class AuthController {
 
@@ -50,7 +50,7 @@ public class AuthController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping(value = "/withdrawal", headers = "X-AUTH-TOKEN")
+    @PostMapping(value = "/withdraw", headers = "X-AUTH-TOKEN")
     public ResponseEntity<?> withdrawal(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal Member member) {
         authService.withdrawal(accessToken, member);
         return new ResponseEntity<>(HttpStatus.OK);
