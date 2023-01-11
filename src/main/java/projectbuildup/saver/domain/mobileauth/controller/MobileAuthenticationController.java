@@ -29,13 +29,13 @@ public class MobileAuthenticationController {
     @PostMapping("/auth/number")
     public ResponseEntity<PhoneAuthResponseDto> getNumber(@RequestBody AuthenticationCodeRequestDto authenticationCodeRequestDto) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         PhoneAuthResponseDto ans = mobileAuthenticationService.getNumber(authenticationCodeRequestDto.getPhoneNumber());
-        return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(ans, HttpStatus.OK);
     }
 
     //인증번호 검증 ->
     @PostMapping("/auth/verify")
     public ResponseEntity<PhoneAuthResponseDto> verifyNumber(@RequestBody AuthenticationCodeCheckRequestDto authenticationCodeCheckRequestDto) {
         PhoneAuthResponseDto ans = mobileAuthenticationService.verifyNumber(authenticationCodeCheckRequestDto.getPhoneNumber(), authenticationCodeCheckRequestDto.getCode());
-        return ans.getStat() ? new ResponseEntity<>(ans, HttpStatus.OK) : new ResponseEntity<>(ans, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(ans, HttpStatus.OK);
     }
 }

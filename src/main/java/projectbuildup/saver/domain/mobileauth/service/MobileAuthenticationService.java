@@ -6,12 +6,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import projectbuildup.saver.domain.dto.res.PhoneAuthResponseDto;
 import projectbuildup.saver.domain.mobileauth.entity.MobileAuthentication;
-import projectbuildup.saver.domain.mobileauth.error.exception.SmsNotSendException;
+import projectbuildup.saver.domain.mobileauth.error.exception.*;
 import projectbuildup.saver.domain.mobileauth.repository.MobileAuthenticationJpaRepository;
 
 import javax.transaction.Transactional;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -119,7 +118,7 @@ public class MobileAuthenticationService {
         if(responseCode == 202) { // 정상 호출
             br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         } else { // 에러 발생
-            throw new SmsNotSendException();
+            throw new CWrongSmsSend();
         }
 
         String inputLine;
@@ -149,7 +148,7 @@ public class MobileAuthenticationService {
     public PhoneAuthResponseDto getNumber(String phoneNumber) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
         // 값 검증
         if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
-            return new PhoneAuthResponseDto(false, "올바르지 않은 전화번호입니다.");
+            throw new CWrongPhoneNumberForm();
         }
 
 
@@ -181,22 +180,22 @@ public class MobileAuthenticationService {
 
         // 값 검증
         if(!Pattern.matches("[0-9]{11}", phoneNumber)) {
-            return new PhoneAuthResponseDto(false, "올바르지 않은 전화번호입니다.");
+            throw new CWrongPhoneNumberForm();
         }
         if(!Pattern.matches("[0-9]{6}", code)) {
-            return new PhoneAuthResponseDto(false, "올바르지 않은 코드입니다.");
+            throw new CWrongVerifyCodeForm();
         }
 
         // 받아온 전화번호에 인증 정보가 있는지 확인
         if(phone.isEmpty()) {
-            return new PhoneAuthResponseDto(false, "인증 중이 아닙니다, 인증번호 전송 버튼을 눌러주세요");
+            throw new CWrongPhoneAuthentication();
         }
 
         MobileAuthentication unwrappedMobileAuthentication = phone.get();
 
         // 이미 시도를 너무 많이 했으면 거절
         if(unwrappedMobileAuthentication.getTried() >= 5) {
-            return new PhoneAuthResponseDto(false, "코드 입력 횟수가 초과되었습니다, 다시 인증해주세요");
+            throw new CIllegalVerifyTry();
         }
 
         log.info(String.format("%s %s", unwrappedMobileAuthentication.getCode(), code));
@@ -208,7 +207,7 @@ public class MobileAuthenticationService {
         } else {
             unwrappedMobileAuthentication.setTried(unwrappedMobileAuthentication.getTried()+1);
             mobileAuthenticationJpaRepository.save(unwrappedMobileAuthentication);
-            return new PhoneAuthResponseDto(false, String.format("인증에 실패하였습니다, 남은 횟수는 %d 회입니다.", 5L - unwrappedMobileAuthentication.getTried()));
+            throw new CWrongVerifyCode();
         }
     }
 }

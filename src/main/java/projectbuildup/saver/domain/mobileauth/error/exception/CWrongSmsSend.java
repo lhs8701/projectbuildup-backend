@@ -4,11 +4,11 @@ import lombok.Getter;
 import projectbuildup.saver.global.error.ErrorCode;
 
 @Getter
-public class SmsNotSendException extends RuntimeException {
+public class CWrongSmsSend extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public SmsNotSendException() {
+    public CWrongSmsSend() {
         super();
-        errorCode = ErrorCode.SMS_NOT_SEND_EXCEPTION;
+        errorCode = ErrorCode.WRONG_SMS_SEND;
     }
 }
