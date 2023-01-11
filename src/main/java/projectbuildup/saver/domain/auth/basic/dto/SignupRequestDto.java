@@ -17,7 +17,6 @@ public class SignupRequestDto {
     private String idToken;
     private String password;
     private String nickname;
-
     private String phoneNumber;
 
     public Member toEntity(String encodedPassword) {
