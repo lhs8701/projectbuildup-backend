@@ -12,17 +12,15 @@ import projectbuildup.saver.domain.dto.res.GetChallengeListResDto;
 import projectbuildup.saver.domain.recentremittance.service.RecentRemittanceService;
 import projectbuildup.saver.domain.user.dto.PasswordUpdateParam;
 import projectbuildup.saver.domain.user.dto.ProfileUpdateParam;
-import projectbuildup.saver.domain.user.dto.UserIdRequestParam;
 import projectbuildup.saver.domain.user.service.MemberService;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/members")
-public class UserController {
+public class MemberController {
 
     private final MemberService memberService;
     private final RecentRemittanceService recentRemittanceService;
-
     private final ChallengeService challengeService;
 
 
@@ -33,32 +31,29 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{memberId}/profile")
+    public ResponseEntity<?> getProfile(@PathVariable Long memberId) {
+        return new ResponseEntity<>(memberService.getProfile(memberId), HttpStatus.OK);
+    }
 
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/profile")
-    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateParam profileUpdateParam) {
-        return new ResponseEntity<>(memberService.updateProfile(profileUpdateParam), HttpStatus.OK);
+    @PatchMapping("/{memberId}/profile")
+    public ResponseEntity<?> updateProfile(@PathVariable Long memberId, @RequestBody ProfileUpdateParam profileUpdateParam) {
+        return new ResponseEntity<>(memberService.updateProfile(memberId, profileUpdateParam), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/{memberId}/profile/image")
+    public ResponseEntity<?> changeProfileImage(@PathVariable Long memberId, @RequestPart MultipartFile imageFile) {
+        return new ResponseEntity<>(memberService.changeProfileImage(memberId, imageFile), HttpStatus.OK);
     }
 
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(@RequestBody UserIdRequestParam userIdRequestParam) {
-        return new ResponseEntity<>(memberService.getProfile(userIdRequestParam), HttpStatus.OK);
-    }
-
-
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/profile/image")
-    public ResponseEntity<?> changeProfileImage(@RequestBody UserIdRequestParam userIdRequestParam, @RequestPart MultipartFile imageFile) {
-        return new ResponseEntity<>(memberService.changeProfileImage(userIdRequestParam, imageFile), HttpStatus.OK);
-    }
-
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/{idToken}/recent")
-    public ResponseEntity<?> getSavingStatus(@PathVariable String idToken) {
-        return new ResponseEntity<>(recentRemittanceService.getRecentSaving(idToken), HttpStatus.OK);
+    @GetMapping("/{memberId}/remittance")
+    public ResponseEntity<?> getRecentRemittance(@PathVariable String idToken) {
+        return new ResponseEntity<>(recentRemittanceService.getRecentRemittance(idToken), HttpStatus.OK);
     }
 
     @GetMapping("/{memberId}/challenges/available")

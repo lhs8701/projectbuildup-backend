@@ -40,22 +40,23 @@ public class MemberService {
 
     /**
      * 사용자의 프로필을 조회합니다.
-     * @param userIdRequestParam 유저 아이디
+     * @param memberId 조회할 회원의 아이디넘버
      * @return 유저 프로필(닉네임, 프로필 사진 URL)
      */
-    public UserProfileResponseDto getProfile(UserIdRequestParam userIdRequestParam) {
-        Member member = userFindService.findByIdToken(userIdRequestParam.getIdToken());
+    public UserProfileResponseDto getProfile(Long memberId) {
+        Member member = userFindService.findById(memberId);
         return new UserProfileResponseDto(member);
     }
 
 
     /**
      * 사용자의 프로필을 수정합니다.
-     * @param profileUpdateParam 수정 항목 (수정할 유저아이디, 닉네임)
-     * @return 수정한 사용자의 아이디
+     * @param memberId 수정할 회원의 아이디넘버
+     * @param profileUpdateParam 수정 항목
+     * @return 수정한 회원의 아이디넘버
      */
-    public Long updateProfile(ProfileUpdateParam profileUpdateParam) {
-        Member member = userFindService.findByIdToken(profileUpdateParam.getIdToken());
+    public Long updateProfile(Long memberId, ProfileUpdateParam profileUpdateParam) {
+        Member member = userFindService.findById(memberId);
         member.setNickName(profileUpdateParam.getNickName());
         memberJpaRepository.save(member);
         return member.getId();
@@ -64,12 +65,12 @@ public class MemberService {
 
     /**
      * 프로필 사진을 변경합니다.
-     * @param userIdRequestParam 사용자 아이디
+     * @param memberId 사용자 아이디넘버
      * @param imageFile 변경할 사진 파일
      * @return 변경한 사용자의 아이디
      */
-    public Long changeProfileImage(UserIdRequestParam userIdRequestParam, MultipartFile imageFile) {
-        Member member = userFindService.findByIdToken(userIdRequestParam.getIdToken());
+    public Long changeProfileImage(Long memberId, MultipartFile imageFile) {
+        Member member = userFindService.findById(memberId);
         ImageDto imageDto = imageService.uploadImage(imageFile);
         Image image = imageDto.toEntity();
         imageRepository.save(image);
